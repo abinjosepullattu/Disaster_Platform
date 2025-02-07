@@ -87,4 +87,37 @@ router.post("/approve-volunteer", async (req, res) => {
 });
 
 
+// Get Accepted Volunteers
+router.get("/accepted-volunteers", async (req, res) => {
+  try {
+    const volunteers = await Volunteer.find({ applicationStatus: 1 }).populate("userId");
+    res.json(volunteers);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching accepted volunteers" });
+  }
+});
+
+// Get Rejected Volunteers
+router.get("/rejected-volunteers", async (req, res) => {
+  try {
+    const volunteers = await Volunteer.find({ applicationStatus: 2 }).populate("userId");
+    res.json(volunteers);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching rejected volunteers" });
+  }
+});
+
+// Delete Rejected Volunteer
+router.delete("/delete-volunteer/:id", async (req, res) => {
+  try {
+    const volunteerId = req.params.id;
+    await Volunteer.findByIdAndDelete(volunteerId);
+    await User.findOneAndDelete({ _id: volunteerId });
+    res.json({ message: "Volunteer deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ error: "Error deleting volunteer" });
+  }
+});
+
+
 module.exports = router;
