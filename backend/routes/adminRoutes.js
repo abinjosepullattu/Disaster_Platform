@@ -11,8 +11,8 @@ const router = express.Router();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, 
-    pass: process.env.EMAIL_PASS, 
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -46,48 +46,45 @@ const verifyAdmin = (req, res, next) => {
   });
 };
 
-// Get Pending Volunteers
-router.get("/pending-volunteers", verifyAdmin, async (req, res) => {
+// Get Pending Volunteers (Without Authentication)
+router.get("/pending-volunteers", async (req, res) => {
   try {
-    const volunteers = await User.find({ role: "volunteer", isApproved: false }).populate("volunteerData");
-    res.json(volunteers);
+    // Fetch only volunteers whose application is still pending
+    const pendingVolunteers = await Volunteer.find({ applicationStatus: 0 }).populate("userId");
+
+    res.json(pendingVolunteers);
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
 });
-
 // Approve/Reject Volunteers
-router.post("/approve-volunteer", verifyAdmin, async (req, res) => {
-  const { volunteerId, status } = req.body;
+router.post("/approve-volunteer", async (req, res) => {
+  const { volunteerId, applicationStatus } = req.body;
 
   try {
-    const volunteer = await User.findById(volunteerId);
+    const volunteer = await Volunteer.findById(volunteerId).populate("userId");
     if (!volunteer) return res.status(404).json({ message: "Volunteer not found" });
 
-    if (status === "approved") {
-      volunteer.isApproved = true;
-      await volunteer.save();
-    } else if (status === "rejected") {
-      await User.findByIdAndDelete(volunteerId);
-      await Volunteer.findOneAndDelete({ userId: volunteerId });
-    }
+    volunteer.applicationStatus = applicationStatus;
+    await volunteer.save();
 
-    // Send Email
-    const emailMessage = status === "approved"
+    // Send Email Notification
+    const emailMessage = applicationStatus === 1
       ? "Your volunteer application has been approved! You can now log in."
       : "Your volunteer application has been rejected.";
 
     await transporter.sendMail({
       from: '"Disaster Relief" <drap7907@gmail.com>',
-      to: volunteer.email,
+      to: volunteer.userId.email,
       subject: "Volunteer Application Status",
       text: emailMessage,
     });
 
-    res.json({ message: `Volunteer ${status}` });
+    res.json({ message: `Volunteer ${applicationStatus === 1 ? "approved" : "rejected"}` });
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }
 });
+
 
 module.exports = router;

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
-const publicSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
 });
 
-module.exports = mongoose.model("Public", publicSchema);
+module.exports = mongoose.model("Admin", adminSchema);

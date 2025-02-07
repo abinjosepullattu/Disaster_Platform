@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema({
   age: { type: Number, required: true },
   role: { type: String, enum: ["admin", "volunteer", "public"], required: true },
   photo: { type: String, required: true }, // File path
-  isApproved: { type: Boolean, default: function () { return this.role !== "volunteer"; } }, // Volunteers require approval
 }, { timestamps: true });
 
-module.exports = mongoose.model("User", userSchema);
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+
+module.exports = User;
