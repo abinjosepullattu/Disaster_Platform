@@ -6,6 +6,7 @@ const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes"); // ✅ Added admin routes
 const skillRoutes = require("./routes/skillRoutes"); // ✅ Added skill routes
 const authRoutes = require("./routes/authRoutes"); // ✅ Added authentication routes
+const ProfileRoutes=require("./routes/ProfileRoutes");
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes); // ✅ Register admin routes
 app.use("/api/skills", skillRoutes); // ✅ Register skill routes
 app.use("/api/auth", authRoutes); // ✅ Register authentication routes
+app.use("/api/profile", ProfileRoutes); 
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
