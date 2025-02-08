@@ -107,17 +107,25 @@ router.get("/rejected-volunteers", async (req, res) => {
   }
 });
 
-// Delete Rejected Volunteer
+// Delete Rejected Volunteer (Fixes issue with User deletion)
 router.delete("/delete-volunteer/:id", async (req, res) => {
   try {
     const volunteerId = req.params.id;
+
+    // Find the volunteer first to get the associated userId
+    const volunteer = await Volunteer.findById(volunteerId);
+    if (!volunteer) return res.status(404).json({ message: "Volunteer not found" });
+
+    // Delete volunteer entry
     await Volunteer.findByIdAndDelete(volunteerId);
-    await User.findOneAndDelete({ _id: volunteerId });
-    res.json({ message: "Volunteer deleted successfully" });
+
+    // Delete corresponding user entry using userId
+    await User.findByIdAndDelete(volunteer.userId);
+
+    res.json({ message: "Volunteer and User deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error deleting volunteer" });
+    res.status(500).json({ error: "Error deleting volunteer and user" });
   }
 });
-
 
 module.exports = router;

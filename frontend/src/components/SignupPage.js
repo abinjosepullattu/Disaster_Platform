@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import "../styles/SignupPage.css";
 
 const SignupPage = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -111,9 +113,13 @@ const SignupPage = () => {
 
             <button type="submit">Signup</button>
           </form>
+        
+          <button onClick={() => navigate("/login")} className="login-btn">Login</button>
+          
         </div>
       </div>
     </div>
+    
   );
 };
 

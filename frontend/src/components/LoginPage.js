@@ -32,6 +32,7 @@ const LoginPage = () => {
         <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="submit">Login</button>
       </form>
+      <button onClick={() => navigate("/signup")} className="signup-btn">Signup</button>
     </div>
   );
 };

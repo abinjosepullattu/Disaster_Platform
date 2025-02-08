@@ -142,3 +142,21 @@ button:hover {
     width: 100%;
   }
 }
+.signup-btn, .login-btn {
+  width: 100%;
+  height: 35px;
+  padding: 12px;
+  background: linear-gradient(135deg, #10cda4, #0b7a7e);
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: bold;
+  transition: all 0.3s ease-in-out;
+}
+
+.signup-btn:hover, .login-btn:hover {
+  background: linear-gradient(135deg, #086753, #0b7a7e);
+}
