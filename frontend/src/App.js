@@ -12,7 +12,13 @@ import AdminSkills from "./components/AdminSkills";
 import AdminApprovalPage from "./components/AdminApprovalPage";
 import VolunteerAccepted from "./components/VolunteerAccepted";
 import VolunteerRejected from "./components/VolunteerRejected";
-
+import AdminReportIncident from "./components/AdminReportIncident";
+import ReportIncident from "./components/ReportIncident";
+import MyIncidentReports from "./components/MyIncidentReports";
+import VerifyPublicReports from "./components/VerifyPublicReports";
+import OngoingIncidents from "./components/OngoingIncidents";
+import CompletedIncidents from "./components/CompletedIncidents";
+import AdminIncidentPage from "./components/IncidentPageAdmin";
 function App() {
   return (
     <Router>
@@ -30,6 +36,13 @@ function App() {
         <Route path="/admin-approval" element={<AdminApprovalPage />} />
         <Route path="/volunteer-accepted" element={<VolunteerAccepted />} />
         <Route path="/volunteer-rejected" element={<VolunteerRejected />} />
+        <Route path="/admin-incident-page" element={<AdminIncidentPage />} />
+        <Route path="/admin-incident-page/admin-report-incident" element={<AdminReportIncident />} />
+        <Route path="/report-incident" element={<ReportIncident />} />
+        <Route path="/my-incidents" element={<MyIncidentReports />} />
+        <Route path="/admin-incident-page/verify-public" element={<VerifyPublicReports />} />
+        <Route path="/admin-incident-page/ongoing-incident" element={<OngoingIncidents />} />
+        <Route path="/admin-incident-page/completed-incident" element={<CompletedIncidents />} />
       </Routes>
     </Router>
   );

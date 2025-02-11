@@ -1,0 +1,50 @@
+.incident-report-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .attention-message {
+    background-color: #ffcc00;
+    color: #333;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .incident-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  input, select, textarea, .search-box, button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  textarea {
+    height: 100px;
+  }
+  
+  button {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  
+  button:hover {
+    background-color: #c9302c;
+  }
+  
+  .search-box {
+    background-color: #f8f8f8;
+  }
+  

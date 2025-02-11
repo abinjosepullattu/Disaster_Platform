@@ -15,7 +15,8 @@ const PublicHome = () => {
     <div className="public-home">
       <h2>Welcome to the Disaster Relief Platform</h2>
       <p>Stay updated and contribute to relief efforts.</p>
-
+      <button onClick={() => navigate("/report-incident")}>Report an Incident</button>
+      <button onClick={() => navigate("/my-incidents")}>📋 View My Incident Reports</button>
       <h3>Account Settings</h3>
       <button onClick={() => navigate("/profile")}>My Profile</button>
       <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>

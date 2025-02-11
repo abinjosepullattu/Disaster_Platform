@@ -1,0 +1,62 @@
+.incident-container {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #eef7ea;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    color: #2c3e50;
+  }
+  
+  button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 15px;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #1e8449;
+  }
+  
+  .incident-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .incident-table th,
+  .incident-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  .map-overlay {
+    position: fixed;
+    top: 10%;
+    left: 20%;
+    height: max-content;
+    width: 60%;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .close-map-btn {
+    background-color: #e74c3c;
+  }
+  
+  .close-map-btn:hover {
+    background-color: #c0392b;
+  }
+  

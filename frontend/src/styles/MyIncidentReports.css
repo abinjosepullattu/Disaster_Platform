@@ -1,0 +1,40 @@
+.incident-status-container {
+    width: 90%;
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .error-message {
+    color: red;
+    font-weight: bold;
+  }
+  
+  .incident-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .incident-table th, .incident-table td {
+    border: 1px solid #0a0707;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  .incident-table th {
+    background-color: #eb2f96;
+  }
+  
+  .verified {
+    color: green;
+    font-weight: bold;
+  }
+  
+  .pending {
+    color: orange;
+    font-weight: bold;
+  }
+  
