@@ -19,6 +19,8 @@ import VerifyPublicReports from "./components/VerifyPublicReports";
 import OngoingIncidents from "./components/OngoingIncidents";
 import CompletedIncidents from "./components/CompletedIncidents";
 import AdminIncidentPage from "./components/IncidentPageAdmin";
+import AddShelter from "./components/AddShelter";
+import ViewShelterAdmin from "./components/ViewShelterAdmin";
 function App() {
   return (
     <Router>
@@ -43,6 +45,8 @@ function App() {
         <Route path="/admin-incident-page/verify-public" element={<VerifyPublicReports />} />
         <Route path="/admin-incident-page/ongoing-incident" element={<OngoingIncidents />} />
         <Route path="/admin-incident-page/completed-incident" element={<CompletedIncidents />} />
+        <Route path="/admin/add-shelter" element={<AddShelter />}/>
+        <Route path="/admin/view-shelter-admin" element={<ViewShelterAdmin />}/>
       </Routes>
     </Router>
   );

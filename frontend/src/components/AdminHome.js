@@ -20,7 +20,8 @@ const AdminHome = () => {
       <button onClick={() => navigate("/volunteer-accepted")}>Accepted Volunteers</button>
       <button onClick={() => navigate("/volunteer-rejected")}>Rejected Volunteers</button>
       <button onClick={() => navigate("/admin-incident-page")}>Incident Details</button>
-
+      <button onClick={() => navigate("/admin/add-shelter")}>Add Shelter</button>
+      <button onClick={() => navigate("/admin/view-shelter-admin")}>View Shelter</button>
       <h3>Account Settings</h3>
       <button onClick={() => navigate("/profile")}>My Profile</button>
       <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>

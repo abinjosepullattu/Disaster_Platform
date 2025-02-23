@@ -3,11 +3,36 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
-const User = require("../models/User");
+const User = require("../models/user");
 const Volunteer = require("../models/Volunteer");
 const Public = require("../models/Public");
 
 require("dotenv").config();
+//fetching volunteers for shelter management
+router.get("/available-volunteers", async (req, res) => {
+  try {
+      const volunteers = await Volunteer.find({ 
+          taskStatus: 0, // ✅ Available for assignment
+          skills: { $in: ["Shelter Management"] }, // ✅ Must have 'Shelter Management' skill
+          applicationStatus: 1 // ✅ Approved by admin
+      }).lean();
+
+      // ✅ Fetch user details from 'users' collection using `userId`
+      const userIds = volunteers.map(v => v.userId);
+      const users = await User.find({ _id: { $in: userIds } });
+
+      // ✅ Merge user details into volunteers list
+      const availableVolunteers = volunteers.map(v => ({
+          ...v,
+          userDetails: users.find(u => u._id.toString() === v.userId.toString()) || {}
+      }));
+
+      res.json(availableVolunteers);
+  } catch (error) {
+      res.status(500).json({ message: "Error fetching available volunteers" });
+  }
+});
+
 
 // ✅ Configure Email Transporter
 const transporter = nodemailer.createTransport({

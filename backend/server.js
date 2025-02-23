@@ -8,7 +8,7 @@ const skillRoutes = require("./routes/skillRoutes"); // ✅ Added skill routes
 const authRoutes = require("./routes/authRoutes"); // ✅ Added authentication routes
 const ProfileRoutes=require("./routes/ProfileRoutes");
 const incidentRoutes = require("./routes/incidentRoutes");
-
+const shelterRoutes= require("./routes/shelterRoutes");
 dotenv.config();
 const app = express();
 
@@ -21,6 +21,7 @@ app.use("/api/skills", skillRoutes); // ✅ Register skill routes
 app.use("/api/auth", authRoutes); // ✅ Register authentication routes
 app.use("/api/profile", ProfileRoutes); 
 app.use("/api/incidents", incidentRoutes);
+app.use("/api/shelters", shelterRoutes);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {

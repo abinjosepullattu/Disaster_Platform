@@ -1,0 +1,58 @@
+.shelter-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.shelter-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.shelter-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.shelter-container input,
+.shelter-container select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.shelter-container button {
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.shelter-container button:hover {
+    background: #0056b3;
+}
+select {
+    color: black!important; /* ✅ Ensure text is visible */
+    background-color: white; /* ✅ Make sure background is not transparent */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+select option {
+    color: black; /* ✅ Ensure dropdown options are readable */
+    background-color: white;
+}
