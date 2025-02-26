@@ -3,8 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, LoadScript, Marker, Autocomplete } from "@react-google-maps/api";
 import "../styles/AdminIncidentPage.css";
+import { useUser } from "../context/UserContext";
 
 const AdminReportIncident = () => {
+  const { user } = useUser();
   const [form, setForm] = useState({ location: "", type: "", severity: 1, description: "" });
   const [marker, setMarker] = useState(null);
   const navigate = useNavigate();
@@ -32,11 +34,11 @@ const AdminReportIncident = () => {
     if (!marker) return alert("⚠️ Please select a location on the map!");
   
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("⚠️ Admin login required!");
-        return;
-      }
+      // const token = localStorage.getItem("token");
+      // if (!token) {
+      //   alert("⚠️ Admin login required!");
+      //   return;
+      // }
   
       // ✅ Step 1: Report the Incident
       const response = await axios.post(
@@ -49,10 +51,9 @@ const AdminReportIncident = () => {
           latitude: marker.lat,
           longitude: marker.lng,
           status: 1, // ✅ Automatically mark as Verified
+          userId:user.id
         },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        
       );
   
       alert("✅ Incident added successfully and marked as Verified!");

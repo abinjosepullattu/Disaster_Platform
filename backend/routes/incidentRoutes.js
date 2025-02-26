@@ -1,10 +1,10 @@
 const express = require("express");
 const Incident = require("../models/Incident");
-const User = require("../models/User");
+const User = require("../models/user");
 const Volunteer = require("../models/Volunteer"); // ✅ Import Volunteer model
 const nodemailer = require("nodemailer");
 const router = express.Router();
-const authenticate = require("../middleware/authenticate"); // ✅ Authentication middleware
+// const authenticate = require("../middleware/authenticate"); // ✅ Authentication middleware
 
 // Email Setup
 const transporter = nodemailer.createTransport({
@@ -45,7 +45,7 @@ router.get("/verified", async (req, res) => {
 });
 
 // ✅ Verify an Incident (Admin) and Notify Volunteers
-router.put("/verify/:id", authenticate, async (req, res) => {
+router.put("/verify/:id", async (req, res) => {
   try {
     console.log("🔹 Received verification request for:", req.params.id);
 
@@ -88,9 +88,9 @@ router.put("/verify/:id", authenticate, async (req, res) => {
 });
 
 // ✅ Admin Adds a New Incident & Sends Email Notification
-router.post("/add", authenticate, async (req, res) => {
+router.post("/add", async (req, res) => {
   try {
-    const { location, type, severity, description, latitude, longitude } = req.body;
+    const { location, type, severity, description, latitude, longitude,userId } = req.body;
     if (!location || !type || !severity || !description || !latitude || !longitude) {
       return res.status(400).json({ error: "All fields are required!" });
     }
@@ -104,7 +104,7 @@ router.post("/add", authenticate, async (req, res) => {
       latitude,
       longitude,
       status: 1, // Marked as Verified
-      reportedBy: req.userId,
+      reportedBy: userId,
     });
 
     await newIncident.save();
@@ -139,9 +139,9 @@ router.post("/add", authenticate, async (req, res) => {
 });
 
 // ✅ Public Users Report an Incident (Initially Marked as Pending)
-router.post("/report", authenticate, async (req, res) => {
+router.post("/report", async (req, res) => {
   try {
-    const { location, type, severity, description, latitude, longitude } = req.body;
+    const { location, type, severity, description, latitude, longitude,userId } = req.body;
     if (!location || !type || !severity || !description || !latitude || !longitude) {
       return res.status(400).json({ error: "All fields are required!" });
     }
@@ -154,7 +154,7 @@ router.post("/report", authenticate, async (req, res) => {
       latitude,
       longitude,
       status: 0, // Pending
-      reportedBy: req.userId,
+      reportedBy: userId,
     });
 
     await newIncident.save();
@@ -175,9 +175,9 @@ router.get("/all", async (req, res) => {
 });
 
 // ✅ Get Incidents Reported by Logged-in User
-router.get("/my-reports", authenticate, async (req, res) => {
+router.get("/my-reports/:id", async (req, res) => {
   try {
-    const incidents = await Incident.find({ reportedBy: req.userId }).sort({ severity: -1, createdAt: -1 });
+    const incidents = await Incident.find({ reportedBy: req.params.id }).sort({ severity: -1, createdAt: -1 });
     res.json(incidents);
   } catch (error) {
     res.status(500).json({ error: "Error fetching incidents." });
@@ -185,7 +185,7 @@ router.get("/my-reports", authenticate, async (req, res) => {
 });
 
 // ✅ Get Public-Reported Incidents (Pending Verification)
-router.get("/public-reports", authenticate, async (req, res) => {
+router.get("/public-reports",  async (req, res) => {
   try {
     const incidents = await Incident.find({ status: 0 })
       .sort({ severity: -1, createdAt: -1 })
@@ -197,7 +197,7 @@ router.get("/public-reports", authenticate, async (req, res) => {
 });
 
 // ✅ Get Ongoing Incidents (status = 1)
-router.get("/ongoing", authenticate, async (req, res) => {
+router.get("/ongoing",  async (req, res) => {
   try {
     const incidents = await Incident.find({ status: 1 }).sort({ severity: -1, createdAt: -1 });
     res.json(incidents);
@@ -216,7 +216,7 @@ router.get("/completed", async (req, res) => {
   }
 });
 // ✅ Mark an Incident as Completed
-router.put("/complete/:id", authenticate, async (req, res) => {
+router.put("/complete/:id", async (req, res) => {
   try {
     const incident = await Incident.findByIdAndUpdate(req.params.id, { status: 3 }, { new: true });
     if (!incident) return res.status(404).json({ error: "Incident not found" });

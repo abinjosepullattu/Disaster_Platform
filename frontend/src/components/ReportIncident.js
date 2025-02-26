@@ -3,12 +3,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, LoadScript, Marker, Autocomplete } from "@react-google-maps/api";
 import "../styles/IncidentReport.css";
+import { useUser } from "../context/UserContext";
 
 const ReportIncident = () => {
   const [form, setForm] = useState({ location: "", type: "", severity: 1, description: "" });
   const [marker, setMarker] = useState(null);
   const navigate = useNavigate();
   const autocompleteRef = useRef(null);
+  const {user} = useUser();
 
   const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // 🔹 Replace with your API Key
 
@@ -32,12 +34,7 @@ const ReportIncident = () => {
     if (!marker) return alert("⚠️ Please select a location on the map!");
   
     try {
-      const token = localStorage.getItem("token"); // ✅ Get token from local storage
-  
-      if (!token) {
-        alert("⚠️ You must be logged in to report an incident!");
-        return;
-      }
+      
   
       const response = await axios.post("http://localhost:5000/api/incidents/report", {
         location: form.location,
@@ -45,9 +42,8 @@ const ReportIncident = () => {
         severity: form.severity,
         description: form.description,
         latitude: marker.lat,
-        longitude: marker.lng
-      }, {
-        headers: { Authorization: `Bearer ${token}` }, // ✅ Ensure token is sent in headers
+        longitude: marker.lng,
+        userId:user.id
       });
   
       alert(response.data.message);

@@ -2,21 +2,26 @@ import React, { useState } from "react";
 import axios from "axios";
 import "../styles/LoginPage.css";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const { user,setUser} = useUser();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("role", response.data.role);
+      setUser({id : response.data._id , role: response.data.role , name:response.data.name})
+      console.log(user);
       if (response.data.role === "admin") navigate("/admin-home");
-      else if (response.data.role === "volunteer") navigate("/volunteer-home");
+      else if (response.data.role === "volunteer"){
+        localStorage.setItem("volunteerId", response.data.volunteerId); // Ensure volunteerId is stored
+        navigate("/volunteer-home");
+      }
       else if (response.data.role === "public") navigate("/public-home");
     } catch (error) {
       setError(error.response ? error.response.data.message : "Login failed");

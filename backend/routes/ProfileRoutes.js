@@ -1,7 +1,7 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
+const User = require("../models/user");
 const multer = require("multer");
 const path = require("path");
 const router = express.Router();
@@ -30,9 +30,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Get Profile (Including Photo)
-router.get("/", authenticate, async (req, res) => {
+router.get("/:userId", async (req, res) => {
   try {
-    const user = await User.findById(req.userId).select("-password");
+    const user = await User.findById(req.params.userId).select("-password");
     if (!user) return res.status(404).json({ message: "User not found." });
 
     // Append full image URL
@@ -44,25 +44,34 @@ router.get("/", authenticate, async (req, res) => {
 });
 
 // Update Profile Photo
-router.put("/update-photo", authenticate, upload.single("photo"), async (req, res) => {
+// Update Profile Photo Route
+router.put("/update-photo", upload.single("photo"), async (req, res) => {
   try {
+    const { userId } = req.body;
+
     if (!req.file) return res.status(400).json({ message: "No file uploaded." });
 
     // Update User Profile Photo
     const updatedUser = await User.findByIdAndUpdate(
-      req.userId,
+      userId, // Get userId from request body
       { photo: req.file.path },
       { new: true }
     );
 
-    res.json({ message: "Profile photo updated successfully!", profilePhotoUrl: `http://localhost:5000/${updatedUser.photo}` });
+    if (!updatedUser) return res.status(404).json({ message: "User not found." });
+
+    res.json({ 
+      message: "Profile photo updated successfully!", 
+      profilePhotoUrl: `http://localhost:5000/${updatedUser.photo}` 
+    });
   } catch (error) {
+    console.error("Error updating profile photo:", error);
     res.status(500).json({ message: "Error updating profile photo." });
   }
 });
 
 // Edit Profile
-router.put("/edit", authenticate, async (req, res) => {
+router.put("/edit/:userId", async (req, res) => {
   try {
     const { name, phone, address, age } = req.body;
 
@@ -72,7 +81,7 @@ router.put("/edit", authenticate, async (req, res) => {
     }
 
     const updatedUser = await User.findByIdAndUpdate(
-      req.userId,
+      req.params.userId,
       { name, phone, address, age },
       { new: true } // Return updated user data
     ).select("-password");
@@ -87,14 +96,15 @@ router.put("/edit", authenticate, async (req, res) => {
   }
 });
 
-// Change Password
-router.put("/change-password", authenticate, async (req, res) => {
+// Change Password Route
+router.put("/change-password", async (req, res) => {
   try {
-    const { oldPassword, newPassword } = req.body;
+    const { userId, oldPassword, newPassword } = req.body;
 
-    console.log("Change Password Request Received:", { oldPassword, newPassword });
+    console.log("Change Password Request Received:", { userId, oldPassword, newPassword });
 
-    const user = await User.findById(req.userId);
+    // Check if user exists
+    const user = await User.findById(userId);
     if (!user) {
       console.log("User not found.");
       return res.status(404).json({ message: "User not found." });
@@ -109,7 +119,7 @@ router.put("/change-password", authenticate, async (req, res) => {
       return res.status(400).json({ message: "Incorrect old password." });
     }
 
-    // Ensure new password is not empty and at least 6 characters
+    // Ensure new password is at least 6 characters long
     if (!newPassword || newPassword.length < 6) {
       console.log("New password is too short.");
       return res.status(400).json({ message: "New password must be at least 6 characters long." });
@@ -118,8 +128,8 @@ router.put("/change-password", authenticate, async (req, res) => {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update only the password field (without triggering validation on other fields)
-    await User.updateOne({ _id: req.userId }, { $set: { password: hashedPassword } });
+    // Update only the password field
+    await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } });
 
     console.log("Password updated successfully.");
     res.json({ message: "Password updated successfully!" });

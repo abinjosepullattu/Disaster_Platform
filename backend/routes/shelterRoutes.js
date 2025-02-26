@@ -121,5 +121,48 @@ router.delete("/delete/:shelterId", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 });
+//list assigned shelters
+router.get("/assigned-shelters/:volunteerId", async (req, res) => {
+  try {
+      const { volunteerId } = req.params;
+
+      // Find shelters assigned to this volunteer
+      const shelters = await Shelter.find({ assignedVolunteer: volunteerId });
+
+      res.json(shelters);
+  } catch (error) {
+      res.status(500).json({ message: "Server Error", error });
+  }
+});
+//to accept task
+router.put("/accept-task/:shelterId", async (req, res) => {
+  try {
+      const { shelterId } = req.params;
+
+      // Update taskStatus to 2 (Accepted)
+      await Shelter.findByIdAndUpdate(shelterId, { taskStatus: 2 });
+
+      res.json({ message: "Task accepted successfully" });
+  } catch (error) {
+      res.status(500).json({ message: "Server Error", error });
+  }
+});
+
+
+
+router.get("/volunteer-id/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const volunteer = await Volunteer.findOne({ userId });
+
+    if (!volunteer) {
+      return res.status(404).json({ message: "Volunteer not found" });
+    }
+
+    res.json({ volunteerId: volunteer._id });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 module.exports = router;

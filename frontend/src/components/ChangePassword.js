@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "../styles/ChangePassword.css";
+import { useUser } from "../context/UserContext";
 
 const ChangePassword = () => {
+  const { user } = useUser(); // Get user from context
   const [formData, setFormData] = useState({ oldPassword: "", newPassword: "" });
   const [message, setMessage] = useState(null);
 
@@ -13,21 +15,21 @@ const ChangePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setMessage({ type: "error", text: "Unauthorized. Please log in again." });
-        return;
-      }
-
       console.log("Sending Request:", formData);
-      const response = await axios.put("http://localhost:5000/api/profile/change-password", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      console.log("User Data:", user);
+
+      const response = await axios.put(
+        "http://localhost:5000/api/profile/change-password",
+        { userId: user.id, ...formData } // Send userId inside the request body
+      );
 
       setMessage({ type: "success", text: response.data.message });
     } catch (error) {
       console.error("Error response:", error.response?.data);
-      setMessage({ type: "error", text: error.response?.data?.message || "Failed to change password." });
+      setMessage({ 
+        type: "error", 
+        text: error.response?.data?.message || "Failed to change password." 
+      });
     }
   };
 

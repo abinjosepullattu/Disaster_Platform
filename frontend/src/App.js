@@ -21,8 +21,11 @@ import CompletedIncidents from "./components/CompletedIncidents";
 import AdminIncidentPage from "./components/IncidentPageAdmin";
 import AddShelter from "./components/AddShelter";
 import ViewShelterAdmin from "./components/ViewShelterAdmin";
+import ViewAssignedShelters from "./components/ViewAssignedShelters";
+import { UserProvider } from "./context/UserContext";
 function App() {
   return (
+    <UserProvider>
     <Router>
       <Routes>
         <Route path="/" element={<LoginPage />} />
@@ -47,8 +50,10 @@ function App() {
         <Route path="/admin-incident-page/completed-incident" element={<CompletedIncidents />} />
         <Route path="/admin/add-shelter" element={<AddShelter />}/>
         <Route path="/admin/view-shelter-admin" element={<ViewShelterAdmin />}/>
+        <Route path="/assigned-shelters" element={<ViewAssignedShelters />} />
       </Routes>
     </Router>
+    </UserProvider>
   );
 }
 

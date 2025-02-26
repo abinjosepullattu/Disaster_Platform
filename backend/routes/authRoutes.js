@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const User = require("../models/user");
 const Volunteer = require("../models/Volunteer");
 const router = express.Router();
 
@@ -21,8 +21,8 @@ router.post("/login", async (req, res) => {
       }
     }
 
-    const token = jwt.sign({ userId: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.json({ token, role: user.role });
+    
+    res.json(user);
   } catch (error) {
     res.status(500).json({ error: "Server error" });
   }

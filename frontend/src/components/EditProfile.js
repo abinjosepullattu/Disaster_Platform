@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/EditProfile.css";
+import { useUser } from "../context/UserContext";
 
 const EditProfile = () => {
+  const { user } = useUser();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -17,10 +19,7 @@ const EditProfile = () => {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/profile", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.get(`http://localhost:5000/api/profile/${user.id}`);
       setFormData(response.data);
     } catch (error) {
       setMessage({ type: "error", text: "Failed to load profile." });
@@ -33,17 +32,30 @@ const EditProfile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!formData.name || !formData.phone || !formData.address || !formData.age) {
+      setMessage({ type: "error", text: "All fields are required." });
+      return;
+    }
+  
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.put("http://localhost:5000/api/profile/edit", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      console.log("User Data:", user);
 
+      const response = await axios.put(
+        `http://localhost:5000/api/profile/edit/${user.id}`, // Ensure correct user ID
+        formData,
+
+      );
+  
       setMessage({ type: "success", text: response.data.message });
     } catch (error) {
-      setMessage({ type: "error", text: error.response?.data?.message || "Failed to update profile." });
+      setMessage({ 
+        type: "error", 
+        text: error.response?.data?.message || "Failed to update profile." 
+      });
     }
   };
+  
 
   return (
     <div className="edit-profile-container">
