@@ -39,41 +39,48 @@ router.post("/add", async (req, res) => {
 
 // ✅ Get all shelters with populated volunteer details
 router.get("/view", async (req, res) => {
-    try {
+  try {
       const shelters = await Shelter.find().lean();
-  
+
       const sheltersWithVolunteers = await Promise.all(
-        shelters.map(async (shelter) => {
-          if (!shelter.assignedVolunteer) {
-            return { ...shelter, volunteer: null };
-          }
-  
-          // Fetch the volunteer details
-          const volunteer = await Volunteer.findById(shelter.assignedVolunteer).lean();
-          if (!volunteer) return { ...shelter, volunteer: null };
-  
-          // If taskStatus is 1, show "Volunteer approval waiting"
-          if (volunteer.taskStatus === 1) {
-            return { ...shelter, volunteer: { approvalStatus: "Volunteer approval waiting" } };
-          }
-  
-          // Fetch user details from users collection
-          const user = await User.findById(volunteer.userId).lean();
-          return {
-            ...shelter,
-            volunteer: user
-              ? { name: user.name, email: user.email, phone: user.phone }
-              : null,
-          };
-        })
+          shelters.map(async (shelter) => {
+              if (!shelter.assignedVolunteer) {
+                  return { ...shelter, volunteer: null };
+              }
+
+              // Fetch the volunteer details
+              const volunteer = await Volunteer.findById(shelter.assignedVolunteer).lean();
+              if (!volunteer) return { ...shelter, volunteer: null };
+
+              // If taskStatus is 1, show "Volunteer approval waiting"
+              if (volunteer.taskStatus === 1) {
+                  return { ...shelter, volunteer: { approvalStatus: "Volunteer approval waiting", taskStatus: 1 } };
+              }
+
+              // If taskStatus is 3, show "Volunteer Rejected the Task"
+              if (volunteer.taskStatus === 3) {
+                  return { ...shelter, volunteer: { approvalStatus: "Volunteer Rejected the Task", taskStatus: 3 } };
+              }
+
+              // Fetch user details from users collection
+              const user = await User.findById(volunteer.userId).lean();
+              return {
+                  ...shelter,
+                  volunteer: user
+                      ? { name: user.name, email: user.email, phone: user.phone, taskStatus: volunteer.taskStatus }
+                      : null,
+              };
+          })
       );
-  
+
       res.json(sheltersWithVolunteers);
-    } catch (error) {
+  } catch (error) {
       console.error("❌ Error fetching shelters:", error);
       res.status(500).json({ error: "Internal Server Error" });
-    }
-  });
+  }
+});
+
+
   
 
 // ✅ Update shelter inmates count (updated by assigned volunteer)
@@ -134,15 +141,40 @@ router.get("/assigned-shelters/:volunteerId", async (req, res) => {
       res.status(500).json({ message: "Server Error", error });
   }
 });
-//to accept task
-router.put("/accept-task/:shelterId", async (req, res) => {
+
+
+router.get("/assigned-shelters/:volunteerId", async (req, res) => {
   try {
-      const { shelterId } = req.params;
+      const { volunteerId } = req.params;
 
-      // Update taskStatus to 2 (Accepted)
-      await Shelter.findByIdAndUpdate(shelterId, { taskStatus: 2 });
+      // Find assigned shelters for the given volunteer
+      const shelters = await Shelter.find({ assignedVolunteer: volunteerId });
 
-      res.json({ message: "Task accepted successfully" });
+      // Fetch taskStatus from the volunteers collection
+      const volunteer = await Volunteer.findById(volunteerId);
+      const taskStatus = volunteer ? volunteer.taskStatus : null;
+
+      res.json({ shelters, taskStatus });
+  } catch (error) {
+      res.status(500).json({ message: "Server Error", error });
+  }
+});
+
+//to accept or decline task
+router.put("/update-task/:shelterId/:volunteerId", async (req, res) => {
+  try {
+      const { shelterId, volunteerId } = req.params;
+      const { taskStatus } = req.body;
+
+      // Ensure taskStatus is either 2 (Accepted) or 3 (Rejected)
+      if (![2, 3].includes(taskStatus)) {
+          return res.status(400).json({ message: "Invalid task status" });
+      }
+
+      // Update taskStatus in the volunteers collection
+      await Volunteer.findByIdAndUpdate(volunteerId, { taskStatus });
+
+      res.json({ message: `Task ${taskStatus === 2 ? "accepted" : "rejected"} successfully` });
   } catch (error) {
       res.status(500).json({ message: "Server Error", error });
   }
