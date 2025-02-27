@@ -9,6 +9,7 @@ const authRoutes = require("./routes/authRoutes"); // ✅ Added authentication r
 const ProfileRoutes=require("./routes/ProfileRoutes");
 const incidentRoutes = require("./routes/incidentRoutes");
 const shelterRoutes= require("./routes/shelterRoutes");
+const inmateRoutes = require("./routes/inmateRoutes");
 dotenv.config();
 const app = express();
 
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes); // ✅ Register authentication routes
 app.use("/api/profile", ProfileRoutes); 
 app.use("/api/incidents", incidentRoutes);
 app.use("/api/shelters", shelterRoutes);
+app.use("/api", inmateRoutes);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {

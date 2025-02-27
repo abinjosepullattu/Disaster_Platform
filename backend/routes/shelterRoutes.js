@@ -197,4 +197,33 @@ router.get("/volunteer-id/:userId", async (req, res) => {
   }
 });
 
+// GET accepted shelter for a specific volunteer (taskStatus === 2)
+router.get("/accepted/:volunteerId", async (req, res) => {
+    try {
+      const { volunteerId } = req.params;
+      // Find shelters where the assignedVolunteer equals the volunteerId
+      const shelters = await Shelter.find({ assignedVolunteer: volunteerId }).lean();
+  
+      // Filter only those shelters where the volunteer's taskStatus is accepted (2)
+      const acceptedShelters = await Promise.all(
+        shelters.map(async (shelter) => {
+          const volunteer = await Volunteer.findById(shelter.assignedVolunteer).lean();
+          if (!volunteer || volunteer.taskStatus !== 2) return null;
+          // Get volunteer's user details
+          const user = await User.findById(volunteer.userId).lean();
+          return {
+            ...shelter,
+            volunteer: user ? { name: user.name, email: user.email, phone: user.phone } : null,
+          };
+        })
+      );
+  
+      res.json(acceptedShelters.filter((s) => s)); // Remove any nulls
+    } catch (error) {
+      console.error("Error fetching accepted shelters:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+  
+
 module.exports = router;

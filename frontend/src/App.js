@@ -22,6 +22,8 @@ import AdminIncidentPage from "./components/IncidentPageAdmin";
 import AddShelter from "./components/AddShelter";
 import ViewShelterAdmin from "./components/ViewShelterAdmin";
 import ViewAssignedShelters from "./components/ViewAssignedShelters";
+import AcceptedShelters from "./components/AcceptedSheltersVolunteer";
+import AddInmates from "./components/AddInmates";
 import { UserProvider } from "./context/UserContext";
 function App() {
   return (
@@ -51,6 +53,8 @@ function App() {
         <Route path="/admin/add-shelter" element={<AddShelter />}/>
         <Route path="/admin/view-shelter-admin" element={<ViewShelterAdmin />}/>
         <Route path="/assigned-shelters" element={<ViewAssignedShelters />} />
+        <Route path="/accepted-shelters" element={<AcceptedShelters />} />
+        <Route path="/add-inmates/:shelterId" element={<AddInmates />} />
       </Routes>
     </Router>
     </UserProvider>

@@ -18,7 +18,9 @@ const transporter = nodemailer.createTransport({
 
 // Admin Login
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = re
+  q.body;
+
   try {
     const admin = await User.findOne({ email, role: "admin" });
     if (!admin) return res.status(404).json({ message: "Admin not found" });
