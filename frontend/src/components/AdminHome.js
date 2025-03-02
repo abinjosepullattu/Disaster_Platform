@@ -22,6 +22,12 @@ const AdminHome = () => {
       <button onClick={() => navigate("/admin-incident-page")}>Incident Details</button>
       <button onClick={() => navigate("/admin/add-shelter")}>Add Shelter</button>
       <button onClick={() => navigate("/admin/view-shelter-admin")}>View Shelter</button>
+      <button onClick={() => navigate("/admin/resource-type")}>Manage Resource Type</button>
+      <button onClick={() => navigate("/admin/task-management")}>Assign Task</button>
+
+      <button onClick={() => navigate("/admin/task-type")}>Manage Task Type</button>
+
+      
       <h3>Account Settings</h3>
       <button onClick={() => navigate("/profile")}>My Profile</button>
       <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>

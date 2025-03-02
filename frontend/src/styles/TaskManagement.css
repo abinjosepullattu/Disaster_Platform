@@ -1,0 +1,14 @@
+.task-management {
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .task-management h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  

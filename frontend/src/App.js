@@ -25,6 +25,10 @@ import ViewAssignedShelters from "./components/ViewAssignedShelters";
 import AcceptedShelters from "./components/AcceptedSheltersVolunteer";
 import AddInmates from "./components/AddInmates";
 import { UserProvider } from "./context/UserContext";
+import TaskManagement from './components/TaskManagement';
+import ResourceTypeForm from "./components/ResourceTypeForm";
+import TaskTypeForm from "./components/TaskTypeForm";
+
 function App() {
   return (
     <UserProvider>
@@ -55,6 +59,10 @@ function App() {
         <Route path="/assigned-shelters" element={<ViewAssignedShelters />} />
         <Route path="/accepted-shelters" element={<AcceptedShelters />} />
         <Route path="/add-inmates/:shelterId" element={<AddInmates />} />
+        <Route path="/admin/task-management" element={<TaskManagement />} />
+        <Route path="/admin/resource-type" element={<ResourceTypeForm />} />
+        <Route path="/admin/task-type" element={<TaskTypeForm />} />
+
       </Routes>
     </Router>
     </UserProvider>
