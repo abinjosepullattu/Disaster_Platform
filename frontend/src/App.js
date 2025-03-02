@@ -28,7 +28,8 @@ import { UserProvider } from "./context/UserContext";
 import TaskManagement from './components/TaskManagement';
 import ResourceTypeForm from "./components/ResourceTypeForm";
 import TaskTypeForm from "./components/TaskTypeForm";
-
+import AdminTaskView from './components/AdminTaskView';
+import VolunteerTaskView from "./components/VolunteerTaskView";
 function App() {
   return (
     <UserProvider>
@@ -62,6 +63,8 @@ function App() {
         <Route path="/admin/task-management" element={<TaskManagement />} />
         <Route path="/admin/resource-type" element={<ResourceTypeForm />} />
         <Route path="/admin/task-type" element={<TaskTypeForm />} />
+        <Route path="/admin/tasks" element={<AdminTaskView />} />
+        <Route path="/volunteer/tasks" element={<VolunteerTaskView />} />
 
       </Routes>
     </Router>

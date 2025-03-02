@@ -24,7 +24,7 @@ const AdminHome = () => {
       <button onClick={() => navigate("/admin/view-shelter-admin")}>View Shelter</button>
       <button onClick={() => navigate("/admin/resource-type")}>Manage Resource Type</button>
       <button onClick={() => navigate("/admin/task-management")}>Assign Task</button>
-
+      <button onClick={() => navigate("/admin/tasks")}>View Assigned Tasks</button>
       <button onClick={() => navigate("/admin/task-type")}>Manage Task Type</button>
 
       

@@ -1,0 +1,149 @@
+.admin-task-view {
+    padding: 20px;
+  }
+  
+  .task-filter {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .task-filter label {
+    margin-bottom: 0;
+    font-weight: bold;
+  }
+  
+  .task-filter select {
+    max-width: 300px;
+  }
+  
+  .loading, .error-message, .no-tasks {
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    border-radius: 5px;
+  }
+  
+  .loading {
+    background-color: #f8f9fa;
+  }
+  
+  .error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .no-tasks {
+    background-color: #e2e3e5;
+    color: #383d41;
+  }
+  
+  .tasks-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .task-card {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: transform 0.2s;
+  }
+  
+  .task-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-header {
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .task-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  
+  .task-status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+  
+  .status-available {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .status-waiting {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  
+  .status-accepted {
+    background-color: #cce5ff;
+    color: #004085;
+  }
+  
+  .status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .status-completed {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+  
+  .task-content {
+    padding: 15px;
+  }
+  
+  .task-description, .task-incident, .task-volunteer, .task-details {
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .task-content h4 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color: #495057;
+  }
+  
+  .task-content p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+  }
+  
+  .task-content p strong {
+    font-weight: bold;
+    color: #343a40;
+  }
+  
+  /* Media query for mobile responsiveness */
+  @media (max-width: 768px) {
+    .tasks-list {
+      grid-template-columns: 1fr;
+    }
+    
+    .task-filter {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .task-filter select {
+      width: 100%;
+      max-width: none;
+    }
+  }
