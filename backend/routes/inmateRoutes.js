@@ -35,7 +35,7 @@ router.get("/shelters/:shelterId/inmates", async (req, res) => {
 });
 
 // Delete an inmate and update shelter inmate count
-router.delete("/inmates/:inmateId", async (req, res) => {
+router.delete("/shelters/:inmateId", async (req, res) => {
   try {
     const { inmateId } = req.params;
     const inmate = await Inmate.findById(inmateId);

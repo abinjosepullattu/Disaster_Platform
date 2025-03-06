@@ -18,6 +18,9 @@ const VolunteerHome = () => {
       <button onClick={() => navigate("/assigned-shelters")}>Assigned Shelters</button>
       <button onClick={() => navigate("/accepted-shelters")}>Accepted Shelters</button>
       <button onClick={() => navigate("/volunteer/tasks")}>Assigned Tasks</button>
+      <button onClick={() => navigate("/volunteer/accepted-task")}>Accepted Tasks</button>
+
+      
       <h3>Account Settings</h3>
       <button onClick={() => navigate("/profile")}>My Profile</button>
       <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>

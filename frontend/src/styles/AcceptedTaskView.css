@@ -1,0 +1,89 @@
+.accepted-tasks-view {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.task-header {
+  background-color: #2196f3;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.task-date {
+  font-size: 14px;
+}
+
+.task-instruction {
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+  margin: 0;
+  font-size: 16px;
+}
+
+.details-section {
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  margin-top: 2px;
+  border-radius: 4px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.incident-details, .shelter-details, .resource-details, .delivery-details {
+  font-size: 14px;
+}
+
+.incident-details p, .shelter-details p, .resource-details p, .delivery-details p {
+  margin: 5px 0;
+}
+
+.map-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.map-button:hover {
+  background-color: #1976d2;
+}
+
+.error {
+  color: #f44336;
+  padding: 10px;
+  background-color: #ffebee;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}

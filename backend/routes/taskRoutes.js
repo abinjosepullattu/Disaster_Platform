@@ -1,4 +1,6 @@
 const express = require('express');
+const mongoose = require('mongoose');
+
 const router = express.Router();
 const Volunteer = require('../models/Volunteer');
 const Incident = require('../models/Incident');
@@ -422,12 +424,15 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
+
+
 // Get status for a specific task for a specific volunteer
-router.get('/status/:volunteerId/:taskId', async (req, res) => {
+router.get('/status/:userId/:taskId', async (req, res) => {
   try {
-    const { volunteerId, taskId } = req.params;
-    
-    const volunteer = await Volunteer.findById(volunteerId);
+    const { userId, taskId } = req.params;
+    //console.log(taskId)
+   // console.log(userId)
+    const volunteer = await Volunteer.findOne({_id: userId});
     
     if (!volunteer) {
       return res.status(404).json({ message: 'Volunteer not found' });
@@ -441,7 +446,7 @@ router.get('/status/:volunteerId/:taskId', async (req, res) => {
     
     // Find the status for this specific task
     const taskStatus = volunteer.taskStatus.find(
-      ts => ts.taskId.toString() === taskId
+      ts => ts.taskId && ts.taskId.toString() === taskId
     );
     
     if (!taskStatus) {
@@ -453,6 +458,112 @@ router.get('/status/:volunteerId/:taskId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching task status:', error);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+router.get("/volunteer/:userId/accepted", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const volunteer = await Volunteer.findOne({ userId }).populate("userId", "_id name email phone");
+    if (!volunteer) {
+      return res.status(404).json({ message: "Volunteer not found" });
+    }
+    if(volunteer.taskStatus!=2)
+    {
+       return "no accepted tasks"
+
+    }
+    else
+    {
+    
+    console.log(volunteer.taskStatus)
+
+    // Find tasks and populate incident data
+    const tasks = await Task.find({ volunteer: volunteer._id })
+      .populate("incident", "location type severity latitude longitude")
+      .sort({ updatedAt: -1 }); // Sort by most recent first
+    
+    // Enhanced tasks with shelter information
+    const enhancedTasks = await Promise.all(tasks.map(async (task) => {
+      const taskObj = task.toObject();
+      
+      // For transportation tasks, get shelter details
+      if (task.taskType === 'Transportation and Distribution') {
+        const transportDetails = await TransportationTask.findOne({ taskId: task._id.toString() })
+        .populate("resourceType", "name");
+        
+        if (transportDetails) {
+          // Add resource type and delivery date
+          taskObj.resourceType = transportDetails.resourceType?.name || 'Medical Supplies';
+         // console.log(transportDetails);
+         // console.log(transportDetails.resourceType?.name);
+          taskObj.deliveryDate = transportDetails.deliveryDateTime;
+          
+          if (transportDetails.shelter) {
+           // console.log(transportDetails.shelter)
+            const shelter = await Shelter.findById(transportDetails.shelter.toString());
+           // console.log(shelter)
+            if (shelter) {
+              taskObj.shelter = {
+                location: shelter.location,
+                latitude: shelter.latitude,
+                longitude: shelter.longitude
+              };
+            }
+          
+          }
+        }
+      }
+      
+      return taskObj;
+    
+    }));
+
+    res.json(enhancedTasks);
+  }
+  } catch (error) {
+    console.error("Error fetching accepted tasks:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET task details by ID
+router.get("/:taskId", async (req, res) => {
+  try {
+    const { taskId } = req.params;
+
+    const task = await Task.findById(taskId).populate("incident", "location type severity latitude longitude");
+    if (!task) return res.status(404).json({ message: "Task not found" });
+
+    let additionalDetails = {};
+
+    if (task.taskType === "Transportation and Distribution") {
+      const transportDetails = await TransportationTask.findOne({ taskId }).populate("shelter resourceType", "location latitude longitude name");
+      if (transportDetails) {
+        additionalDetails = {
+          shelter: transportDetails.shelter?.location || "Unknown",
+          shelterLatitude: transportDetails.shelter?.latitude,
+          shelterLongitude: transportDetails.shelter?.longitude,
+          resourceType: transportDetails.resourceType?.name || "Unknown",
+          deliveryDateTime: transportDetails.deliveryDateTime,
+        };
+      }
+    } else if (task.taskType === "Preparing and Serving Food") {
+      const foodDetails = await FoodTask.findOne({ taskId }).populate("shelter", "location latitude longitude");
+      if (foodDetails) {
+        additionalDetails = {
+          shelter: foodDetails.shelter?.location || "Unknown",
+          shelterLatitude: foodDetails.shelter?.latitude,
+          shelterLongitude: foodDetails.shelter?.longitude,
+        };
+      }
+    }
+
+    res.json({ ...task.toObject(), ...additionalDetails });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
   }
 });
 

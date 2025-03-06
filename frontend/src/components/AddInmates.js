@@ -14,7 +14,7 @@ const AddInmates = () => {
 
   const fetchInmates = () => {
     axios
-      .get(`http://localhost:5000/api/shelters/${shelterId}/inmates`)
+      .get(`http://localhost:5000/api/inmates/shelters/${shelterId}/inmates`)
       .then((response) => setInmates(response.data))
       .catch((error) => console.error("Error fetching inmates:", error));
   };
@@ -30,7 +30,7 @@ const AddInmates = () => {
   const handleAddInmate = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:5000/api/shelters/${shelterId}/inmates`, formData)
+      .post(`http://localhost:5000/api/inmates/shelters/${shelterId}/inmates`, formData)
       .then((response) => {
         alert("Inmate added successfully!");
         setFormData({ name: "", place: "", age: "", contact: "" });
@@ -45,7 +45,7 @@ const AddInmates = () => {
   const handleDeleteInmate = (inmateId) => {
     if (!window.confirm("Are you sure you want to delete this inmate?")) return;
     axios
-      .delete(`http://localhost:5000/api/inmates/${inmateId}`)
+      .delete(`http://localhost:5000/api/inmates/shelters/${inmateId}`)
       .then((response) => {
         alert("Inmate deleted successfully!");
         fetchInmates();
