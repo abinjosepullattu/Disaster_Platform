@@ -408,15 +408,15 @@ router.put('/update-status/:volunteerId/:taskId', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    
+
     // Find volunteer document by userId
     const volunteer = await Volunteer.findOne({ userId })
       .populate('userId', 'name email phone'); // Populate user details
-    
+
     if (!volunteer) {
       return res.status(404).json({ message: 'Volunteer not found' });
     }
-    
+
     res.status(200).json(volunteer);
   } catch (error) {
     console.error('Error fetching volunteer by userId:', error);
@@ -431,29 +431,29 @@ router.get('/status/:userId/:taskId', async (req, res) => {
   try {
     const { userId, taskId } = req.params;
     //console.log(taskId)
-   // console.log(userId)
-    const volunteer = await Volunteer.findOne({_id: userId});
-    
+    // console.log(userId)
+    const volunteer = await Volunteer.findOne({ _id: userId });
+
     if (!volunteer) {
       return res.status(404).json({ message: 'Volunteer not found' });
     }
-    
+
     // Check if the volunteer has a taskStatuses array
     if (!volunteer.taskStatus || !Array.isArray(volunteer.taskStatus)) {
       // If no taskStatuses array, default to status 1 (pending)
       return res.status(200).json({ taskStatus: 1 });
     }
-    
+
     // Find the status for this specific task
     const taskStatus = volunteer.taskStatus.find(
       ts => ts.taskId && ts.taskId.toString() === taskId
     );
-    
+
     if (!taskStatus) {
       // If no status found for this task, default to status 1 (pending)
       return res.status(200).json({ taskStatus: 1 });
     }
-    
+
     res.status(200).json({ taskStatus: taskStatus.status });
   } catch (error) {
     console.error('Error fetching task status:', error);
@@ -470,59 +470,82 @@ router.get("/volunteer/:userId/accepted", async (req, res) => {
     if (!volunteer) {
       return res.status(404).json({ message: "Volunteer not found" });
     }
-    if(volunteer.taskStatus!=2)
-    {
-       return "no accepted tasks"
+    if (volunteer.taskStatus != 2) {
+      return "no accepted tasks"
 
     }
-    else
-    {
-    
-    console.log(volunteer.taskStatus)
+    else {
 
-    // Find tasks and populate incident data
-    const tasks = await Task.find({ volunteer: volunteer._id })
-      .populate("incident", "location type severity latitude longitude")
-      .sort({ updatedAt: -1 }); // Sort by most recent first
-    
-    // Enhanced tasks with shelter information
-    const enhancedTasks = await Promise.all(tasks.map(async (task) => {
-      const taskObj = task.toObject();
-      
-      // For transportation tasks, get shelter details
-      if (task.taskType === 'Transportation and Distribution') {
-        const transportDetails = await TransportationTask.findOne({ taskId: task._id.toString() })
-        .populate("resourceType", "name");
-        
-        if (transportDetails) {
-          // Add resource type and delivery date
-          taskObj.resourceType = transportDetails.resourceType?.name || 'Medical Supplies';
-         // console.log(transportDetails);
-         // console.log(transportDetails.resourceType?.name);
-          taskObj.deliveryDate = transportDetails.deliveryDateTime;
-          
-          if (transportDetails.shelter) {
-           // console.log(transportDetails.shelter)
-            const shelter = await Shelter.findById(transportDetails.shelter.toString());
-           // console.log(shelter)
-            if (shelter) {
-              taskObj.shelter = {
-                location: shelter.location,
-                latitude: shelter.latitude,
-                longitude: shelter.longitude
-              };
+      console.log(volunteer.taskStatus)
+
+      // Find tasks and populate incident data
+      const tasks = await Task.find({ volunteer: volunteer._id })
+        .populate("incident", "location type severity latitude longitude")
+        .sort({ updatedAt: -1 }); // Sort by most recent first
+
+      // Enhanced tasks with shelter information
+      const enhancedTasks = await Promise.all(tasks.map(async (task) => {
+        const taskObj = task.toObject();
+
+        // For transportation tasks, get shelter details
+        if (task.taskType === 'Transportation and Distribution') {
+          const transportDetails = await TransportationTask.findOne({ taskId: task._id.toString() })
+            .populate("resourceType", "name");
+
+          if (transportDetails) {
+            // Add resource type and delivery date
+            taskObj.resourceType = transportDetails.resourceType?.name || 'Medical Supplies';
+            // console.log(transportDetails);
+            // console.log(transportDetails.resourceType?.name);
+            taskObj.deliveryDate = transportDetails.deliveryDateTime;
+
+            if (transportDetails.shelter) {
+              // console.log(transportDetails.shelter)
+              const shelter = await Shelter.findById(transportDetails.shelter.toString());
+              // console.log(shelter)
+              if (shelter) {
+                taskObj.shelter = {
+                  location: shelter.location,
+                  latitude: shelter.latitude,
+                  longitude: shelter.longitude
+                };
+              }
+
             }
-          
           }
         }
-      }
-      
-      return taskObj;
-    
-    }));
+        // For transportation tasks, get shelter details
+        if (task.taskType === 'Preparing and Serving Food') {
+          const foodDetails = await FoodTask.findOne({ taskId: task._id.toString() })
 
-    res.json(enhancedTasks);
-  }
+          if (foodDetails) {
+            // Add resource type and delivery date
+            // console.log(transportDetails);
+            // console.log(transportDetails.resourceType?.name);
+           // console.log(foodDetails)
+            //taskObj.deliveryDate = transportDetails.deliveryDateTime;
+
+            if (foodDetails.shelter) {
+              // console.log(transportDetails.shelter)
+              const shelter = await Shelter.findById(foodDetails.shelter.toString());
+              // console.log(shelter)
+              if (shelter) {
+                taskObj.shelter = {
+                  location: shelter.location,
+                  latitude: shelter.latitude,
+                  longitude: shelter.longitude
+                };
+              }
+
+            }
+          }
+        }
+        return taskObj;
+
+      }));
+
+      res.json(enhancedTasks);
+    }
   } catch (error) {
     console.error("Error fetching accepted tasks:", error);
     res.status(500).json({ error: "Server error" });

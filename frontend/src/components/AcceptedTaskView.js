@@ -38,6 +38,9 @@ const AcceptedTasksView = () => {
     const date = new Date(dateString);
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
   };
+  const navigateToMarkProgress = (taskId) => {
+    navigate('/volunteer/progress-form');
+  };
 
   return (
     <div className="accepted-tasks-view container">
@@ -111,6 +114,16 @@ const AcceptedTasksView = () => {
                   </div>
                 </div>
               )}
+              {/* Add a Mark Progress button */}
+              <div className="task-actions">
+                <button 
+                  className="progress-button"
+                  onClick={() => navigateToMarkProgress(task._id)}
+                >
+                  Mark Progress
+                </button>
+              </div>
+
             </div>
           ))}
         </div>
