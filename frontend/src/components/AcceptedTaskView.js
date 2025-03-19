@@ -7,7 +7,7 @@ import '../styles/AcceptedTaskView.css';
 const AcceptedTasksView = () => {
   const { user } = useUser();
   const navigate = useNavigate();
-  const [tasks, setTasks] = useState([]);
+  const [latestTask, setLatestTask] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -20,7 +20,17 @@ const AcceptedTasksView = () => {
       try {
         // Fetch tasks for the logged-in volunteer
         const response = await axios.get(`http://localhost:5000/api/tasks/volunteer/${user.id}/accepted`);
-        setTasks(response.data);
+        
+        // Find the latest task based on createdAt or updatedAt field
+        if (response.data.length > 0) {
+          // Sort tasks by createdAt in descending order (newest first)
+          const sortedTasks = response.data.sort((a, b) => 
+            new Date(b.createdAt || b.updatedAt) - new Date(a.createdAt || a.updatedAt)
+          );
+          
+          // Set only the latest task
+          setLatestTask(sortedTasks[0]);
+        }
       } catch (err) {
         setError("Failed to load tasks. Please try again.");
       }
@@ -38,94 +48,94 @@ const AcceptedTasksView = () => {
     const date = new Date(dateString);
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}, ${date.getHours()}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')} ${date.getHours() >= 12 ? 'PM' : 'AM'}`;
   };
+  
   const navigateToMarkProgress = (taskId) => {
-    navigate('/volunteer/progress-form');
+    navigate(`/volunteer/progress-form?taskId=${taskId}`);
   };
 
   return (
     <div className="accepted-tasks-view container">
-      <h2>Your Accepted Tasks</h2>
+      <h2>Your Accepted Task</h2>
 
       {error && <p className="error">{error}</p>}
 
-      {tasks.length === 0 ? (
+      {!latestTask ? (
         <p>No accepted tasks at the moment.</p>
       ) : (
         <div className="tasks-list">
-          {tasks.map(task => (
-            <div key={task._id} className="task-card">
-              <div className="task-header">
-                <h3>{task.taskType}</h3>
-                <span className="task-date">{task.updatedAt ? formatDate(task.updatedAt).split(',')[0] : ''}</span>
-              </div>
-              
-              <p className="task-instruction">{task.description || 'Do it fast'}</p>
-
-              <div className="details-section">
-                <div className="section-title">Incident Details</div>
-                {task.incident && (
-                  <div className="incident-details">
-                    <p><strong>Location:</strong> {task.incident.location}</p>
-                    <p><strong>Type:</strong> {task.incident.type}</p>
-                    <p><strong>Severity:</strong> {task.incident.severity}</p>
-                    {task.incident.latitude && task.incident.longitude && (
-                      <button 
-                        className="map-button"
-                        onClick={() => openMap(task.incident.latitude, task.incident.longitude, 'Incident')}
-                      >
-                        View Incident Map
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              {task.shelter && (
-                <div className="details-section">
-                  <div className="section-title">Shelter</div>
-                  <div className="shelter-details">
-                    <p>
-                      {task.shelter.name || ''} {task.shelter.location || ''}
-                    </p>
-                    {task.shelter.latitude && task.shelter.longitude && (
-                      <button 
-                        className="map-button"
-                        onClick={() => openMap(task.shelter.latitude, task.shelter.longitude, 'Shelter')}
-                      >
-                        View Shelter Map
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {task.resourceType && (
-                <div className="details-section">
-                  <div className="resource-details">
-                    <p><strong>Resource Type:</strong> {task.resourceType}</p>
-                  </div>
-                </div>
-              )}
-
-              {task.deliveryDate && (
-                <div className="details-section">
-                  <div className="delivery-details">
-                    <p><strong>Delivery Date & Time:</strong> {formatDate(task.deliveryDate)}</p>
-                  </div>
-                </div>
-              )}
-              {/* Add a Mark Progress button */}
-              <div className="task-actions">
-                <button 
-                  className="progress-button"
-                  onClick={() => navigateToMarkProgress(task._id)}
-                >
-                  Mark Progress
-                </button>
-              </div>
-
+          <div className="task-card">
+            <div className="task-header">
+              <h3>{latestTask.taskType}</h3>
+              <span className="task-date">
+                {latestTask.updatedAt ? formatDate(latestTask.updatedAt).split(',')[0] : ''}
+              </span>
             </div>
-          ))}
+            
+            <p className="task-instruction">{latestTask.description || 'Do it fast'}</p>
+
+            <div className="details-section">
+              <div className="section-title">Incident Details</div>
+              {latestTask.incident && (
+                <div className="incident-details">
+                  <p><strong>Location:</strong> {latestTask.incident.location}</p>
+                  <p><strong>Type:</strong> {latestTask.incident.type}</p>
+                  <p><strong>Severity:</strong> {latestTask.incident.severity}</p>
+                  {latestTask.incident.latitude && latestTask.incident.longitude && (
+                    <button 
+                      className="map-button"
+                      onClick={() => openMap(latestTask.incident.latitude, latestTask.incident.longitude, 'Incident')}
+                    >
+                      View Incident Map
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {latestTask.shelter && (
+              <div className="details-section">
+                <div className="section-title">Shelter</div>
+                <div className="shelter-details">
+                  <p>
+                    {latestTask.shelter.name || ''} {latestTask.shelter.location || ''}
+                  </p>
+                  {latestTask.shelter.latitude && latestTask.shelter.longitude && (
+                    <button 
+                      className="map-button"
+                      onClick={() => openMap(latestTask.shelter.latitude, latestTask.shelter.longitude, 'Shelter')}
+                    >
+                      View Shelter Map
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {latestTask.resourceType && (
+              <div className="details-section">
+                <div className="resource-details">
+                  <p><strong>Resource Type:</strong> {latestTask.resourceType}</p>
+                </div>
+              </div>
+            )}
+
+            {latestTask.deliveryDate && (
+              <div className="details-section">
+                <div className="delivery-details">
+                  <p><strong>Delivery Date & Time:</strong> {formatDate(latestTask.deliveryDate)}</p>
+                </div>
+              </div>
+            )}
+            
+            <div className="task-actions">
+              <button 
+                className="progress-button"
+                onClick={() => navigateToMarkProgress(latestTask._id)}
+              >
+                Mark Progress
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

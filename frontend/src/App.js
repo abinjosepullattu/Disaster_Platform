@@ -32,6 +32,8 @@ import AdminTaskView from './components/AdminTaskView';
 import VolunteerTaskView from "./components/VolunteerTaskView";
 import AcceptedTasksView from "./components/AcceptedTaskView";
 import MarkProgressForm from "./components/MarkProgressForm";
+import VolunteerCompletedTasks from './components/VolunteerCompletedTasks';
+import AdminCompletedTasksView from './components/AdminCompletedTaskView';
 
 function App() {
   return (
@@ -70,8 +72,8 @@ function App() {
         <Route path="/volunteer/tasks" element={<VolunteerTaskView />} />
         <Route path="/volunteer/accepted-task" element={<AcceptedTasksView />} />
         <Route path="/volunteer/progress-form" element={<MarkProgressForm />} />
-
-
+        <Route path="/volunteer/completed-tasks" element={<VolunteerCompletedTasks />} />
+        <Route path="/admin/completed-tasks" element={<AdminCompletedTasksView />} />
 
       </Routes>
     </Router>

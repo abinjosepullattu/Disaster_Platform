@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/AdminTaskView.css'; // You'll need to create this CSS file
+import '../styles/AdminTaskView.css';
 
 const AdminTaskView = () => {
   const [taskTypes, setTaskTypes] = useState([]);
@@ -36,7 +36,26 @@ const AdminTaskView = () => {
     setError('');
     try {
       const response = await axios.get(`http://localhost:5000/api/tasks/by-type/${taskType}`);
-      setTasks(response.data);
+      
+      // Group tasks by volunteer ID and find the latest one for each volunteer
+      const tasksByVolunteer = {};
+      
+      response.data.forEach(task => {
+        if (task.volunteer && task.volunteer.taskStatus !== 0) {
+          const volunteerId = task.volunteer._id || task.volunteer.id;
+          
+          // If we don't have this volunteer yet, or if this task is newer than the one we have
+          if (!tasksByVolunteer[volunteerId] || 
+              new Date(task.createdAt) > new Date(tasksByVolunteer[volunteerId].createdAt)) {
+            tasksByVolunteer[volunteerId] = task;
+          }
+        }
+      });
+      
+      // Convert the object back to an array
+      const latestTasksPerVolunteer = Object.values(tasksByVolunteer);
+      
+      setTasks(latestTasksPerVolunteer);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching tasks:', err);
@@ -54,7 +73,7 @@ const AdminTaskView = () => {
   const getStatusText = (status) => {
     switch (status) {
       case 0:
-        return 'Available';
+        return ''; // Changed from 'Available' to empty string
       case 1:
         return 'Waiting for volunteer approval';
       case 2:
@@ -113,8 +132,7 @@ const AdminTaskView = () => {
 
   return (
     <div className="admin-task-view container">
-      <h2>Assigned Task Status</h2>
-      
+      <h2>Assigned Tasks</h2>
       <div className="task-filter">
         <label htmlFor="taskType">Filter by Task Type:</label>
         <select
@@ -133,9 +151,9 @@ const AdminTaskView = () => {
       </div>
 
       {loading && <div className="loading">Loading tasks...</div>}
-      
+
       {error && <div className="error-message">{error}</div>}
-      
+
       {!loading && !error && tasks.length === 0 && selectedTaskType && (
         <div className="no-tasks">No tasks found for the selected type.</div>
       )}
@@ -150,13 +168,13 @@ const AdminTaskView = () => {
                   {getStatusText(task.volunteer.taskStatus)}
                 </span>
               </div>
-              
+
               <div className="task-content">
                 <div className="task-description">
                   <p><strong>Description:</strong> {task.description}</p>
                   <p><strong>Created:</strong> {new Date(task.createdAt).toLocaleString()}</p>
                 </div>
-                
+
                 <div className="task-incident">
                   <h4>Incident Details</h4>
                   {task.incident ? (
@@ -169,7 +187,7 @@ const AdminTaskView = () => {
                     <p>No incident details available</p>
                   )}
                 </div>
-                
+
                 <div className="task-volunteer">
                   <h4>Volunteer Details</h4>
                   {task.volunteer ? (
@@ -182,7 +200,7 @@ const AdminTaskView = () => {
                     <p>No volunteer assigned</p>
                   )}
                 </div>
-                
+
                 {/* Render type-specific details */}
                 {renderTaskDetails(task)}
               </div>

@@ -121,7 +121,7 @@ const TaskManagement = () => {
       axios.post('http://localhost:5000/api/tasks/add', { task, extraData })
       .then(() => {
           alert('Task assigned successfully!');
-          navigate(-2); // Navigate back to the previous page
+          navigate(-1); // Navigate back to the previous page
       })
       .catch(err => console.error(err));
 };

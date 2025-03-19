@@ -1,0 +1,195 @@
+/* VolunteerCompletedTasks.css */
+
+.completed-tasks-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+  }
+  
+  .completed-tasks-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .completed-tasks-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+  
+  @media (min-width: 768px) {
+    .completed-tasks-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .task-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    background-color: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  
+  .task-type {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #2d3748;
+  }
+  
+  .completed-badge {
+    background-color: #def7ec;
+    color: #046c4e;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-weight: 500;
+  }
+  
+  .task-description {
+    margin-top: 0.5rem;
+    color: #4a5568;
+    line-height: 1.5;
+  }
+  
+  .progress-container {
+    margin-top: 0.75rem;
+  }
+  
+  .progress-bar-background {
+    height: 0.5rem;
+    width: 100%;
+    background-color: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  
+  .progress-bar-fill {
+    height: 100%;
+    background-color: #48bb78;
+    border-radius: 9999px;
+    transition: width 0.5s ease;
+  }
+  
+  .progress-text {
+    font-size: 0.75rem;
+    text-align: right;
+    margin-top: 0.25rem;
+    color: #4a5568;
+  }
+  
+  .task-specific-details {
+    margin-top: 0.5rem;
+  }
+  
+  .detail-label {
+    font-weight: 500;
+    color: #2d3748;
+  }
+  
+  .detail-value {
+    color: #4a5568;
+  }
+  
+  .task-status {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .show-more-button {
+    display: flex;
+    align-items: center;
+    color: #3182ce;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  .show-more-button:hover {
+    color: #2c5282;
+  }
+  
+  .chevron-icon {
+    margin-left: 0.25rem;
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .chevron-icon.rotated {
+    transform: rotate(180deg);
+  }
+  
+  .expanded-details {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    background-color: #f7fafc;
+    border-radius: 0.375rem;
+  }
+  
+  .expanded-heading {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .updates-list {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+  }
+  
+  .update-item {
+    margin-bottom: 0.25rem;
+  }
+  
+  .update-timestamp {
+    font-size: 0.75rem;
+    color: #718096;
+  }
+  
+  .timestamp-info {
+    font-size: 0.75rem;
+    color: #718096;
+    margin-top: 0.5rem;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 2rem 0;
+    background-color: #f7fafc;
+    border-radius: 0.5rem;
+  }
+  
+  .empty-message {
+    color: #718096;
+    font-size: 1rem;
+  }
+  
+  .loading-state {
+    text-align: center;
+    padding: 1.5rem 0;
+  }
+  
+  .error-message {
+    text-align: center;
+    padding: 1.5rem 0;
+    color: #e53e3e;
+  }

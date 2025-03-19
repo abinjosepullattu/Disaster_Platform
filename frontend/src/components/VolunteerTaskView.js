@@ -7,7 +7,7 @@ import '../styles/VolunteerTaskView.css';
 const VolunteerTaskView = () => {
   const { user } = useUser();
   const navigate = useNavigate();
-  const [tasks, setTasks] = useState([]);
+  const [latestTask, setLatestTask] = useState(null);
   const [volunteer, setVolunteer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -47,7 +47,18 @@ const VolunteerTaskView = () => {
           }
         }));
 
-        setTasks(tasksWithStatus);
+        // Sort tasks by createdAt date (newest first)
+        const sortedTasks = tasksWithStatus.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        // Find the first pending task (status 1) that needs action
+        const pendingTask = sortedTasks.find(task => task.taskStatus === 1);
+        
+        // If no pending task, just get the most recent task of any status
+        const mostRecentTask = pendingTask || (sortedTasks.length > 0 ? sortedTasks[0] : null);
+        
+        setLatestTask(mostRecentTask);
       } catch (err) {
         console.error("Error fetching tasks:", err);
         setError("Failed to load tasks. Please try again.");
@@ -68,14 +79,10 @@ const VolunteerTaskView = () => {
     try {
       setLoading(true);
       await axios.put(`http://localhost:5000/api/tasks/update-status/${volunteer._id}/${taskId}`, { status });
-  
-      // Update task status locally without reloading
-      setTasks(prevTasks =>
-        prevTasks.map(task =>
-          task._id === taskId ? { ...task, taskStatus: status } : task
-        )
-      );
-  
+      
+      // Update task status locally
+      setLatestTask(prev => prev ? { ...prev, taskStatus: status } : null);
+      
       alert(status === 2 ? "Task accepted successfully!" : "Task rejected.");
     } catch (err) {
       console.error("Error updating task status:", err);
@@ -84,7 +91,6 @@ const VolunteerTaskView = () => {
       setLoading(false);
     }
   };
-  
 
   const openMap = (latitude, longitude, label) => {
     // Open Google Maps with the given coordinates
@@ -135,39 +141,45 @@ const VolunteerTaskView = () => {
     }
   };
 
-  const renderActionButtons = (task) => {
+  const renderTaskStatus = (task) => {
     const taskStatus = typeof volunteer.taskStatus === 'number' ? volunteer.taskStatus : 1;
-  
-    if (taskStatus === 2) {
-      return <div className="task-status accepted">✅ You have accepted this task</div>;
-    } else if (taskStatus === 3) {
-      return <div className="task-status rejected">❌ You have rejected this task</div>;
-    } else {
-      // Show buttons only when taskStatus is pending (1)
-      return (
-        <div className="task-actions">
-          <button 
-            className="btn-accept"
-            onClick={() => handleTaskAction(task._id, 2)}
-            disabled={loading}
-          >
-            Accept Task
-          </button>
-          <button 
-            className="btn-reject"
-            onClick={() => handleTaskAction(task._id, 3)}
-            disabled={loading}
-          >
-            Reject Task
-          </button>
-        </div>
-      );
+    
+    switch (taskStatus) {
+      case 0:
+        return <div className="task-status accepted">Wait For The New Task</div>;
+
+      case 1:
+        return (
+          <div className="task-actions">
+            <button 
+              className="btn-accept"
+              onClick={() => handleTaskAction(task._id, 2)}
+              disabled={loading}
+            >
+              Accept Task
+            </button>
+            <button 
+              className="btn-reject"
+              onClick={() => handleTaskAction(task._id, 3)}
+              disabled={loading}
+            >
+              Reject Task
+            </button>
+          </div>
+        );
+      case 2:
+        return <div className="task-status accepted">✅ Task is accepted</div>;
+      case 3:
+        return <div className="task-status rejected">❌ Task is rejected</div>;
+      case 4:
+        return <div className="task-status completed">✓ Task is completed</div>;
+      default:
+        return <div className="task-status unknown">Unknown status</div>;
     }
   };
   
-
   if (loading) {
-    return <div className="loading-spinner">Loading your tasks...</div>;
+    return <div className="loading-spinner">Loading your task...</div>;
   }
 
   if (error) {
@@ -176,54 +188,50 @@ const VolunteerTaskView = () => {
 
   return (
     <div className="volunteer-task-view container">
-      <h2>Your Assigned Tasks</h2>
+      <h2>My Assigned Tasks</h2>
 
-      {tasks.length === 0 ? (
+      {!latestTask ? (
         <div className="no-tasks">
           <p>You don't have any assigned tasks at the moment.</p>
         </div>
       ) : (
-        <div className="tasks-list">
-          {tasks.map(task => (
-            <div key={task._id} className="task-card">
-              <div className="task-header">
-                <h3>{task.taskType}</h3>
-                <span className="task-date">{new Date(task.createdAt).toLocaleDateString()}</span>
-              </div>
+        <div className="task-card">
+          <div className="task-header">
+            <h3>{latestTask.taskType}</h3>
+            <span className="task-date">{new Date(latestTask.createdAt).toLocaleDateString()}</span>
+          </div>
 
-              <div className="task-content">
-                <div className="task-description">
-                  <p>{task.description}</p>
-                </div>
-
-                <div className="task-incident">
-                  <div className="incident-header">
-                    <h4>Incident Details</h4>
-                    {task.incident && task.incident.latitude && task.incident.longitude && (
-                      <button 
-                        className="map-button"
-                        onClick={() => openMap(task.incident.latitude, task.incident.longitude, 'Incident')}
-                      >
-                        View Incident Map
-                      </button>
-                    )}
-                  </div>
-                  {task.incident ? (
-                    <div className="incident-details">
-                      <p><strong>Location:</strong> {task.incident.location}</p>
-                      <p><strong>Type:</strong> {task.incident.type}</p>
-                      <p><strong>Severity:</strong> {task.incident.severity}</p>
-                    </div>
-                  ) : (
-                    <p>No incident details available</p>
-                  )}
-                </div>
-
-                {renderTaskDetails(task)}
-                {renderActionButtons(task)}
-              </div>
+          <div className="task-content">
+            <div className="task-description">
+              <p>{latestTask.description}</p>
             </div>
-          ))}
+
+            <div className="task-incident">
+              <div className="incident-header">
+                <h4>Incident Details</h4>
+                {latestTask.incident && latestTask.incident.latitude && latestTask.incident.longitude && (
+                  <button 
+                    className="map-button"
+                    onClick={() => openMap(latestTask.incident.latitude, latestTask.incident.longitude, 'Incident')}
+                  >
+                    View Incident Map
+                  </button>
+                )}
+              </div>
+              {latestTask.incident ? (
+                <div className="incident-details">
+                  <p><strong>Location:</strong> {latestTask.incident.location}</p>
+                  <p><strong>Type:</strong> {latestTask.incident.type}</p>
+                  <p><strong>Severity:</strong> {latestTask.incident.severity}</p>
+                </div>
+              ) : (
+                <p>No incident details available</p>
+              )}
+            </div>
+
+            {renderTaskDetails(latestTask)}
+            {renderTaskStatus(latestTask)}
+          </div>
         </div>
       )}
     </div>

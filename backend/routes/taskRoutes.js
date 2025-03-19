@@ -590,5 +590,247 @@ router.get("/:taskId", async (req, res) => {
   }
 });
 
+// Add these routes to your Express server
+// Add these routes to your Express server
+
+// Get all completed tasks (with volunteers having taskStatus 4)
+// router.get('/completed', async (req, res) => {
+//   try {
+//     // Fetch all tasks and populate volunteer and incident details
+//     const tasks = await Task.find()
+//       .populate('volunteer') // Fetch volunteer details
+//       .populate('incident');  // Fetch incident details
+
+//     res.json(tasks);
+//   } catch (err) {
+//     console.error('Error fetching completed tasks:', err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
+// Get all completed tasks
+router.get('/completed', async (req, res) => {
+  try {
+    // Find all volunteers with taskStatus 4 (completed)
+    const completedVolunteers = await Volunteer.find({ taskStatus: 4 });
+    const volunteerIds = completedVolunteers.map(volunteer => volunteer._id);
+    
+    // Find all tasks assigned to these volunteers
+    const tasks = await Task.find({ 
+      volunteer: { $in: volunteerIds }
+    }).sort({ createdAt: -1 }); // Sort by newest first
+    
+    // Create an array to hold the enhanced task data
+    const enhancedTasks = [];
+    
+    // For each task, fetch the volunteer and any type-specific details
+    for (const task of tasks) {
+      // Get volunteer information
+      const volunteer = await Volunteer.findById(task.volunteer).populate('userId', 'name email phone');
+      
+      // Get incident information
+      const incident = await Incident.findById(task.incident);
+      
+      // Initialize additional details object
+      let additionalDetails = {};
+      
+      // Based on task type, fetch additional details
+      if (task.taskType === 'Transportation and Distribution') {
+        const transportDetails = await TransportationTask.findOne({ taskId: task._id });
+        if (transportDetails) {
+          const shelter = await Shelter.findById(transportDetails.shelter);
+          const resourceType = await ResourceType.findById(transportDetails.resourceType);
+          
+          additionalDetails = {
+            shelter: shelter ? shelter.location : 'Unknown',
+            resourceType: resourceType ? resourceType.name : 'Unknown',
+            deliveryDateTime: transportDetails.deliveryDateTime
+          };
+        }
+      } else if (task.taskType === 'Preparing and Serving Food') {
+        const foodDetails = await FoodTask.findOne({ taskId: task._id });
+        if (foodDetails) {
+          const shelter = await Shelter.findById(foodDetails.shelter);
+          
+          additionalDetails = {
+            shelter: shelter ? shelter.location : 'Unknown'
+          };
+        }
+      } else if (task.taskType === 'Rescue Operation Management' || task.taskType === 'Rescue Operator') {
+        // Nothing additional to fetch for rescue tasks
+        const rescueDetails = await RescueTask.findOne({ taskId: task._id });
+        additionalDetails = {};
+      }
+      
+      // Add enhanced task to array
+      enhancedTasks.push({
+        _id: task._id,
+        taskType: task.taskType,
+        description: task.description,
+        createdAt: task.createdAt,
+        volunteer: volunteer ? {
+          _id: volunteer._id,
+          name: volunteer.userId ? volunteer.userId.name : 'Unknown',
+          email: volunteer.userId ? volunteer.userId.email : 'Unknown',
+          phone: volunteer.userId ? volunteer.userId.phone : 'Unknown',
+          taskStatus: volunteer.taskStatus
+        } : null,
+        incident: incident ? {
+          location: incident.location,
+          type: incident.type,
+          severity: incident.severity
+        } : null,
+        ...additionalDetails
+      });
+    }
+    
+    res.status(200).json(enhancedTasks);
+  } catch (error) {
+    console.error('Error fetching completed tasks:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get completed tasks by type
+router.get('/completed/:taskType', async (req, res) => {
+  try {
+    const { taskType } = req.params;
+    
+    // Find all volunteers with taskStatus 4 (completed)
+    const completedVolunteers = await Volunteer.find({ taskStatus: 4 });
+    const volunteerIds = completedVolunteers.map(volunteer => volunteer._id);
+    
+    // Find tasks of the specified type assigned to these volunteers
+    const tasks = await Task.find({ 
+      volunteer: { $in: volunteerIds },
+      taskType 
+    }).sort({ createdAt: -1 }); // Sort by newest first
+    
+    // Create an array to hold the enhanced task data
+    const enhancedTasks = [];
+    
+    // For each task, fetch the volunteer and any type-specific details
+    for (const task of tasks) {
+      // Get volunteer information
+      const volunteer = await Volunteer.findById(task.volunteer).populate('userId', 'name email phone');
+      
+      // Get incident information
+      const incident = await Incident.findById(task.incident);
+      
+      // Initialize additional details object
+      let additionalDetails = {};
+      
+      // Based on task type, fetch additional details
+      if (taskType === 'Transportation and Distribution') {
+        const transportDetails = await TransportationTask.findOne({ taskId: task._id });
+        if (transportDetails) {
+          const shelter = await Shelter.findById(transportDetails.shelter);
+          const resourceType = await ResourceType.findById(transportDetails.resourceType);
+          
+          additionalDetails = {
+            shelter: shelter ? shelter.location : 'Unknown',
+            resourceType: resourceType ? resourceType.name : 'Unknown',
+            deliveryDateTime: transportDetails.deliveryDateTime
+          };
+        }
+      } else if (taskType === 'Preparing and Serving Food') {
+        const foodDetails = await FoodTask.findOne({ taskId: task._id });
+        if (foodDetails) {
+          const shelter = await Shelter.findById(foodDetails.shelter);
+          
+          additionalDetails = {
+            shelter: shelter ? shelter.location : 'Unknown'
+          };
+        }
+      } else if (taskType === 'Rescue Operation Management' || taskType === 'Rescue Operator') {
+        // Nothing additional to fetch for rescue tasks
+        const rescueDetails = await RescueTask.findOne({ taskId: task._id });
+        additionalDetails = {};
+      }
+      
+      // Add enhanced task to array
+      enhancedTasks.push({
+        _id: task._id,
+        taskType: task.taskType,
+        description: task.description,
+        createdAt: task.createdAt,
+        volunteer: volunteer ? {
+          _id: volunteer._id,
+          name: volunteer.userId ? volunteer.userId.name : 'Unknown',
+          email: volunteer.userId ? volunteer.userId.email : 'Unknown',
+          phone: volunteer.userId ? volunteer.userId.phone : 'Unknown',
+          taskStatus: volunteer.taskStatus
+        } : null,
+        incident: incident ? {
+          location: incident.location,
+          type: incident.type,
+          severity: incident.severity
+        } : null,
+        ...additionalDetails
+      });
+    }
+    
+    res.status(200).json(enhancedTasks);
+  } catch (error) {
+    console.error('Error fetching completed tasks by type:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update volunteer task status (for verification)
+router.patch('/verify-completion/:taskId', async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    
+    // Find the task
+    const task = await Task.findById(taskId);
+    if (!task) {
+      return res.status(404).json({ message: 'Task not found' });
+    }
+    
+    // Find the volunteer associated with the task
+    const volunteer = await Volunteer.findById(task.volunteer);
+    if (!volunteer) {
+      return res.status(404).json({ message: 'Volunteer not found' });
+    }
+    
+    // Update volunteer's task status to 0 (Available)
+    volunteer.taskStatus = 0;
+    await volunteer.save();
+    
+    res.status(200).json({ 
+      message: 'Task completion verified successfully',
+      volunteerId: volunteer._id,
+      taskId: task._id
+    });
+  } catch (error) {
+    console.error('Error verifying task completion:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// // Update volunteer's taskStatus
+// router.patch('/volunteers/:volunteerId/update-status', async (req, res) => {
+//   try {
+//     const { volunteerId } = req.params;
+//     const { taskStatus } = req.body;
+    
+//     const volunteer = await Volunteer.findById(volunteerId);
+    
+//     if (!volunteer) {
+//       return res.status(404).json({ message: 'Volunteer not found' });
+//     }
+    
+//     // Update the volunteer's taskStatus
+//     volunteer.taskStatus = taskStatus;
+//     await volunteer.save();
+    
+//     res.json({ message: 'Volunteer status updated successfully', volunteer });
+//   } catch (err) {
+//     console.error('Error updating volunteer status:', err);
+//     res.status(500).json({ message: 'Server error' });
+//   }
+// });
+
 
 module.exports = router;

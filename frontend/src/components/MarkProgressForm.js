@@ -1,186 +1,145 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import '../styles/MarkProgressForm.css';
 
-const MarkProgressForm = () => {
-  const { taskId } = useParams();
-  const { user } = useUser();
+const TaskProgressForm = () => {
+  const { user } = useUser();  // We'll handle the update differently since updateUser is not working
   const navigate = useNavigate();
+  const location = useLocation();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [task, setTask] = useState(null);
-  const [volunteer, setVolunteer] = useState(null);
   const [formData, setFormData] = useState({
     progressDescription: '',
     progressPercentage: 0,
-    updateDescription: '',
+    completed: false,
     deliveryStatus: 'Not Started',
     mealsServed: 0,
     peopleFound: 0,
     peopleHospitalized: 0,
     peopleMissing: 0,
-    peopleLost: 0
+    peopleLost: 0,
+    updates: []
   });
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
+  // Extract taskId from URL or state
   useEffect(() => {
-    const fetchTaskAndProgress = async () => {
-      if (!user || !user.id || !taskId) {
-        setError("Missing information. Please try again.");
-        setLoading(false);
-        return;
-      }
+    const searchParams = new URLSearchParams(location.search);
+    const taskId = searchParams.get('taskId') || (location.state && location.state.taskId);
+    
+    if (!taskId) {
+      setError('No task selected. Please go back and select a task.');
+      return;
+    }
 
+    const fetchTaskDetails = async () => {
       try {
-        // Get volunteer info
-        const volunteerRes = await axios.get(`http://localhost:5000/api/tasks/user/${user.id}`);
-        const volunteerData = volunteerRes.data;
-
-        if (!volunteerData || !volunteerData._id) {
-          setError("Volunteer profile not found.");
-          setLoading(false);
-          return;
-        }
-
-        setVolunteer(volunteerData);
-
-        // Get task details
-        const taskRes = await axios.get(`http://localhost:5000/api/tasks/${taskId}`);
-        setTask(taskRes.data);
-
-        // Get existing progress
-        const progressRes = await axios.get(`http://localhost:5000/api/progress/${taskId}/${volunteerData._id}`);
+        setLoading(true);
+        const response = await axios.get(`http://localhost:5000/api/tasks/${taskId}`);
+        setTask(response.data);
         
-        // If progress exists, update form data
-        if (progressRes.data && Object.keys(progressRes.data).length > 0) {
-          const { 
-            progressDescription, 
-            progressPercentage, 
-            deliveryStatus,
-            mealsServed,
-            peopleFound,
-            peopleHospitalized,
-            peopleMissing,
-            peopleLost
-          } = progressRes.data;
-          
-          setFormData(prevState => ({
-            ...prevState,
-            progressDescription: progressDescription || '',
-            progressPercentage: progressPercentage || 0,
-            deliveryStatus: deliveryStatus || 'Not Started',
-            mealsServed: mealsServed || 0,
-            peopleFound: peopleFound || 0,
-            peopleHospitalized: peopleHospitalized || 0,
-            peopleMissing: peopleMissing || 0,
-            peopleLost: peopleLost || 0
-          }));
+        try {
+          // Check if there's existing progress
+          const progressResponse = await axios.get(`http://localhost:5000/api/taskprogress/task/${taskId}`);
+          if (progressResponse.data) {
+            setFormData(progressResponse.data);
+          }
+        } catch (progressErr) {
+          console.log("No existing progress found, using defaults");
+          // Just continue with default values if no progress exists
         }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setError('Failed to load task information. Please try again.');
-      } finally {
+        
         setLoading(false);
+      } catch (err) {
+        setLoading(false);
+        setError('Failed to load task details. Please try again.');
+        console.error(err);
       }
     };
 
-    fetchTaskAndProgress();
-  }, [taskId, user]);
+    fetchTaskDetails();
+  }, [location]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    let parsedValue = value;
-    
-    // Convert number inputs to actual numbers
-    if (['progressPercentage', 'mealsServed', 'peopleFound', 'peopleHospitalized', 'peopleMissing', 'peopleLost'].includes(name)) {
-      parsedValue = parseInt(value, 10) || 0;
-    }
-    
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: parsedValue
-    }));
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError('');
-    setSuccess('');
+    
+    if (!task || !user) {
+      setError('Missing task or user information');
+      return;
+    }
 
     try {
-      if (!volunteer || !volunteer._id) {
-        throw new Error('Volunteer information missing');
-      }
-
-      // Submit progress data
-      await axios.post(`http://localhost:5000/api/progress/${taskId}/${volunteer._id}`, formData);
-      
-      setSuccess('Progress updated successfully');
-      
-      // Reset update description field
-      setFormData(prevState => ({
-        ...prevState,
-        updateDescription: ''
-      }));
-      
-      // Redirect after short delay
-      setTimeout(() => {
-        navigate('/accepted-tasks');
-      }, 2000);
-    } catch (error) {
-      console.error('Error updating progress:', error);
-      setError('Failed to update progress. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleMarkComplete = async () => {
-    if (window.confirm('Are you sure you want to mark this task as complete? This action cannot be undone.')) {
       setLoading(true);
-      try {
-        await axios.put(`http://localhost:5000/api/progress/complete/${taskId}/${volunteer._id}`);
-        setSuccess('Task marked as completed!');
-        setTimeout(() => {
-          navigate('/accepted-tasks');
-        }, 2000);
-      } catch (error) {
-        console.error('Error completing task:', error);
-        setError('Failed to complete task. Please try again.');
-      } finally {
-        setLoading(false);
+      const submitData = {
+        ...formData,
+        taskId: task._id,
+        volunteerId: user.id,
+        lastUpdated: new Date()
+      };
+
+      // Add current progress description as an update
+      if (formData.progressDescription.trim()) {
+        submitData.updates = [
+          ...formData.updates,
+          {
+            description: formData.progressDescription,
+            timestamp: new Date()
+          }
+        ];
       }
+
+      const response = await axios.post('http://localhost:5000/api/taskprogress', submitData);
+      setSuccess('Progress updated successfully!');
+      
+      // Note: We're not updating the user context here anymore since updateUser is not a function
+      // The backend will handle updating the volunteer's taskStatus to 4
+      
+      setLoading(false);
+      
+      // Redirect after a short delay
+      setTimeout(() => {
+        if (formData.completed) {
+          // For a completed task, refresh the page or update user info via a new API call
+          // Let's force a refresh to get the updated user data from the server
+          window.location.href = '/volunteer-home';
+        } else {
+          navigate('/volunteer/accepted-tasks');
+        }
+      }, 2000);
+    } catch (err) {
+      setLoading(false);
+      setError('Failed to update progress. Please try again.');
+      console.error(err);
     }
   };
 
-  if (loading) {
-    return <div className="loading-spinner">Loading task information...</div>;
-  }
+  // Render different form fields based on task type
+  const renderTaskSpecificFields = () => {
+    if (!task) return null;
 
-  if (error) {
-    return <div className="error-message">{error}</div>;
-  }
-
-  if (!task) {
-    return <div className="error-message">Task not found.</div>;
-  }
-
-  const renderTaskTypeSpecificFields = () => {
     switch (task.taskType) {
       case 'Transportation and Distribution':
         return (
-          <div className="field-group">
+          <div className="form-section">
             <h3>Transportation Details</h3>
-            <div className="form-field">
-              <label htmlFor="deliveryStatus">Delivery Status</label>
+            <div className="form-group">
+              <label>Delivery Status:</label>
               <select
-                id="deliveryStatus"
                 name="deliveryStatus"
                 value={formData.deliveryStatus}
                 onChange={handleInputChange}
+                className="form-control"
               >
                 <option value="Not Started">Not Started</option>
                 <option value="In Transit">In Transit</option>
@@ -189,166 +148,187 @@ const MarkProgressForm = () => {
             </div>
           </div>
         );
-        
+      
       case 'Preparing and Serving Food':
         return (
-          <div className="field-group">
+          <div className="form-section">
             <h3>Food Service Details</h3>
-            <div className="form-field">
-              <label htmlFor="mealsServed">Number of Meals Served</label>
+            <div className="form-group">
+              <label>Meals Served:</label>
               <input
                 type="number"
-                id="mealsServed"
                 name="mealsServed"
                 value={formData.mealsServed}
                 onChange={handleInputChange}
+                className="form-control"
                 min="0"
               />
             </div>
           </div>
         );
-        
+      
       case 'Rescue Operation Management':
         return (
-          <div className="field-group">
-            <h3>Rescue Operation Statistics</h3>
-            <div className="form-field">
-              <label htmlFor="peopleFound">People Found (Total)</label>
+          <div className="form-section">
+            <h3>Rescue Operation Details</h3>
+            <div className="form-group">
+              <label>People Found:</label>
               <input
                 type="number"
-                id="peopleFound"
                 name="peopleFound"
                 value={formData.peopleFound}
                 onChange={handleInputChange}
+                className="form-control"
                 min="0"
               />
             </div>
-            <div className="form-field">
-              <label htmlFor="peopleHospitalized">People Hospitalized</label>
+            <div className="form-group">
+              <label>People Hospitalized:</label>
               <input
                 type="number"
-                id="peopleHospitalized"
                 name="peopleHospitalized"
                 value={formData.peopleHospitalized}
                 onChange={handleInputChange}
+                className="form-control"
                 min="0"
               />
             </div>
-            <div className="form-field">
-              <label htmlFor="peopleMissing">People Still Missing</label>
+            <div className="form-group">
+              <label>People Missing:</label>
               <input
                 type="number"
-                id="peopleMissing"
                 name="peopleMissing"
                 value={formData.peopleMissing}
                 onChange={handleInputChange}
+                className="form-control"
                 min="0"
               />
             </div>
-            <div className="form-field">
-              <label htmlFor="peopleLost">People Lost (Casualties)</label>
+            <div className="form-group">
+              <label>People Lost:</label>
               <input
                 type="number"
-                id="peopleLost"
                 name="peopleLost"
                 value={formData.peopleLost}
                 onChange={handleInputChange}
+                className="form-control"
                 min="0"
               />
             </div>
           </div>
         );
-        
+      
       default:
         return null;
     }
   };
 
-  return (
-    <div className="mark-progress-container">
-      <h2>Update Progress for Task</h2>
-      <div className="task-summary">
-        <h3>{task.taskType}</h3>
-        <p>{task.description}</p>
-      </div>
+  // Show loading state
+  if (loading && !task) {
+    return <div className="loading">Loading task details...</div>;
+  }
 
+  // Show error
+  if (error && !task) {
+    return <div className="error-container">{error}</div>;
+  }
+
+  return (
+    <div className="task-progress-form container">
+      <h2>Update Task Progress</h2>
+      
+      {task && (
+        <div className="task-info">
+          <h3>{task.taskType}</h3>
+          <p>{task.description}</p>
+        </div>
+      )}
+
+      {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
 
       <form onSubmit={handleSubmit}>
-        <div className="field-group">
-          <h3>Progress Update</h3>
-          <div className="form-field">
-            <label htmlFor="progressPercentage">Progress Percentage</label>
+        <div className="form-section">
+          <h3>General Progress</h3>
+          <div className="form-group">
+            <label>Progress Description:</label>
+            <textarea
+              name="progressDescription"
+              value={formData.progressDescription}
+              onChange={handleInputChange}
+              className="form-control"
+              rows="4"
+              placeholder="Describe your current progress..."
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Progress Percentage: {formData.progressPercentage}%</label>
             <input
               type="range"
-              id="progressPercentage"
               name="progressPercentage"
               value={formData.progressPercentage}
               onChange={handleInputChange}
+              className="form-control-range"
               min="0"
               max="100"
               step="5"
             />
-            <span className="range-value">{formData.progressPercentage}%</span>
           </div>
 
-          <div className="form-field">
-            <label htmlFor="progressDescription">Overall Progress Description</label>
-            <textarea
-              id="progressDescription"
-              name="progressDescription"
-              value={formData.progressDescription}
-              onChange={handleInputChange}
-              rows="3"
-              placeholder="Describe your overall progress on this task..."
-            ></textarea>
-          </div>
-
-          <div className="form-field">
-            <label htmlFor="updateDescription">New Update</label>
-            <textarea
-              id="updateDescription"
-              name="updateDescription"
-              value={formData.updateDescription}
-              onChange={handleInputChange}
-              rows="3"
-              placeholder="Add a new update or progress note..."
-            ></textarea>
+          <div className="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="completed"
+                checked={formData.completed}
+                onChange={handleInputChange}
+              />
+              Mark as Completed
+            </label>
           </div>
         </div>
 
-        {renderTaskTypeSpecificFields()}
+        {/* Render task-specific fields */}
+        {renderTaskSpecificFields()}
 
         <div className="form-actions">
           <button 
+            type="button" 
+            className="btn btn-secondary"
+            onClick={() => navigate('/volunteer/accepted-tasks')}
+          >
+            Cancel
+          </button>
+          <button 
             type="submit" 
-            className="btn-save"
+            className="btn btn-primary"
             disabled={loading}
           >
             {loading ? 'Saving...' : 'Save Progress'}
           </button>
-          
-          <button 
-            type="button" 
-            className="btn-complete"
-            onClick={handleMarkComplete}
-            disabled={loading || formData.progressPercentage < 100}
-          >
-            Mark as Complete
-          </button>
-          
-          <button 
-            type="button" 
-            className="btn-cancel"
-            onClick={() => navigate('/accepted-tasks')}
-            disabled={loading}
-          >
-            Cancel
-          </button>
         </div>
       </form>
+
+      {/* Display previous updates if any */}
+      {formData.updates && formData.updates.length > 0 && (
+        <div className="previous-updates">
+          <h3>Previous Updates</h3>
+          <ul className="updates-list">
+            {formData.updates.map((update, index) => (
+              <li key={index} className="update-item">
+                <div className="update-time">
+                  {new Date(update.timestamp).toLocaleString()}
+                </div>
+                <div className="update-description">{update.description}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
 
-export default MarkProgressForm;
+export default TaskProgressForm;

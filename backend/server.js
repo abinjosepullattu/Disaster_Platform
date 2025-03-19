@@ -12,7 +12,7 @@ const shelterRoutes= require("./routes/shelterRoutes");
 const resourceRoutes = require("./routes/resourceRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const inmateRoutes = require("./routes/inmateRoutes");
-const taskprogressRoutes= require("./models/TaskProgress");
+const taskprogressRoutes= require("./routes/taskprogressRoutes");
 dotenv.config();
 const app = express();
 
@@ -29,7 +29,7 @@ app.use("/api/shelters", shelterRoutes);
 app.use("/api/inmates", inmateRoutes);
 app.use("/api/tasks",taskRoutes);
 app.use("/api/resourceTypes",resourceRoutes);
-app.use("/api/progress",taskprogressRoutes);
+app.use("/api/taskprogress",taskprogressRoutes);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
