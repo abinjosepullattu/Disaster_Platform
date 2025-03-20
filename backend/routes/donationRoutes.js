@@ -165,25 +165,25 @@ router.delete("/campaigns/:id", async (req, res) => {
     }
   });
 
-  // Get all donations for a user
-router.get("/user/:userId", async (req, res) => {
+
+// Fetch user details
+router.get("/users/:userId", async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const donations = await Donation.find({ donorId: userId })
-      .sort({ createdAt: -1 }); // Most recent first
-    
-    res.status(200).json(donations);
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ name: user.name, email: user.email });
   } catch (error) {
-    console.error("Error fetching user donations:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
+    console.error("Error fetching user:", error);
+    res.status(500).json({ error: "Failed to fetch user details" });
   }
 });
 
 // Get campaign details by id
-router.get("/campaigns/:campaignId", async (req, res) => {
+router.get("/h/campaigns/:campaignId", async (req, res) => {
   try {
     const campaignId = req.params.campaignId;
-    const campaign = await Campaign.findById(campaignId);
+    const campaign = await Donation.find({campaignId});
     
     if (!campaign) {
       return res.status(404).json({ message: "Campaign not found" });
@@ -193,6 +193,26 @@ router.get("/campaigns/:campaignId", async (req, res) => {
   } catch (error) {
     console.error("Error fetching campaign details:", error);
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+// Get user by ID (used to get donor details)
+router.get('/users/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // Return only necessary user information
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      phone: user.phone || null
+    });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
