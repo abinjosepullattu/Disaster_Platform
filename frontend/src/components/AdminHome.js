@@ -27,6 +27,9 @@ const AdminHome = () => {
       <button onClick={() => navigate("/admin/tasks")}>View Assigned Tasks</button>
       <button onClick={() => navigate("/admin/task-type")}>Manage Task Type</button>
       <button onClick={() => navigate("/admin/completed-tasks")}>Verify Completed Tasks</button>
+      <button onClick={() => navigate("/admin/campaign-page")}>Add Campaign</button>
+
+      
 
    
 

@@ -33,7 +33,10 @@ import VolunteerTaskView from "./components/VolunteerTaskView";
 import AcceptedTasksView from "./components/AcceptedTaskView";
 import MarkProgressForm from "./components/MarkProgressForm";
 import VolunteerCompletedTasks from './components/VolunteerCompletedTasks';
+import CampaignPage from './components/AddCampaign';
 import AdminCompletedTasksView from './components/AdminCompletedTaskView';
+import ViewCampaigns from "./components/ViewCampaignPublic";
+import MakeDonation from "./components/MakeDonation";
 
 function App() {
   return (
@@ -74,6 +77,11 @@ function App() {
         <Route path="/volunteer/progress-form" element={<MarkProgressForm />} />
         <Route path="/volunteer/completed-tasks" element={<VolunteerCompletedTasks />} />
         <Route path="/admin/completed-tasks" element={<AdminCompletedTasksView />} />
+        <Route path="/admin/campaign-page" element={<CampaignPage />} />
+        <Route path="/public/view-campaign" element={<ViewCampaigns />} />
+        <Route path="/public/make-donation/:campaignId" element={<MakeDonation />} />
+
+
 
       </Routes>
     </Router>

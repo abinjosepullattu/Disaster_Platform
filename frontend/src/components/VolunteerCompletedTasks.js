@@ -69,10 +69,12 @@ const VolunteerCompletedTasks = ({ volunteerId }) => {
         <h4 className="expanded-heading">Detailed Information</h4>
         
         {/* Task Type Specific Additional Details */}
-        {task.taskId?.taskType === 'Rescue Operation' && (
+        {task.taskId?.taskType === 'Rescue Operation Management' && (
           <div>
+            
             <p><span className="detail-label">People Missing:</span> {task.peopleMissing}</p>
             <p><span className="detail-label">People Lost:</span> {task.peopleLost}</p>
+
           </div>
         )}
         

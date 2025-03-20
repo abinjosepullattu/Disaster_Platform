@@ -5,7 +5,7 @@ import { useUser } from '../context/UserContext';
 import '../styles/MarkProgressForm.css';
 
 const TaskProgressForm = () => {
-  const { user } = useUser();  // We'll handle the update differently since updateUser is not working
+  const { user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -17,11 +17,11 @@ const TaskProgressForm = () => {
     progressPercentage: 0,
     completed: false,
     deliveryStatus: 'Not Started',
-    mealsServed: 0,
-    peopleFound: 0,
-    peopleHospitalized: 0,
-    peopleMissing: 0,
-    peopleLost: 0,
+    mealsServed: '',  // Changed from 0 to empty string
+    peopleFound: '',  // Changed from 0 to empty string
+    peopleHospitalized: '',  // Changed from 0 to empty string
+    peopleMissing: '',  // Changed from 0 to empty string
+    peopleLost: '',  // Changed from 0 to empty string
     updates: []
   });
 
@@ -45,7 +45,14 @@ const TaskProgressForm = () => {
           // Check if there's existing progress
           const progressResponse = await axios.get(`http://localhost:5000/api/taskprogress/task/${taskId}`);
           if (progressResponse.data) {
-            setFormData(progressResponse.data);
+            // If there are any zero values, convert them to empty strings
+            const formattedData = { ...progressResponse.data };
+            ['mealsServed', 'peopleFound', 'peopleHospitalized', 'peopleMissing', 'peopleLost'].forEach(field => {
+              if (formattedData[field] === 0) {
+                formattedData[field] = '';
+              }
+            });
+            setFormData(formattedData);
           }
         } catch (progressErr) {
           console.log("No existing progress found, using defaults");
@@ -65,10 +72,19 @@ const TaskProgressForm = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value
-    });
+    
+    if (type === 'number') {
+      // For number fields, store as empty string if empty or convert to number
+      setFormData({
+        ...formData,
+        [name]: value === '' ? '' : Number(value)
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value
+      });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -81,8 +97,17 @@ const TaskProgressForm = () => {
 
     try {
       setLoading(true);
+      
+      // Convert empty strings to 0 for submission to API
+      const processedData = { ...formData };
+      ['mealsServed', 'peopleFound', 'peopleHospitalized', 'peopleMissing', 'peopleLost'].forEach(field => {
+        if (processedData[field] === '') {
+          processedData[field] = 0;
+        }
+      });
+      
       const submitData = {
-        ...formData,
+        ...processedData,
         taskId: task._id,
         volunteerId: user.id,
         lastUpdated: new Date()
@@ -102,19 +127,14 @@ const TaskProgressForm = () => {
       const response = await axios.post('http://localhost:5000/api/taskprogress', submitData);
       setSuccess('Progress updated successfully!');
       
-      // Note: We're not updating the user context here anymore since updateUser is not a function
-      // The backend will handle updating the volunteer's taskStatus to 4
-      
       setLoading(false);
       
       // Redirect after a short delay
       setTimeout(() => {
         if (formData.completed) {
-          // For a completed task, refresh the page or update user info via a new API call
-          // Let's force a refresh to get the updated user data from the server
           window.location.href = '/volunteer-home';
         } else {
-          navigate('/volunteer/accepted-tasks');
+          navigate('/volunteer-home');
         }
       }, 2000);
     } catch (err) {
@@ -162,6 +182,7 @@ const TaskProgressForm = () => {
                 onChange={handleInputChange}
                 className="form-control"
                 min="0"
+                placeholder="Enter number of meals"
               />
             </div>
           </div>
@@ -180,6 +201,7 @@ const TaskProgressForm = () => {
                 onChange={handleInputChange}
                 className="form-control"
                 min="0"
+                placeholder="Enter number"
               />
             </div>
             <div className="form-group">
@@ -191,6 +213,7 @@ const TaskProgressForm = () => {
                 onChange={handleInputChange}
                 className="form-control"
                 min="0"
+                placeholder="Enter number"
               />
             </div>
             <div className="form-group">
@@ -202,6 +225,7 @@ const TaskProgressForm = () => {
                 onChange={handleInputChange}
                 className="form-control"
                 min="0"
+                placeholder="Enter number"
               />
             </div>
             <div className="form-group">
@@ -213,6 +237,7 @@ const TaskProgressForm = () => {
                 onChange={handleInputChange}
                 className="form-control"
                 min="0"
+                placeholder="Enter number"
               />
             </div>
           </div>

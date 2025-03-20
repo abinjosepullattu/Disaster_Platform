@@ -17,6 +17,8 @@ const PublicHome = () => {
       <p>Stay updated and contribute to relief efforts.</p>
       <button onClick={() => navigate("/report-incident")}>Report an Incident</button>
       <button onClick={() => navigate("/my-incidents")}>📋 View My Incident Reports</button>
+      <button onClick={() => navigate("/public/view-campaign")}>📋 View Donation Campaigns</button>
+
       <h3>Account Settings</h3>
       <button onClick={() => navigate("/profile")}>My Profile</button>
       <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>
