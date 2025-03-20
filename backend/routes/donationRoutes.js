@@ -165,4 +165,35 @@ router.delete("/campaigns/:id", async (req, res) => {
     }
   });
 
+  // Get all donations for a user
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const donations = await Donation.find({ donorId: userId })
+      .sort({ createdAt: -1 }); // Most recent first
+    
+    res.status(200).json(donations);
+  } catch (error) {
+    console.error("Error fetching user donations:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
+// Get campaign details by id
+router.get("/campaigns/:campaignId", async (req, res) => {
+  try {
+    const campaignId = req.params.campaignId;
+    const campaign = await Campaign.findById(campaignId);
+    
+    if (!campaign) {
+      return res.status(404).json({ message: "Campaign not found" });
+    }
+    
+    res.status(200).json(campaign);
+  } catch (error) {
+    console.error("Error fetching campaign details:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+
 module.exports = router;

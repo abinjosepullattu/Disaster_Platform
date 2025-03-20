@@ -15,7 +15,7 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", { email, password });
-      setUser({id : response.data._id , role: response.data.role , name:response.data.name, phone:response.data.phone })
+      setUser({id : response.data._id , role: response.data.role , name:response.data.name, phone:response.data.phone, email:response.data.email })
       console.log(user);
       if (response.data.role === "admin") navigate("/admin-home");
       else if (response.data.role === "volunteer"){
