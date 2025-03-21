@@ -1,0 +1,111 @@
+.admin-resource-allocation-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .admin-resource-allocation-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .error {
+    color: #d9534f;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 4px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  select, input, textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .resource-item {
+    border: 1px solid #eee;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    position: relative;
+  }
+  
+  .resource-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    align-items: center;
+  }
+  
+  .resource-type-select, .unit-select {
+    flex: 1;
+  }
+  
+  .quantity-input, .total-amount-input {
+    flex: 1;
+  }
+  
+  .description-row {
+    margin-bottom: 0;
+  }
+  
+  .description-textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .resource-item {
+    /* Your existing styles */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .remove-button-container {
+    align-self: flex-end;
+    margin-bottom: 10px;
+  }
+  
+  .remove-button {
+    background-color: #d9534f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .add-button, .submit-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .add-button {
+    background-color: #5bc0de;
+    color: white;
+    align-self: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .submit-button {
+    background-color: #5cb85c;
+    color: white;
+    margin-top: 10px;
+  }
+  
+  .submit-button:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }

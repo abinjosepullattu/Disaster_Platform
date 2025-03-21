@@ -29,12 +29,8 @@ const AdminHome = () => {
       <button onClick={() => navigate("/admin/completed-tasks")}>Verify Completed Tasks</button>
       <button onClick={() => navigate("/admin/campaign-page")}>Add Campaign</button>
       <button onClick={() => navigate("/admin/donation-view")}>View Donations</button>
-
-      
-
-   
-
-      
+      <button onClick={() => navigate("/admin/resource-allocation")}>Allocate Resources Shelter</button>
+      <button onClick={() => navigate("/admin/view-allocated")}>View Allocated Resources</button>
       <h3>Account Settings</h3>
       <button onClick={() => navigate("/profile")}>My Profile</button>
       <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>

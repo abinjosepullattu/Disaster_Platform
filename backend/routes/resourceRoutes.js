@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const ResourceType = require('../models/ResourceType');
-
+const ResourceAllocation=require('../models/ResourceAllocation')
+const Shelter=require('../models/Shelter')
 // @route   POST /api/resourceTypes/add
 // @desc    Add a new resource type
 // @access  Admin only
@@ -53,4 +54,63 @@ router.delete('/delete/:id', async (req, res) => {
     }
   });
   
+
+
+  // Get all shelters for dropdown
+router.get("/shelters", async (req, res) => {
+  try {
+    const shelters = await Shelter.find();
+    res.json(shelters);
+  } catch (error) {
+    console.error("Error fetching shelters:", error);
+    res.status(500).json({ error: "Failed to fetch shelters" });
+  }
+});
+
+// Allocate resources to a shelter
+router.post("/allocate", async (req, res) => {
+  try {
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+    const { shelter, resources } = req.body;
+    
+    // Create allocation without calculating amountPerUnit
+    const allocation = new ResourceAllocation({
+      shelter: shelter,
+      resources: resources
+    });
+    
+    await allocation.save();
+    res.status(201).json({ message: "Resources allocated successfully!" });
+  } catch (error) {
+    console.error("Error allocating resources:", error);
+    res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
+
+// Add this to your existing routes file, e.g., routes/resourceTypes.js
+
+// Get all allocations for a specific shelter
+router.get("/allocations/:shelterId", async (req, res) => {
+  try {
+    const { shelterId } = req.params;
+    
+    // Find all allocations for the given shelter and populate resourceType details
+    const allocations = await ResourceAllocation.find({ shelter: shelterId })
+      .populate({
+        path: 'resources.resourceType',
+        select: 'name category'
+      })
+      .populate({
+        path: 'shelter',
+        select: 'location'
+      })
+      .sort({ createdAt: -1 }); // Sort by most recent first
+    
+    res.json(allocations);
+  } catch (error) {
+    console.error("Error fetching allocations:", error);
+    res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
+
 module.exports = router;
