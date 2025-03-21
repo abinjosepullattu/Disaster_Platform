@@ -3,6 +3,7 @@ const router = express.Router();
 const ResourceType = require('../models/ResourceType');
 const ResourceAllocation=require('../models/ResourceAllocation')
 const Shelter=require('../models/Shelter')
+const Volunteer=require('../models/Volunteer')
 // @route   POST /api/resourceTypes/add
 // @desc    Add a new resource type
 // @access  Admin only
@@ -113,4 +114,30 @@ router.get("/allocations/:shelterId", async (req, res) => {
   }
 });
 
+// Get shelter assigned to a volunteer
+// Get shelter assigned to a volunteer (based on userId)
+router.get("/shelter-assigned/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find volunteer using userId
+    const volunteer = await Volunteer.findOne({ userId: userId });
+
+    if (!volunteer) {
+      return res.status(404).json({ message: "Volunteer not found" });
+    }
+
+    // Fetch assigned shelter using volunteer ID
+    const shelter = await Shelter.findOne({ assignedVolunteer: volunteer._id });
+
+    if (!shelter) {
+      return res.status(404).json({ message: "No shelter assigned to this volunteer" });
+    }
+
+    res.json(shelter);
+  } catch (error) {
+    console.error("Error fetching assigned shelter:", error);
+    res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
 module.exports = router;

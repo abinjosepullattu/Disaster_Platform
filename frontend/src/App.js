@@ -41,6 +41,7 @@ import MyDonations from "./components/MyDonationsPublic";
 import AdminCampaignDonationsView from "./components/AdminDonationsView";
 import AdminResourceAllocation from "./components/AdminResourceAllocation";
 import ViewAllocatedResources from "./components/ViewAllocatedResources";
+import ViewAllocatedResourcesVolunteer from "./components/ViewAllocatedResourcesVolunteer";
 
 function App() {
   return (
@@ -88,6 +89,8 @@ function App() {
         <Route path="/admin/donation-view" element={<AdminCampaignDonationsView />} />
         <Route path="/admin/resource-allocation" element={<AdminResourceAllocation />} />
         <Route path="/admin/view-allocated" element={<ViewAllocatedResources />} />
+        <Route path="/volunteer/view-allocated" element={<ViewAllocatedResourcesVolunteer />} />
+
 
 
 
