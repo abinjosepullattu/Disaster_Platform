@@ -46,6 +46,8 @@ import AddContributedResource from "./components/AddContributedResource";
 import ViewUserContributions from "./components/PublicResourceContributions";
 import VerifyContributions from "./components/VerifyContributionVolunteer";
 import AdminContributions from "./components/ViewContributionsAdmin";
+import AddResourceUsage from "./components/AddResourceUsage";
+import ViewResourceUsageShelterOwner from "./components/ViewResourceUsage";
 function App() {
   return (
     <UserProvider>
@@ -97,6 +99,11 @@ function App() {
         <Route path="/public/view-contribute" element={<ViewUserContributions />} />
         <Route path="/volunteer/verify-contribute" element={<VerifyContributions />} />
         <Route path="/Admin/view-contribute" element={<AdminContributions />} />
+        <Route path="/volunteer/res-usage" element={<AddResourceUsage />} />
+        <Route path="/volunteer/res-usage-details" element={<ViewResourceUsageShelterOwner />} />
+
+        
+
 
 
 

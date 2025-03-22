@@ -22,7 +22,10 @@ const VolunteerHome = () => {
       <button onClick={() => navigate("/volunteer/completed-tasks")}>Completed Tasks</button>
       <button onClick={() => navigate("/volunteer/view-allocated")}>View Allocated Resources Shelter</button>
       <button onClick={() => navigate("/volunteer/verify-contribute")}>Verify Contributions</button>
+      <button onClick={() => navigate("/volunteer/res-usage")}>Add Resource Usage</button>
+      <button onClick={() => navigate("/volunteer/res-usage-details")}>View Resource Usage</button>
 
+      
       
       
       

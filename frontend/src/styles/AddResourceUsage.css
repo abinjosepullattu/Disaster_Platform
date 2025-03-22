@@ -1,0 +1,202 @@
+.resource-usage-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .resource-usage-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .resource-usage-container h3 {
+    color: #555;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+  }
+  
+  .form-section {
+    margin-bottom: 25px;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .form-group textarea {
+    resize: vertical;
+    min-height: 60px;
+  }
+  
+  .resource-item {
+    border-radius: 5px;
+    margin-bottom: 15px;
+    position: relative;
+  }
+  
+  .resource-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .resource-bottom-row {
+    display: flex;
+    margin-top: 10px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .description-field {
+    flex-grow: 1;
+    margin-right: 10px;
+  }
+  
+  /* Improved button styling */
+  button {
+    font-family: inherit;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  .add-button {
+    background-color: #007bff;  /* Changed to a stronger blue for better visibility */
+    color: white;              /* Changed to white text for better contrast */
+    border: none;
+    padding: 12px 15px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 15px;
+    font-size: 16px;           /* Increased font size */
+    text-align: center;        /* Ensure text is centered */
+    display: block;            /* Ensure it displays as block */
+    line-height: normal;       /* Reset line height */
+    box-sizing: border-box;    /* Ensure padding doesn't affect width */
+    height: auto;              /* Allow height to adjust to content */
+    overflow: visible;         /* Ensure text isn't cut off */
+  }
+  
+  .add-button:hover {
+    background-color: #0069d9;
+  }
+  
+  .remove-button {
+    background-color: #fff0f0;
+    color: #f44336;
+    border: 1px solid #ffcdd2;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+    margin-top: auto;
+    margin-bottom: 5px;
+    min-width: 80px;
+    height: auto;
+    line-height: 1.5;
+  }
+  
+  .remove-button:hover {
+    background-color: #ffe6e6;
+  }
+  
+  .submit-button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    height: auto;
+    line-height: 1.5;
+  }
+  
+  .submit-button:hover {
+    background-color: #45a049;
+  }
+  
+  .submit-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  .form-actions {
+    margin-top: 20px;
+  }
+  
+  .error {
+    color: #d32f2f;
+    background-color: #fde8e8;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+  
+  .success {
+    color: #43a047;
+    background-color: #e8f5e9;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+  
+  hr {
+    border: 0;
+    height: 1px;
+    background-color: #eee;
+    margin: 15px 0;
+  }
+  
+  /* Better responsive handling */
+  @media (max-width: 768px) {
+    .resource-row {
+      grid-template-columns: 1fr;
+      gap: 15px;
+    }
+    
+    .resource-bottom-row {
+      flex-direction: column;
+    }
+    
+    .remove-button {
+      margin-top: 10px;
+      align-self: flex-start;
+      width: 100%;
+    }
+    
+    .description-field {
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }
