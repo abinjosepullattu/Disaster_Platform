@@ -128,14 +128,26 @@ router.post("/donate", async (req, res) => {
 });
 
 // Get all donations for a campaign with donor details
-router.get("/donations/:campaignId", async (req, res) => {
+router.get("/e/campaigns/:campaignId", async (req, res) => {
   try {
-    const donations = await Donation.find({ campaignId: req.params.campaignId }).populate("donorId", "name email");
+    console.log(req.params.campaignId);
+    const donations = await Donation.findById({ campaignId: req.params.campaignId });
     res.status(200).json(donations);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+// // Get all donations for a campaign with donor details
+// router.get("/:campaignId", async (req, res) => {
+//   try {
+//     console.log(req.params.campaignId);
+//     const donations = await Donation.find({ campaignId: req.params.campaignId }).populate("donorId", "name email");
+//     res.status(200).json(donations);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
 
 // Get all donations made by a specific user
 router.get("/user-donations/:userId", async (req, res) => {

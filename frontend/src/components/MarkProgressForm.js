@@ -168,7 +168,25 @@ const TaskProgressForm = () => {
             </div>
           </div>
         );
-      
+      // case 'Resource Distribution':
+        // return (
+        //   <div className="form-section">
+        //     <h3>Transportation Details</h3>
+        //     <div className="form-group">
+        //       <label>Delivery Status:</label>
+        //       <select
+        //         name="deliveryStatus"
+        //         value={formData.deliveryStatus}
+        //         onChange={handleInputChange}
+        //         className="form-control"
+        //       >
+        //         <option value="Not Started">Not Started</option>
+        //         <option value="In Transit">In Transit</option>
+        //         <option value="Delivered">Delivered</option>
+        //       </select>
+        //     </div>
+        //   </div>
+        // );
       case 'Preparing and Serving Food':
         return (
           <div className="form-section">

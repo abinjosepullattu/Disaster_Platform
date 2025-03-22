@@ -133,6 +133,22 @@ const VolunteerTaskView = () => {
             </div>
           </div>
         );
+        case 'Resource Distribution':
+          return (
+            <div className="task-details">
+              <div className="detail-with-map">
+                <p><strong>Shelter:</strong> {task.shelter}</p>
+                {task.shelterLatitude && task.shelterLongitude && (
+                  <button 
+                    className="map-button"
+                    onClick={() => openMap(task.shelterLatitude, task.shelterLongitude, 'Shelter')}
+                  >
+                    View Shelter Map
+                  </button>
+                )}
+              </div>
+            </div>
+          );
       case 'Rescue Operation Management':
       case 'Rescue Operator':
         return null;

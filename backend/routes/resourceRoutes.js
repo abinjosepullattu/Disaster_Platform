@@ -140,4 +140,103 @@ router.get("/shelter-assigned/:userId", async (req, res) => {
     res.status(500).json({ message: "Server error. Please try again." });
   }
 });
+
+const ContributedResource = require("../models/ContributedResource");
+// Add a new contribution (multiple resources in an array)
+router.post("/add-contribution", async (req, res) => {
+  try {
+      const { resources, shelter, contributorName, contributorContact, contributorId } = req.body;
+
+      // // Log the received data for debugging
+      // console.log("Received contribution data:", {
+      //     resources,
+      //     shelter,
+      //     contributorName,
+      //     contributorContact,
+      //     contributorId
+      // });
+
+      if (!resources || resources.length === 0 || !shelter || !contributorName || !contributorContact) {
+          return res.status(400).json({ message: "All required fields must be filled!" });
+      }
+
+      // Create the contribution object, handling the contributorId properly
+      const newContribution = new ContributedResource({
+          resources,
+          shelter,
+          contributorName,
+          contributorContact,
+          // Only add contributorId if it's not null/undefined
+          ...(contributorId && { contributorId }),
+          status: 0 // Default is pending
+      });
+
+      // Log the contribution object before saving
+      console.log("Contribution document to be saved:", newContribution);
+
+      await newContribution.save();
+      res.status(201).json({ 
+          message: "Contribution submitted successfully!", 
+          contribution: newContribution 
+      });
+  } catch (error) {
+      console.error("Error adding contribution:", error);
+      res.status(500).json({ message: "Server error. Please try again." });
+  }
+});
+
+// Get all contributions (for admin)
+router.get("/contributions", async (req, res) => {
+    try {
+        const contributions = await ContributedResource.find().populate("shelter");
+        res.json(contributions);
+    } catch (error) {
+        res.status(500).json({ message: "Server error." });
+    }
+});
+
+// Approve contribution (Admin action)
+router.put("/approve-contribution/:id", async (req, res) => {
+    try {
+        const contribution = await ContributedResource.findById(req.params.id);
+        if (!contribution) {
+            return res.status(404).json({ message: "Contribution not found." });
+        }
+
+        contribution.status = 1; // Mark as verified
+        await contribution.save();
+
+        res.json({ message: "Contribution approved successfully!" });
+    } catch (error) {
+        res.status(500).json({ message: "Server error." });
+    }
+});
+
+
+router.get('/user-contributions/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    
+    // Find all contributions without trying to convert userId to ObjectId
+    const contributions = await ContributedResource.find({ contributorId: userId })
+    .populate({
+      path: 'resources.resourceType',
+      select: 'name category'
+    })
+    .populate({
+      path: 'shelter',
+      select: 'location'
+    })
+      .sort({ createdAt: -1 });
+    
+    // Log what we found to help with debugging
+    console.log(`Found ${contributions.length} contributions for user ${userId}`);
+    
+    res.status(200).json(contributions);
+  } catch (error) {
+    console.error('Error fetching user contributions:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;

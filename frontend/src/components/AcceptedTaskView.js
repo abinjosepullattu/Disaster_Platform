@@ -50,7 +50,12 @@ const AcceptedTasksView = () => {
   };
   
   const navigateToMarkProgress = (taskId) => {
-    navigate(`/volunteer/progress-form?taskId=${taskId}`);
+    if(latestTask.taskType=='Resource Distribution')
+    {
+      navigate(`/volunteer/progress-form?taskId=${taskId}`);
+    }
+    else{ navigate(`/volunteer/progress-form?taskId=${taskId}`);}
+   
   };
 
   return (

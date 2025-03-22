@@ -24,24 +24,29 @@ const MyDonations = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/donations/user/${user.id}`);
+        const response = await axios.get(`http://localhost:5000/api/donations/user-donations/${user.id}`);
         
         // Fetch campaign details for each donation
         const donationsWithCampaignDetails = await Promise.all(
           response.data.map(async (donation) => {
+            console.log("Donation object:", JSON.stringify(donation, null, 2));
+
             try {
               const campaignResponse = await axios.get(
-                `http://localhost:5000/api/donations/campaigns/${donation.campaignId}`
+                `http://localhost:5000/api/donations/e/campaigns/${donation.campaignId._id}` 
               );
               return {
                 ...donation,
-                campaign: campaignResponse.data
+                campaign: {
+                    title: donation.campaignId.title,
+                    _id: donation.campaignId._id
+                }
               };
             } catch (err) {
               console.error("Error fetching campaign details:", err);
               return {
                 ...donation,
-                campaign: { title: "Unknown Campaign" }
+                campaign: { title: donation.campaignId.title || "Unknown Campaign" }
               };
             }
           })

@@ -11,6 +11,7 @@ const ResourceType = require('../models/ResourceType');
 const TransportationTask = require('../models/TransportationTask');
 const FoodTask = require('../models/FoodTask');
 const RescueTask = require('../models/RescueTask');
+const ResourceDist=require('../models/ResourceDist');
 
 // Generate the next available typeId
 const getNextTypeId = async () => {
@@ -177,6 +178,17 @@ router.post("/add", async (req, res) => {
       });
       await foodTask.save();
     }
+
+        // Step 2: If Preparing and Serving Food Task, save extra details with task ID
+        if (task.taskType === "Resource Distribution") {
+          const resTask = new ResourceDist({
+            taskId: savedTask._id, // Reference to main task
+            shelter: extraData.shelter,
+    
+          });
+          await resTask.save();
+        }
+
     // Step 2: If Rescue Task, save extra details with task ID
     if (task.taskType === "Rescue Operation Management") {
       const rescueTask = new RescueTask({
@@ -245,6 +257,16 @@ router.get('/by-type/:taskType', async (req, res) => {
         const foodDetails = await FoodTask.findOne({ taskId: task._id });
         if (foodDetails) {
           const shelter = await Shelter.findById(foodDetails.shelter);
+
+          additionalDetails = {
+            shelter: shelter ? shelter.location : 'Unknown'
+          };
+        }
+      }
+      else if (taskType === 'Resource Distribution') {
+        const resDetails = await ResourceDist.findOne({ taskId: task._id });
+        if (resDetails) {
+          const shelter = await Shelter.findById(resDetails.shelter);
 
           additionalDetails = {
             shelter: shelter ? shelter.location : 'Unknown'
@@ -344,7 +366,19 @@ router.get('/volunteer/:volunteerId', async (req, res) => {
             shelterLongitude: shelter ? shelter.longitude : null
           };
         }
-      } else if (task.taskType === 'Rescue Operation Management' || task.taskType === 'Rescue Operator') {
+      }  else if (task.taskType === 'Resource Distribution') {
+        const resDetails = await ResourceDist.findOne({ taskId: task._id });
+        if (resDetails) {
+          const shelter = await Shelter.findById(resDetails.shelter);
+
+          additionalDetails = {
+            shelter: shelter ? shelter.location : 'Unknown',
+            shelterLatitude: shelter ? shelter.latitude : null,
+            shelterLongitude: shelter ? shelter.longitude : null
+          };
+        }
+      }
+      else if (task.taskType === 'Rescue Operation Management' || task.taskType === 'Rescue Operator') {
         // Nothing additional to fetch for rescue tasks
         additionalDetails = {};
       }
@@ -540,6 +574,32 @@ router.get("/volunteer/:userId/accepted", async (req, res) => {
             }
           }
         }
+         // For transportation tasks, get shelter details
+         if (task.taskType === 'Resource Distribution') {
+          const resDetails = await ResourceDist.findOne({ taskId: task._id.toString() })
+
+          if (resDetails) {
+            // Add resource type and delivery date
+            // console.log(transportDetails);
+            // console.log(transportDetails.resourceType?.name);
+           // console.log(foodDetails)
+            //taskObj.deliveryDate = transportDetails.deliveryDateTime;
+
+            if (resDetails.shelter) {
+              // console.log(transportDetails.shelter)
+              const shelter = await Shelter.findById(resDetails.shelter.toString());
+              // console.log(shelter)
+              if (shelter) {
+                taskObj.shelter = {
+                  location: shelter.location,
+                  latitude: shelter.latitude,
+                  longitude: shelter.longitude
+                };
+              }
+
+            }
+          }
+        }
         return taskObj;
 
       }));
@@ -558,6 +618,7 @@ router.get("/:taskId", async (req, res) => {
     const { taskId } = req.params;
 
     const task = await Task.findById(taskId).populate("incident", "location type severity latitude longitude");
+    //console.log(task);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
     let additionalDetails = {};
@@ -580,6 +641,17 @@ router.get("/:taskId", async (req, res) => {
           shelter: foodDetails.shelter?.location || "Unknown",
           shelterLatitude: foodDetails.shelter?.latitude,
           shelterLongitude: foodDetails.shelter?.longitude,
+        };
+      }
+    }
+    else if (task.taskType === "Resource Distribution") {
+      const resDetails = await ResourceDist.findOne({ taskId }).populate("shelter", "location latitude longitude");
+      console.log(resDetails);
+      if (resDetails) {
+        additionalDetails = {
+          shelter: resDetails.shelter?.location || "Unknown",
+          shelterLatitude: resDetails.shelter?.latitude,
+          shelterLongitude: resDetails.shelter?.longitude,
         };
       }
     }
@@ -656,7 +728,18 @@ router.get('/completed', async (req, res) => {
             shelter: shelter ? shelter.location : 'Unknown'
           };
         }
-      } else if (task.taskType === 'Rescue Operation Management' || task.taskType === 'Rescue Operator') {
+      } 
+      else if (task.taskType === 'Resource Distribution') {
+        const resDetails = await ResourceDist.findOne({ taskId: task._id });
+        if (resDetails) {
+          const shelter = await Shelter.findById(resDetails.shelter);
+          
+          additionalDetails = {
+            shelter: shelter ? shelter.location : 'Unknown'
+          };
+        }
+      }
+      else if (task.taskType === 'Rescue Operation Management' || task.taskType === 'Rescue Operator') {
         // Nothing additional to fetch for rescue tasks
         const rescueDetails = await RescueTask.findOne({ taskId: task._id });
         additionalDetails = {};
@@ -741,6 +824,16 @@ router.get('/completed/:taskType', async (req, res) => {
           additionalDetails = {
             shelter: shelter ? shelter.location : 'Unknown'
           };
+        }
+        else if (task.taskType === 'Resource Distribution') {
+          const resDetails = await ResourceDist.findOne({ taskId: task._id });
+          if (resDetails) {
+            const shelter = await Shelter.findById(resDetails.shelter);
+            
+            additionalDetails = {
+              shelter: shelter ? shelter.location : 'Unknown'
+            };
+          }
         }
       } else if (taskType === 'Rescue Operation Management' || taskType === 'Rescue Operator') {
         // Nothing additional to fetch for rescue tasks

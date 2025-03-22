@@ -42,7 +42,8 @@ import AdminCampaignDonationsView from "./components/AdminDonationsView";
 import AdminResourceAllocation from "./components/AdminResourceAllocation";
 import ViewAllocatedResources from "./components/ViewAllocatedResources";
 import ViewAllocatedResourcesVolunteer from "./components/ViewAllocatedResourcesVolunteer";
-
+import AddContributedResource from "./components/AddContributedResource";
+import ViewUserContributions from "./components/PublicResourceContributions";
 function App() {
   return (
     <UserProvider>
@@ -90,6 +91,9 @@ function App() {
         <Route path="/admin/resource-allocation" element={<AdminResourceAllocation />} />
         <Route path="/admin/view-allocated" element={<ViewAllocatedResources />} />
         <Route path="/volunteer/view-allocated" element={<ViewAllocatedResourcesVolunteer />} />
+        <Route path="/public/contribute-res" element={<AddContributedResource />} />
+        <Route path="/public/view-contribute" element={<ViewUserContributions />} />
+
 
 
 

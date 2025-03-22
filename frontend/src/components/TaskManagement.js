@@ -93,6 +93,8 @@ const TaskManagement = () => {
         case 3: // Rescue Operation Management
         case 4: // Rescue Operator
           return { incident };
+        case 5: // Resource Distribution
+        return { shelter };
 
         default:
           return {}; // Ensures it's always an object
@@ -108,6 +110,8 @@ const TaskManagement = () => {
         extraData = {shelter};
       } else if (task.taskType === "Rescue Operation Management" || task.taskType === "Rescue Operator") {  // Rescue Operations
         extraData = { incident };
+      }else if (task.taskType === "Resource Distribution") {  // Preparing and Serving Food
+        extraData = {shelter};
       }
 
       const selectedTask = taskTypes.find(task => task.name === taskType);
@@ -220,6 +224,15 @@ const TaskManagement = () => {
         )}
 
         {taskType === 'Preparing and Serving Food' && (
+            <div className="form-group">
+            <label>Shelter</label>
+            <select className="form-control" value={shelter} onChange={(e) => setShelter(e.target.value)} required>
+              <option value="">Select Shelter</option>
+              {shelters.map(s => <option key={s._id} value={s._id}>{s.location}</option>)}
+            </select>
+          </div>
+        )}
+                {taskType === 'Resource Distribution' && (
             <div className="form-group">
             <label>Shelter</label>
             <select className="form-control" value={shelter} onChange={(e) => setShelter(e.target.value)} required>

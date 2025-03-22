@@ -19,6 +19,10 @@ const PublicHome = () => {
       <button onClick={() => navigate("/my-incidents")}>📋 View My Incident Reports</button>
       <button onClick={() => navigate("/public/view-campaign")}> View Donation Campaigns</button>
       <button onClick={() => navigate("/public/my-donation")}> My Donations</button>
+      <button onClick={() => navigate("/public/contribute-res")}> Add Contributed Resources</button>
+      <button onClick={() => navigate("/public/view-contribute")}> My Contributions</button>
+
+      
 
       
 
