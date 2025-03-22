@@ -48,6 +48,7 @@ import VerifyContributions from "./components/VerifyContributionVolunteer";
 import AdminContributions from "./components/ViewContributionsAdmin";
 import AddResourceUsage from "./components/AddResourceUsage";
 import ViewResourceUsageShelterOwner from "./components/ViewResourceUsage";
+import AdminViewResourceUsage from "./components/ViewResourceUsageAdmin";
 function App() {
   return (
     <UserProvider>
@@ -101,6 +102,8 @@ function App() {
         <Route path="/Admin/view-contribute" element={<AdminContributions />} />
         <Route path="/volunteer/res-usage" element={<AddResourceUsage />} />
         <Route path="/volunteer/res-usage-details" element={<ViewResourceUsageShelterOwner />} />
+        <Route path="/admin/res-usage-details" element={<AdminViewResourceUsage />} />
+
 
         
 

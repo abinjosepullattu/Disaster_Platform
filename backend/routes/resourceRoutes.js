@@ -508,4 +508,33 @@ router.get("/usage/summary/:shelterId", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+// Route to get all shelters (for admin use)
+router.get("/all", async (req, res) => {
+  try {
+    const shelters = await Shelter.find({})
+      .populate('assignedVolunteer')
+      .sort({ location: 1 });
+    
+    // If you need volunteer user details too
+    const populatedShelters = await Promise.all(shelters.map(async (shelter) => {
+      if (shelter.assignedVolunteer) {
+        // Get the user info for the assigned volunteer
+        const volunteerWithUser = await Volunteer.findById(shelter.assignedVolunteer._id)
+          .populate('userId', 'name email phone');
+        
+        // Create a new object with volunteer user data
+        const shelterObj = shelter.toObject();
+        shelterObj.volunteerUser = volunteerWithUser ? volunteerWithUser.userId : null;
+        return shelterObj;
+      }
+      return shelter;
+    }));
+    
+    res.json(populatedShelters);
+  } catch (error) {
+    console.error("Error fetching all shelters:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;
