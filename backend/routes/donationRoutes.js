@@ -5,6 +5,8 @@ const Donation = require("../models/Donation");
 const User = require("../models/user"); // Import User model
 const Razorpay = require("razorpay");
 const mongoose = require("mongoose");
+const DonationAllocation = require("../models/DonationAllocation");
+const ResourceType = require('../models/ResourceType');
 
 const razorpay = new Razorpay({
   key_id: "rzp_test_cITg7ERmHMWIX4", // Replace with your Razorpay key
@@ -228,4 +230,150 @@ router.get('/users/:id', async (req, res) => {
   }
 });
 
+
+// Get donation summary (total, allocated, remaining)
+// Get donation summary endpoint (needed by frontend)
+router.get("/summary", async (req, res) => {
+  try {
+    const summary = await getDonationSummary();
+    res.json(summary);
+  } catch (error) {
+    console.error("Error getting donation summary:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Helper function to get donation summary
+async function getDonationSummary() {
+  const [donations, allocations] = await Promise.all([
+    Donation.aggregate([
+      { $match: { status: "Paid" } },
+      { $group: { _id: null, total: { $sum: "$amount" } } }
+    ]),
+    DonationAllocation.aggregate([
+      { $group: { _id: null, total: { $sum: "$totalCost" } } }
+    ])
+  ]);
+  
+  const totalDonations = donations[0]?.total || 0;
+  const totalAllocated = allocations[0]?.total || 0;
+  
+  return {
+    total: totalDonations,
+    allocated: totalAllocated,
+    remaining: totalDonations - totalAllocated
+  };
+}
+
+// Create a donation allocation
+// Create a donation allocation
+router.post("/allocate", async (req, res) => {
+  try {
+    const { allocations, totalCost } = req.body;
+    
+    // Basic validation
+    if (!Array.isArray(allocations) || allocations.length === 0) {
+      return res.status(400).json({ message: "Invalid input data" });
+    }
+    
+    // Check funds availability
+    const donationSummary = await getDonationSummary();
+    
+    if (totalCost > donationSummary.remaining) {
+      return res.status(400).json({ 
+        message: "Insufficient funds", 
+        remaining: donationSummary.remaining, 
+        requested: totalCost 
+      });
+    }
+    
+    // Find resources by name if needed
+    const processedAllocations = [];
+    for (const item of allocations) {
+      if (!item.resourceType || !item.quantity || !item.unit || !item.cost) {
+        return res.status(400).json({ message: "Incomplete allocation data" });
+      }
+      
+      // If resourceType is not a valid ObjectId, try to find it by name
+      let resourceTypeId = item.resourceType;
+      
+      // Check if resourceType is a string but not a valid ObjectId format
+      const isValidObjectId = mongoose.Types.ObjectId.isValid(item.resourceType);
+      if (!isValidObjectId) {
+        // Try to find the resource type by name
+        const resourceType = await ResourceType.findOne({ name: item.resourceType });
+        if (!resourceType) {
+          return res.status(404).json({ message: `Resource type not found: ${item.resourceType}` });
+        }
+        resourceTypeId = resourceType._id;
+      }
+      
+      processedAllocations.push({
+        resourceType: resourceTypeId,
+        quantity: parseFloat(item.quantity),
+        unit: item.unit,
+        cost: parseFloat(item.cost),
+        description: item.description || ""
+      });
+    }
+    
+    // Create and save allocation record
+    const allocationRecord = new DonationAllocation({
+      allocations: processedAllocations,
+      totalCost: parseFloat(totalCost)
+    });
+    
+    await allocationRecord.save();
+    
+    res.status(201).json({ 
+      message: "Donation allocation successful", 
+      allocation: allocationRecord 
+    });
+  } catch (error) {
+    console.error("Error allocating donations:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
+// Get allocation history
+router.get("/allocations", async (req, res) => {
+  try {
+    const allocations = await DonationAllocation.find()
+      .populate('allocations.resourceType', 'name category')
+      .sort({ createdAt: -1 });
+    
+    // Transform data to match frontend expectations
+    const formattedAllocations = allocations.map(allocation => ({
+      id: allocation._id,
+      createdAt: allocation.createdAt,
+      totalCost: allocation.totalCost,
+      admin: allocation.admin || { name: "System" }, // Provide default if no admin reference
+      allocations: allocation.allocations.map(item => ({
+        ...item.toObject(),
+        resourceType: item.resourceType
+      }))
+    }));
+    
+    res.json(formattedAllocations);
+  } catch (error) {
+    console.error("Error getting allocation history:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Get detailed allocation by ID
+router.get("/allocation/:id", async (req, res) => {
+  try {
+    const allocation = await DonationAllocation.findById(req.params.id)
+      .populate('allocations.resourceType', 'name category');
+    
+    if (!allocation) {
+      return res.status(404).json({ message: "Allocation record not found" });
+    }
+    
+    res.json(allocation);
+  } catch (error) {
+    console.error("Error getting allocation details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 module.exports = router;

@@ -33,6 +33,9 @@ const AdminHome = () => {
       <button onClick={() => navigate("/admin/view-allocated")}>View Allocated Resources</button>
       <button onClick={() => navigate("/Admin/view-contribute")}>View Public Contributions</button>
       <button onClick={() => navigate("/admin/res-usage-details")}>View Resource Usage Report</button>
+      <button onClick={() => navigate("/admin/donation-alloc")}>Allocate Donations</button>
+
+      
 
       
       <h3>Account Settings</h3>
