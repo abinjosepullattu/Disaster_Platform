@@ -44,6 +44,8 @@ import ViewAllocatedResources from "./components/ViewAllocatedResources";
 import ViewAllocatedResourcesVolunteer from "./components/ViewAllocatedResourcesVolunteer";
 import AddContributedResource from "./components/AddContributedResource";
 import ViewUserContributions from "./components/PublicResourceContributions";
+import VerifyContributions from "./components/VerifyContributionVolunteer";
+import AdminContributions from "./components/ViewContributionsAdmin";
 function App() {
   return (
     <UserProvider>
@@ -93,6 +95,10 @@ function App() {
         <Route path="/volunteer/view-allocated" element={<ViewAllocatedResourcesVolunteer />} />
         <Route path="/public/contribute-res" element={<AddContributedResource />} />
         <Route path="/public/view-contribute" element={<ViewUserContributions />} />
+        <Route path="/volunteer/verify-contribute" element={<VerifyContributions />} />
+        <Route path="/Admin/view-contribute" element={<AdminContributions />} />
+
+
 
 
 

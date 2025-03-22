@@ -185,14 +185,25 @@ router.post("/add-contribution", async (req, res) => {
   }
 });
 
-// Get all contributions (for admin)
+// Get all contributions with populated data (enhanced version)
 router.get("/contributions", async (req, res) => {
-    try {
-        const contributions = await ContributedResource.find().populate("shelter");
-        res.json(contributions);
-    } catch (error) {
-        res.status(500).json({ message: "Server error." });
-    }
+  try {
+    const contributions = await ContributedResource.find()
+      .populate({
+        path: 'shelter',
+        select: 'location'
+      })
+      .populate({
+        path: 'resources.resourceType',
+        select: 'name category'
+      })
+      .sort({ createdAt: -1 }); // Sort by newest first
+    
+    res.json(contributions);
+  } catch (error) {
+    console.error("Error fetching all contributions:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // Approve contribution (Admin action)
@@ -236,6 +247,28 @@ router.get('/user-contributions/:userId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching user contributions:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+router.get("/shelter-contributions/:shelterId", async (req, res) => {
+  try {
+    const { shelterId } = req.params;
+    
+    const contributions = await ContributedResource.find({ shelter: shelterId })
+      .populate({
+        path: 'resources.resourceType',
+        select: 'name category'
+      })
+      .populate({
+        path: 'shelter',
+        select: 'location'
+      })
+      .sort({ createdAt: -1 }); // Sort by most recent first
+    
+    res.json(contributions);
+  } catch (error) {
+    console.error("Error fetching shelter contributions:", error);
+    res.status(500).json({ message: "Server error. Please try again." });
   }
 });
 
