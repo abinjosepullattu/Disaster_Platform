@@ -24,7 +24,12 @@ const VolunteerHome = () => {
       <button onClick={() => navigate("/volunteer/verify-contribute")}>Verify Contributions</button>
       <button onClick={() => navigate("/volunteer/res-usage")}>Add Resource Usage</button>
       <button onClick={() => navigate("/volunteer/res-usage-details")}>View Resource Usage</button>
+      <button onClick={() => navigate("/volunteer/feedback-view")}>View Feedbacks</button>
+      <button onClick={() => navigate("/user/complaint")}>Submit Complaint</button>
+      <button onClick={() => navigate("/user/view-complaint")}>View Complaint Status</button>
 
+      
+      
       
       
       

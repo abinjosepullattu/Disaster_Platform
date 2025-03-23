@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../styles/AdminCompletedTaskView.css'; // Create this CSS file with similar styling to AdminTaskView.css
+import '../styles/AdminCompletedTaskView.css';
+import { useUser } from "../context/UserContext";
+
+import FeedbackModal from './FeedbackAdmin'; // We'll create this component next
 
 const AdminCompletedTasksView = () => {
+  const { user } = useUser();
   const [taskTypes, setTaskTypes] = useState([]);
   const [selectedTaskType, setSelectedTaskType] = useState('');
   const [latestTask, setLatestTask] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [verifyingTask, setVerifyingTask] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [feedbackSubmitting, setFeedbackSubmitting] = useState(false);
+  const [existingFeedback, setExistingFeedback] = useState(null);
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
 
   // Fetch all task types on component mount
   useEffect(() => {
@@ -29,6 +37,15 @@ const AdminCompletedTasksView = () => {
   useEffect(() => {
     fetchLatestCompletedTask(selectedTaskType);
   }, [selectedTaskType]);
+
+  // Check for existing feedback when a task is loaded
+  useEffect(() => {
+    if (latestTask) {
+      checkExistingFeedback(latestTask._id);
+    } else {
+      setExistingFeedback(null);
+    }
+  }, [latestTask]);
 
   const fetchLatestCompletedTask = async (taskType) => {
     setLoading(true);
@@ -53,6 +70,23 @@ const AdminCompletedTasksView = () => {
     } catch (err) {
       console.error('Error fetching completed tasks:', err);
       setLoading(false);
+    }
+  };
+
+  const checkExistingFeedback = async (taskId) => {
+    setFeedbackLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/feedback/task/${taskId}`);
+      setExistingFeedback(response.data);
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        // No feedback found is not an error
+        setExistingFeedback(null);
+      } else {
+        console.error('Error checking for existing feedback:', err);
+      }
+    } finally {
+      setFeedbackLoading(false);
     }
   };
 
@@ -82,6 +116,41 @@ const AdminCompletedTasksView = () => {
     }
   };
 
+  // Open feedback modal
+  const handleOpenFeedbackModal = () => {
+    setShowFeedbackModal(true);
+  };
+
+  // Close feedback modal
+  const handleCloseFeedbackModal = () => {
+    setShowFeedbackModal(false);
+  };
+
+  // Submit feedback
+  const handleSubmitFeedback = async (feedbackData) => {
+    setFeedbackSubmitting(true);
+    try {
+      const response = await axios.post('http://localhost:5000/api/feedback/submit', {
+        taskId: latestTask._id,
+        volunteerId: latestTask.volunteer?._id,
+        adminId: user.id,
+        rating: feedbackData.rating,
+        comments: feedbackData.comments,
+        status: 0 // Initial status - not viewed
+      });
+      
+      alert("✅ Feedback submitted successfully");
+      setShowFeedbackModal(false);
+      setExistingFeedback(response.data.feedback);
+      
+    } catch (err) {
+      console.error('Error submitting feedback:', err);
+      alert("Failed to submit feedback. Please try again.");
+    } finally {
+      setFeedbackSubmitting(false);
+    }
+  };
+
   // Render appropriate details based on task type
   const renderTaskDetails = (task) => {
     switch (task.taskType) {
@@ -105,6 +174,29 @@ const AdminCompletedTasksView = () => {
       default:
         return null;
     }
+  };
+
+  // Render feedback information if it exists
+  const renderFeedbackInfo = () => {
+    if (feedbackLoading) {
+      return <div className="feedback-info loading">Checking feedback status...</div>;
+    }
+    
+    if (existingFeedback) {
+      return (
+        <div className="feedback-info submitted">
+          <p className="feedback-status">
+            <span className="feedback-icon">✓</span> 
+            Feedback submitted ({existingFeedback.rating}/4)
+          </p>
+          {existingFeedback.status === 1 && (
+            <span className="feedback-viewed-badge">Viewed by volunteer</span>
+          )}
+        </div>
+      );
+    }
+    
+    return null;
   };
 
   return (
@@ -183,6 +275,9 @@ const AdminCompletedTasksView = () => {
               {/* Render type-specific details */}
               {renderTaskDetails(latestTask)}
               
+              {/* Feedback information */}
+              {renderFeedbackInfo()}
+              
               {/* Verification section with button */}
               <div className="task-verification">
                 <button 
@@ -192,6 +287,17 @@ const AdminCompletedTasksView = () => {
                 >
                   {verifyingTask ? 'Verifying...' : 'Verify Completion'}
                 </button>
+                
+                {/* Feedback Button - only show if no feedback exists */}
+                {!existingFeedback && latestTask.volunteer && (
+                  <button 
+                    className="btn btn-secondary feedback-btn"
+                    onClick={handleOpenFeedbackModal}
+                  >
+                    Provide Feedback
+                  </button>
+                )}
+                
                 <p className="verification-note">
                   Verifying will mark this task as available for new assignments
                 </p>
@@ -199,6 +305,18 @@ const AdminCompletedTasksView = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Feedback Modal */}
+      {showFeedbackModal && latestTask && (
+        <FeedbackModal
+          show={showFeedbackModal}
+          onClose={handleCloseFeedbackModal}
+          onSubmit={handleSubmitFeedback}
+          volunteer={latestTask.volunteer}
+          task={latestTask}
+          isSubmitting={feedbackSubmitting}
+        />
       )}
     </div>
   );

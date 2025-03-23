@@ -21,6 +21,8 @@ const PublicHome = () => {
       <button onClick={() => navigate("/public/my-donation")}> My Donations</button>
       <button onClick={() => navigate("/public/contribute-res")}> Add Contributed Resources</button>
       <button onClick={() => navigate("/public/view-contribute")}> My Contributions</button>
+      <button onClick={() => navigate("/user/complaint")}>Submit Complaint</button>
+      <button onClick={() => navigate("/user/view-complaint")}>View Complaint Status</button>
 
       
 

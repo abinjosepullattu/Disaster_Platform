@@ -52,6 +52,11 @@ import AdminViewResourceUsage from "./components/ViewResourceUsageAdmin";
 import DonationAllocation from "./components/DonationAllocationAdmin";
 import DonationUsageReport from "./components/DonationUsageReport";
 import IndexPage from "./components/IndexPage";
+import VolunteerFeedbackView from "./components/ViewFeedbackVolunteer";
+import ReportComplaint from "./components/ReportComplaint";
+import ViewComplaints from "./components/ViewComplaintStatus";
+import AdminComplaintManagement from "./components/AdminComplaintManagement";
+//import FeedbackModal from "./components/FeedbackAdmin";
 function App() {
   return (
     <UserProvider>
@@ -108,6 +113,15 @@ function App() {
         <Route path="/admin/res-usage-details" element={<AdminViewResourceUsage />} />
         <Route path="/admin/donation-alloc" element={<DonationAllocation />} />
         <Route path="/admin/donation-report" element={<DonationUsageReport />} />
+        {/* <Route path="/admin/donation-report" element={<FeedbackModal />} /> */}
+        <Route path="/volunteer/feedback-view" element={<VolunteerFeedbackView />} />
+        <Route path="/user/complaint" element={<ReportComplaint />} />
+        <Route path="/user/view-complaint" element={<ViewComplaints />} />
+        <Route path="/admin/view-complaint" element={<AdminComplaintManagement />} />
+
+
+
+
 
 
 

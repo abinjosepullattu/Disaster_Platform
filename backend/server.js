@@ -14,6 +14,8 @@ const taskRoutes = require("./routes/taskRoutes");
 const inmateRoutes = require("./routes/inmateRoutes");
 const taskprogressRoutes = require("./routes/taskprogressRoutes");
 const donationRoutes= require("./routes/donationRoutes");
+const feedbackRoutes=require("./routes/feedbackRoutes");
+const complaintRoutes=require("./routes/complaintRoutes");
 dotenv.config();
 const app = express();
 
@@ -32,6 +34,9 @@ app.use("/api/tasks",taskRoutes);
 app.use("/api/resourceTypes",resourceRoutes);
 app.use("/api/taskprogress",taskprogressRoutes);
 app.use("/api/donations",donationRoutes);
+app.use('/api/feedback', feedbackRoutes);
+app.use('/api/complaints', complaintRoutes);
+
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
