@@ -1,0 +1,254 @@
+/* Donation Usage Report Styles */
+.donation-usage-report-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .donation-usage-report-container h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+  }
+  
+  .donation-summary-card {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .donation-summary-card h3 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+  }
+  
+  .summary-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .stat-item {
+    flex: 1;
+    min-width: 200px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stat-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .stat-value {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Filter Section */
+  .filter-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .filter-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+  }
+  
+  .filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+  }
+  
+  .filter-group {
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  .filter-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .filter-group input,
+  .filter-group select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  .filter-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .filter-button,
+  .reset-button {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .filter-button {
+    background-color: #0066cc;
+    color: white;
+  }
+  
+  .reset-button {
+    background-color: #e6e6e6;
+    color: #333;
+  }
+  
+  /* Allocation Records List */
+  .allocations-list {
+    margin-top: 20px;
+  }
+  
+  .allocation-date-group {
+    margin-bottom: 30px;
+  }
+  
+  .date-header {
+    background-color: #e9ecef;
+    padding: 10px 15px;
+    border-radius: 6px 6px 0 0;
+  }
+  
+  .date-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .allocation-card {
+    background-color: white;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+    overflow: hidden;
+  }
+  
+  .allocation-header {
+    background-color: #f8f9fa;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .allocation-header h5 {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+    flex: 1;
+  }
+  
+  .allocation-by {
+    font-size: 14px;
+    color: #666;
+    margin-right: 15px;
+  }
+  
+  .allocation-total {
+    font-size: 15px;
+    font-weight: bold;
+    color: #0066cc;
+  }
+  
+  /* Table Styles */
+  .resources-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .resources-table th,
+  .resources-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .resources-table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  .resources-table td {
+    font-size: 14px;
+    color: #444;
+  }
+  
+  /* Error and Loading States */
+  .loading,
+  .error,
+  .no-data {
+    text-align: center;
+    padding: 30px;
+    font-size: 16px;
+  }
+  
+  .loading {
+    color: #666;
+  }
+  
+  .error {
+    color: #dc3545;
+  }
+  
+  .no-data {
+    color: #666;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin-top: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    .filter-controls {
+      flex-direction: column;
+    }
+    
+    .filter-group {
+      width: 100%;
+    }
+    
+    .allocation-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .allocation-by,
+    .allocation-total {
+      margin-top: 5px;
+    }
+    
+    .resources-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }

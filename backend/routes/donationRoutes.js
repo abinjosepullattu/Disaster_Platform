@@ -334,11 +334,45 @@ router.post("/allocate", async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 });
-// Get allocation history
 router.get("/allocations", async (req, res) => {
   try {
-    const allocations = await DonationAllocation.find()
-      .populate('allocations.resourceType', 'name category')
+    const { startDate, endDate, resourceType } = req.query;
+    
+    // Build query based on filters
+    const query = {};
+    
+    // Date range filter
+    if (startDate || endDate) {
+      query.createdAt = {};
+      if (startDate) {
+        query.createdAt.$gte = new Date(startDate);
+      }
+      if (endDate) {
+        // Set endDate to end of day
+        const endDateTime = new Date(endDate);
+        endDateTime.setHours(23, 59, 59, 999);
+        query.createdAt.$lte = endDateTime;
+      }
+    }
+    
+    // Resource type filter
+    if (resourceType) {
+      try {
+        query["allocations.resourceType"] = new mongoose.Types.ObjectId(resourceType);
+      } catch (err) {
+        console.warn("Invalid ObjectId format for resourceType:", resourceType);
+        // If invalid ObjectId, return empty results instead of error
+        return res.json([]);
+      }
+    }
+    
+    // Execute query with filters
+    const allocations = await DonationAllocation.find(query)
+      .populate({
+        path: 'allocations.resourceType',
+        select: 'name category',
+        model: 'ResourceType'
+      })
       .sort({ createdAt: -1 });
     
     // Transform data to match frontend expectations
@@ -346,11 +380,13 @@ router.get("/allocations", async (req, res) => {
       id: allocation._id,
       createdAt: allocation.createdAt,
       totalCost: allocation.totalCost,
-      admin: allocation.admin || { name: "System" }, // Provide default if no admin reference
-      allocations: allocation.allocations.map(item => ({
-        ...item.toObject(),
-        resourceType: item.resourceType
-      }))
+      allocations: allocation.allocations.map(item => {
+        const itemObj = item.toObject ? item.toObject() : item;
+        return {
+          ...itemObj,
+          resourceType: itemObj.resourceType
+        };
+      })
     }));
     
     res.json(formattedAllocations);
@@ -364,7 +400,8 @@ router.get("/allocations", async (req, res) => {
 router.get("/allocation/:id", async (req, res) => {
   try {
     const allocation = await DonationAllocation.findById(req.params.id)
-      .populate('allocations.resourceType', 'name category');
+      .populate('allocations.resourceType', 'name category')
+      // .populate('admin', 'name email');
     
     if (!allocation) {
       return res.status(404).json({ message: "Allocation record not found" });
@@ -373,6 +410,102 @@ router.get("/allocation/:id", async (req, res) => {
     res.json(allocation);
   } catch (error) {
     console.error("Error getting allocation details:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.get("/stats/by-resource", async (req, res) => {
+  try {
+    const stats = await DonationAllocation.aggregate([
+      // Unwind the allocations array to work with individual allocation items
+      { $unwind: "$allocations" },
+      
+      // Group by resource type
+      { 
+        $group: {
+          _id: "$allocations.resourceType",
+          totalSpent: { $sum: { $multiply: ["$allocations.quantity", "$allocations.cost"] } },
+          totalQuantity: { $sum: "$allocations.quantity" },
+          count: { $sum: 1 }
+        }
+      },
+      
+      // Lookup resource type details
+      {
+        $lookup: {
+          from: "resourcetypes",
+          localField: "_id",
+          foreignField: "_id",
+          as: "resourceTypeInfo"
+        }
+      },
+      
+      // Project fields for the response with resource info
+      {
+        $project: {
+          resourceType: { $arrayElemAt: ["$resourceTypeInfo", 0] },
+          totalSpent: 1,
+          totalQuantity: 1,
+          count: 1
+        }
+      },
+      
+      // Sort by category first, then by total spent
+      { $sort: { "resourceType.category": 1, totalSpent: -1 } }
+    ]);
+    
+    res.json(stats);
+  } catch (error) {
+    console.error("Error getting allocation statistics:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Get allocation statistics by month
+router.get("/stats/by-month", async (req, res) => {
+  try {
+    const monthlyStats = await DonationAllocation.aggregate([
+      // Group by year and month
+      {
+        $group: {
+          _id: {
+            year: { $year: "$createdAt" },
+            month: { $month: "$createdAt" }
+          },
+          totalAllocated: { $sum: "$totalCost" },
+          count: { $sum: 1 }
+        }
+      },
+      
+      // Format the results for easier consumption
+      {
+        $project: {
+          _id: 0,
+          year: "$_id.year",
+          month: "$_id.month",
+          totalAllocated: 1,
+          count: 1,
+          // Create a date string for sorting (YYYY-MM)
+          monthYear: {
+            $concat: [
+              { $toString: "$_id.year" }, "-",
+              { $cond: [
+                { $lt: ["$_id.month", 10] },
+                { $concat: ["0", { $toString: "$_id.month" }] },
+                { $toString: "$_id.month" }
+              ]}
+            ]
+          }
+        }
+      },
+      
+      // Sort by date (ascending)
+      { $sort: { monthYear: 1 } }
+    ]);
+    
+    res.json(monthlyStats);
+  } catch (error) {
+    console.error("Error getting monthly statistics:", error);
     res.status(500).json({ message: "Server error" });
   }
 });

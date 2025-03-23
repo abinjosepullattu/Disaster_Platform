@@ -50,6 +50,7 @@ import AddResourceUsage from "./components/AddResourceUsage";
 import ViewResourceUsageShelterOwner from "./components/ViewResourceUsage";
 import AdminViewResourceUsage from "./components/ViewResourceUsageAdmin";
 import DonationAllocation from "./components/DonationAllocationAdmin";
+import DonationUsageReport from "./components/DonationUsageReport";
 function App() {
   return (
     <UserProvider>
@@ -105,6 +106,9 @@ function App() {
         <Route path="/volunteer/res-usage-details" element={<ViewResourceUsageShelterOwner />} />
         <Route path="/admin/res-usage-details" element={<AdminViewResourceUsage />} />
         <Route path="/admin/donation-alloc" element={<DonationAllocation />} />
+        <Route path="/admin/donation-report" element={<DonationUsageReport />} />
+
+
 
 
 

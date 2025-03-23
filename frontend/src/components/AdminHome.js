@@ -34,9 +34,10 @@ const AdminHome = () => {
       <button onClick={() => navigate("/Admin/view-contribute")}>View Public Contributions</button>
       <button onClick={() => navigate("/admin/res-usage-details")}>View Resource Usage Report</button>
       <button onClick={() => navigate("/admin/donation-alloc")}>Allocate Donations</button>
+      <button onClick={() => navigate("/admin/donation-report")}>View Donation Usage Report</button>
 
       
-
+      
       
       <h3>Account Settings</h3>
       <button onClick={() => navigate("/profile")}>My Profile</button>
