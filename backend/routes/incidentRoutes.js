@@ -246,4 +246,19 @@ router.put("/complete/:id", async (req, res) => {
   }
 });
 
+// Endpoint to get active incidents
+router.get('/active', async (req, res) => {
+  try {
+      // Get all incidents that are not resolved (status !== 3)
+      const activeIncidents = await Incident.find({
+          status: { $ne: 3 } // Not resolved
+      }).sort({ severity: -1, createdAt: -1 }); // Sort by severity (descending) then by newest
+      
+      res.json(activeIncidents);
+  } catch (error) {
+      console.error("Error fetching active incidents:", error);
+      res.status(500).json({ message: "Server error" });
+  }
+});
+
 module.exports = router;

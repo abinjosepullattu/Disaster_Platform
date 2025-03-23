@@ -3,6 +3,17 @@ const router = express.Router();
 const Shelter = require('../models/Shelter');
 const Volunteer = require("../models/Volunteer");
 const User = require("../models/user");
+const multer = require("multer");
+const nodemailer = require("nodemailer");
+
+// ✅ Configure Email Transporter
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 // ✅ Add Shelter and Update Assigned Volunteer Task Status
 router.post("/add", async (req, res) => {
@@ -224,6 +235,107 @@ router.get("/accepted/:volunteerId", async (req, res) => {
       res.status(500).json({ error: "Internal Server Error" });
     }
   });
+
+  // Get nearby shelters within a specified radius (km)
+router.get('/nearby', async (req, res) => {
+    try {
+        const { lat, lng, radius } = req.query;
+        
+        // Convert latitude and longitude to numbers
+        const userLat = parseFloat(lat);
+        const userLng = parseFloat(lng);
+        const searchRadius = parseFloat(radius) || 10; // Default 10km
+        
+        // Basic validation
+        if (isNaN(userLat) || isNaN(userLng)) {
+            return res.status(400).json({ message: "Invalid latitude or longitude" });
+        }
+        
+        // Find all shelters (we'll filter by distance in JavaScript)
+        const allShelters = await Shelter.find({}).populate('assignedVolunteer');
+
+        
+        
+        // Calculate distance using the Haversine formula
+        const nearbyShelters = allShelters.filter(shelter => {
+            const distance = calculateDistance(
+                userLat, userLng,
+                shelter.latitude, shelter.longitude
+            );
+            return distance <= searchRadius;
+        });
+        
+        return res.json(nearbyShelters);
+    } catch (error) {
+        console.error("Error finding nearby shelters:", error);
+        return res.status(500).json({ message: "Server error" });
+    }
+});
+
+// Haversine formula to calculate distance between two points on Earth
+function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radius of the earth in km
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2); 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const distance = R * c; // Distance in km
+    return distance;
+}
+
+function deg2rad(deg) {
+    return deg * (Math.PI/180);
+}
   
 
+// Send shelter directions via email
+router.post('/send-directions', async (req, res) => {
+    try {
+      const { shelterName, shelterAddress, userEmail, shelterLat, shelterLng } = req.body;
+      
+      // Basic validation
+      if (!userEmail || !shelterName) {
+        return res.status(400).json({ message: "Email and shelter information required" });
+      }
+  
+      // Generate Google Maps directions URL - this URL will use the person's 
+      // current location when they open it
+      const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${shelterLat},${shelterLng}&travelmode=driving`;
+      
+      // Create email with directions
+      const mailOptions = {
+        from: `"Disaster Relief Platform" <${process.env.EMAIL_USER}>`,
+        to: userEmail,
+        subject: `Directions to ${shelterName} Shelter`,
+        html: `
+          <h2>Directions to ${shelterName}</h2>
+          <p>Address: ${shelterAddress}</p>
+          <p>When you open the link below, it will provide directions from your current location to the shelter:</p>
+          <p><a href="${directionsUrl}" target="_blank" style="background-color: #2196f3; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; display: inline-block; margin: 10px 0;">Open Directions in Google Maps</a></p>
+          <p>You can also copy and paste this link into your browser:</p>
+          <p style="word-break: break-all;">${directionsUrl}</p>
+          <p>Stay safe!</p>
+          <p>Best Regards,<br>
+          Disaster Relief Assistance Team</p>
+        `,
+      };
+  
+      // Send email
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.error("Email Error:", err);
+          return res.status(500).json({ message: "Error sending email" });
+        } else {
+          console.log("Directions Email Sent: " + info.response);
+          return res.status(200).json({ message: "Directions sent to your email successfully" });
+        }
+      });
+    } catch (error) {
+      console.error("Error sending directions:", error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  });
 module.exports = router;

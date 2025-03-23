@@ -1,0 +1,293 @@
+/* IndexPage.css */
+.index-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  .header h1 {
+    margin: 0;
+    color: #d32f2f;
+  }
+  
+  .auth-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-login, .btn-signup {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-login {
+    background-color: #ffffff;
+    color: #d32f2f;
+    border: 2px solid #d32f2f;
+  }
+  
+  .btn-signup {
+    background-color: #d32f2f;
+    color: white;
+  }
+  
+  .btn-login:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .btn-signup:hover {
+    background-color: #b71c1c;
+  }
+  
+  .search-section {
+    margin-bottom: 20px;
+  }
+  
+  .search-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .search-input {
+    flex: 1 1;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+    width: max-content;
+}
+  
+  .search-box button {
+    padding: 10px 20px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .search-box button:hover {
+    background-color: #0b7dda;
+  }
+  
+  .map-container {
+    margin-bottom: 30px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shelters-list, .incidents-section {
+    margin-bottom: 30px;
+  }
+  
+  .shelter-cards, .incident-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+  }
+  
+  .shelter-card {
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .shelter-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .shelter-card.available {
+    border-left: 5px solid #4caf50;
+  }
+  
+  .shelter-card.full {
+    border-left: 5px solid #ff9800;
+  }
+  
+  .incident-card {
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .incident-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .shelter-card h3, .incident-card h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .shelter-card button, .incident-card button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .shelter-card button:hover, .incident-card button:hover {
+    background-color: #0b7dda;
+  }
+  
+  .info-window {
+    padding: 5px;
+    max-width: 250px;
+  }
+  
+  .info-window h3 {
+    margin-top: 0;
+    color: #333;
+  }
+  
+  .footer {
+    text-align: center;
+    padding-top: 20px;
+    margin-top: 30px;
+    border-top: 1px solid #e0e0e0;
+    color: #757575;
+  }
+  
+  .footer a {
+    color: #2196f3;
+    text-decoration: none;
+  }
+  
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  /* Email Modal Styles */
+.email-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .email-modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  }
+  
+  .email-input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .email-modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  .send-email-btn, .cancel-btn {
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .send-email-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+  }
+  
+  .send-email-btn:disabled {
+    background-color: #a5d6a7;
+    cursor: not-allowed;
+  }
+  
+  .cancel-btn {
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ccc;
+  }
+  
+  .email-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  /* Direction button styles */
+  .directions-btn {
+    background-color: #2196f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    margin-top: 8px;
+    font-weight: bold;
+  }
+  
+  .directions-btn:hover {
+    background-color: #0d8bf2;
+  }
+  
+  .shelter-card-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .view-map-btn {
+    background-color: #ffab40;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    flex: 1;
+    margin-right: 8px;
+  }
+  
+  .shelter-card .directions-btn {
+    flex: 1;
+    margin-left: 8px;
+  }
+  
+  /* Info window enhancements */
+  .info-window {
+    min-width: 200px;
+  }

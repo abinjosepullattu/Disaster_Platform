@@ -51,12 +51,13 @@ import ViewResourceUsageShelterOwner from "./components/ViewResourceUsage";
 import AdminViewResourceUsage from "./components/ViewResourceUsageAdmin";
 import DonationAllocation from "./components/DonationAllocationAdmin";
 import DonationUsageReport from "./components/DonationUsageReport";
+import IndexPage from "./components/IndexPage";
 function App() {
   return (
     <UserProvider>
     <Router>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        <Route path="/" element={<IndexPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/admin-home" element={<AdminHome />} />
