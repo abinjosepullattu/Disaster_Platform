@@ -12,6 +12,8 @@ const AdminIncidentPage = () => {
 <button onClick={() => navigate("/admin-incident-page/verify-public")}>Verify Incident Reports</button>
 <button onClick={() => navigate("/admin-incident-page/ongoing-incident")}>Ongoing Incidents</button>
 <button onClick={() => navigate("/admin-incident-page/completed-incident")}>Completed Incidents</button>
+<button onClick={() => navigate("/admin/incident-reports")}>View Incident Reports</button>
+
 <button onClick={() => navigate("/admin-home")}>Back</button>
 </div>
   );

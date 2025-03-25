@@ -16,34 +16,17 @@ const AdminHome = () => {
     <div className="admin-home">
       <h2>Admin Dashboard</h2>
       <button onClick={() => navigate("/admin-skills")}>Manage Skills</button>
-      <button onClick={() => navigate("/admin-approval")}>Volunteer Approvals</button>
-      <button onClick={() => navigate("/volunteer-accepted")}>Accepted Volunteers</button>
-      <button onClick={() => navigate("/volunteer-rejected")}>Rejected Volunteers</button>
-      <button onClick={() => navigate("/admin-incident-page")}>Incident Details</button>
-      <button onClick={() => navigate("/admin/add-shelter")}>Add Shelter</button>
-      <button onClick={() => navigate("/admin/view-shelter-admin")}>View Shelter</button>
-      <button onClick={() => navigate("/admin/resource-type")}>Manage Resource Type</button>
-      <button onClick={() => navigate("/admin/task-management")}>Assign Task</button>
-      <button onClick={() => navigate("/admin/tasks")}>View Assigned Tasks</button>
-      <button onClick={() => navigate("/admin/task-type")}>Manage Task Type</button>
-      <button onClick={() => navigate("/admin/completed-tasks")}>Verify Completed Tasks</button>
-      <button onClick={() => navigate("/admin/campaign-page")}>Add Campaign</button>
-      <button onClick={() => navigate("/admin/donation-view")}>View Donations</button>
-      <button onClick={() => navigate("/admin/resource-allocation")}>Allocate Resources Shelter</button>
-      <button onClick={() => navigate("/admin/view-allocated")}>View Allocated Resources</button>
+      <button onClick={() => navigate("/admin/volunteer-page")}>Volunteer Management</button>
+      <button onClick={() => navigate("/admin/shelter-page")}>Shelter Management</button>
+      <button onClick={() => navigate("/admin/task-page")}>Task Management</button>
+      <button onClick={() => navigate("/admin-incident-page")}>Incident Management</button>
+      <button onClick={() => navigate("/admin/resource-page")}>Resource Management</button>
+      <button onClick={() => navigate("/admin/donation-page")}>Campaign & Donation Management</button>
       <button onClick={() => navigate("/Admin/view-contribute")}>View Public Contributions</button>
-      <button onClick={() => navigate("/admin/res-usage-details")}>View Resource Usage Report</button>
-      <button onClick={() => navigate("/admin/donation-alloc")}>Allocate Donations</button>
-      <button onClick={() => navigate("/admin/donation-report")}>View Donation Usage Report</button>
       <button onClick={() => navigate("/admin/view-complaint")}>View Complaints</button>
+      <button onClick={() => navigate("/admin/account")}>Account Settings</button>
 
-      
-      
-      
-      <h3>Account Settings</h3>
-      <button onClick={() => navigate("/profile")}>My Profile</button>
-      <button onClick={() => navigate("/edit-profile")}>Edit Profile</button>
-      <button onClick={() => navigate("/change-password")}>Change Password</button>
+    
       <button onClick={handleLogout} className="logout-btn">Logout</button>
     </div>
   );

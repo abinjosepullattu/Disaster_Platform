@@ -56,6 +56,20 @@ import VolunteerFeedbackView from "./components/ViewFeedbackVolunteer";
 import ReportComplaint from "./components/ReportComplaint";
 import ViewComplaints from "./components/ViewComplaintStatus";
 import AdminComplaintManagement from "./components/AdminComplaintManagement";
+import IncidentReportsPage from "./components/IncidentReportsPage";
+import TaskProgressReport from "./components/TaskProgressReport";
+
+
+
+
+
+import AdminVolunteerPage from "./components/VolunteerManagement";
+import AdminShelterPage from "./components/AdminShelterManagement";
+import AdminTaskPage from "./components/AdminTaskManagement";
+import AdminResourcePage from "./components/AdminResourceManagement";
+import AdminDonationPage from "./components/AdminDonationManagement";
+import AdminAccountPage from "./components/AdminAccountSettings";
+
 //import FeedbackModal from "./components/FeedbackAdmin";
 function App() {
   return (
@@ -118,6 +132,28 @@ function App() {
         <Route path="/user/complaint" element={<ReportComplaint />} />
         <Route path="/user/view-complaint" element={<ViewComplaints />} />
         <Route path="/admin/view-complaint" element={<AdminComplaintManagement />} />
+        <Route path="/admin/incident-reports" element={<IncidentReportsPage />} />
+        <Route path="/admin/progress-reports" element={<TaskProgressReport />} />
+
+
+
+
+
+        <Route path="/admin/volunteer-page" element={<AdminVolunteerPage />} />
+        <Route path="/admin/shelter-page" element={<AdminShelterPage />} />
+        <Route path="/admin/task-page" element={<AdminTaskPage />} />
+        <Route path="/admin/resource-page" element={<AdminResourcePage />} />
+        <Route path="/admin/donation-page" element={<AdminDonationPage />} />
+        <Route path="/admin/account" element={<AdminAccountPage />} />
+
+
+        
+
+        
+
+
+
+
 
 
 

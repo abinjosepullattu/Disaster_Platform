@@ -220,4 +220,212 @@ router.get('/volunteer/:volunteerId/completed', async (req, res) => {
   }
 });
 
+
+
+router.get('/', async (req, res) => {
+  try {
+    const { fromDate, toDate, taskType, status } = req.query;
+    console.log(req.query)
+    
+    // Build the query object
+    const query = {};
+    
+    // Date range filter
+    if (fromDate || toDate) {
+      query.createdAt = {};
+      if (fromDate) query.createdAt.$gte = new Date(fromDate);
+      if (toDate) {
+        // Set time to end of day for toDate
+        const endDate = new Date(toDate);
+        endDate.setHours(23, 59, 59, 999);
+        query.createdAt.$lte = endDate;
+      }
+    }
+    
+    // Status filter
+    if (status === 'true' || status === 'false') {
+      query.completed = status === 'true';
+    }
+    
+    // Get task progress entries
+    let taskProgressList = await TaskProgress.find(query)
+      .populate({
+        path: 'taskId',
+        model: 'Task'
+      })
+      .populate({
+        path: 'volunteerId',
+        model: 'Volunteer',
+        select: 'name email phone'
+      })
+      .sort({ lastUpdated: -1 });
+    
+    // Process the results
+    const results = taskProgressList.map(progress => {
+      return {
+        _id: progress._id,
+        progressDescription: progress.progressDescription,
+        progressPercentage: progress.progressPercentage,
+        completed: progress.completed,
+        lastUpdated: progress.lastUpdated,
+        deliveryStatus: progress.deliveryStatus,
+        mealsServed: progress.mealsServed,
+        peopleFound: progress.peopleFound,
+        peopleHospitalized: progress.peopleHospitalized,
+        peopleMissing: progress.peopleMissing,
+        peopleLost: progress.peopleLost,
+        updates: progress.updates,
+        task: progress.taskId,
+        volunteer: progress.volunteerId
+      };
+    });
+    
+    // Apply taskType filter if provided (we do this after getting results since the taskType is in the Task model)
+    let filteredResults = results;
+    if (taskType) {
+      filteredResults = results.filter(item => item.task.taskType === taskType);
+    }
+    
+    res.json(filteredResults);
+  } catch (error) {
+    console.error('Error fetching task progress:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// GET /api/task-progress/:id - Get a single task progress by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const taskProgress = await TaskProgress.findById(req.params.id)
+      .populate('taskId')
+      .populate('volunteerId');
+      
+    if (!taskProgress) {
+      return res.status(404).json({ message: 'Task progress not found' });
+    }
+    
+    res.json(taskProgress);
+  } catch (error) {
+    console.error('Error fetching task progress:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// // PUT /api/task-progress/:id - Update a task progress
+// router.put('/:id', async (req, res) => {
+//   try {
+//     const {
+//       progressDescription,
+//       progressPercentage,
+//       completed,
+//       deliveryStatus,
+//       mealsServed,
+//       peopleFound,
+//       peopleHospitalized,
+//       peopleMissing,
+//       peopleLost,
+//       update
+//     } = req.body;
+    
+//     const taskProgress = await TaskProgress.findById(req.params.id);
+    
+//     if (!taskProgress) {
+//       return res.status(404).json({ message: 'Task progress not found' });
+//     }
+    
+//     // Update fields if provided
+//     if (progressDescription) taskProgress.progressDescription = progressDescription;
+//     if (progressPercentage !== undefined) taskProgress.progressPercentage = progressPercentage;
+//     if (completed !== undefined) taskProgress.completed = completed;
+//     if (deliveryStatus) taskProgress.deliveryStatus = deliveryStatus;
+//     if (mealsServed !== undefined) taskProgress.mealsServed = mealsServed;
+//     if (peopleFound !== undefined) taskProgress.peopleFound = peopleFound;
+//     if (peopleHospitalized !== undefined) taskProgress.peopleHospitalized = peopleHospitalized;
+//     if (peopleMissing !== undefined) taskProgress.peopleMissing = peopleMissing;
+//     if (peopleLost !== undefined) taskProgress.peopleLost = peopleLost;
+    
+//     // Add new update if provided
+//     if (update && update.description) {
+//       taskProgress.updates.push({
+//         description: update.description,
+//         timestamp: new Date()
+//       });
+//     }
+    
+//     // Update lastUpdated timestamp
+//     taskProgress.lastUpdated = new Date();
+    
+//     const updatedTaskProgress = await taskProgress.save();
+    
+//     res.json(updatedTaskProgress);
+//   } catch (error) {
+//     console.error('Error updating task progress:', error);
+//     res.status(500).json({ message: 'Server error', error: error.message });
+//   }
+// });
+
+// // POST /api/task-progress - Create a new task progress
+// router.post('/', async (req, res) => {
+//   try {
+//     const {
+//       taskId,
+//       volunteerId,
+//       progressDescription,
+//       progressPercentage,
+//       completed,
+//       deliveryStatus,
+//       mealsServed,
+//       peopleFound,
+//       peopleHospitalized,
+//       peopleMissing,
+//       peopleLost
+//     } = req.body;
+    
+//     // Check if task exists
+//     const task = await Task.findById(taskId);
+//     if (!task) {
+//       return res.status(404).json({ message: 'Task not found' });
+//     }
+    
+//     // Create new task progress
+//     const taskProgress = new TaskProgress({
+//       taskId,
+//       volunteerId,
+//       progressDescription,
+//       progressPercentage: progressPercentage || 0,
+//       completed: completed || false,
+//       deliveryStatus: deliveryStatus || 'Not Started',
+//       mealsServed: mealsServed || 0,
+//       peopleFound: peopleFound || 0,
+//       peopleHospitalized: peopleHospitalized || 0,
+//       peopleMissing: peopleMissing || 0,
+//       peopleLost: peopleLost || 0,
+//       lastUpdated: new Date()
+//     });
+    
+//     const savedTaskProgress = await taskProgress.save();
+    
+//     res.status(201).json(savedTaskProgress);
+//   } catch (error) {
+//     console.error('Error creating task progress:', error);
+//     res.status(500).json({ message: 'Server error', error: error.message });
+//   }
+// });
+
+// DELETE /api/task-progress/:id - Delete a task progress
+router.delete('/:id', async (req, res) => {
+  try {
+    const taskProgress = await TaskProgress.findByIdAndDelete(req.params.id);
+    
+    if (!taskProgress) {
+      return res.status(404).json({ message: 'Task progress not found' });
+    }
+    
+    res.json({ message: 'Task progress deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting task progress:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router;

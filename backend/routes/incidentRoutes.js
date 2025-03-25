@@ -261,4 +261,151 @@ router.get('/active', async (req, res) => {
   }
 });
 
+
+
+// Get all incidents
+router.get('/', async (req, res) => {
+  try {
+    const incidents = await Incident.find().sort({ createdAt: -1 });
+    res.json(incidents);
+  } catch (error) {
+    console.error('Error fetching incidents:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Filter incidents
+router.get('/filter', async (req, res) => {
+  try {
+    const { startDate, endDate, status, type, severity, location } = req.query;
+    
+    // Build filter object
+    const filter = {};
+    
+    if (startDate) {
+      filter.createdAt = filter.createdAt || {};
+      filter.createdAt.$gte = new Date(startDate);
+    }
+    
+    if (endDate) {
+      filter.createdAt = filter.createdAt || {};
+      filter.createdAt.$lte = new Date(new Date(endDate).setHours(23, 59, 59));
+    }
+    
+    if (status) {
+      filter.status = parseInt(status);
+    }
+    
+    if (type) {
+      filter.type = type;
+    }
+    
+    if (severity) {
+      filter.severity = parseInt(severity);
+    }
+    
+    if (location) {
+      filter.location = location;
+    }
+    
+    const incidents = await Incident.find(filter).sort({ createdAt: -1 });
+    res.json(incidents);
+  } catch (error) {
+    console.error('Error filtering incidents:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Get a single incident by ID
+router.get('/:id', async (req, res) => {
+  try {
+    const incident = await Incident.findById(req.params.id);
+    
+    if (!incident) {
+      return res.status(404).json({ message: 'Incident not found' });
+    }
+    
+    res.json(incident);
+  } catch (error) {
+    console.error('Error fetching incident:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Create a new incident
+router.post('/', async (req, res) => {
+  try {
+    const { 
+      type, 
+      location, 
+      description, 
+      latitude, 
+      longitude, 
+      severity,
+      reportedBy
+    } = req.body;
+    
+    // Validate required fields
+    if (!type || !location || !description || !latitude || !longitude || !severity) {
+      return res.status(400).json({ message: 'Please provide all required fields' });
+    }
+    
+    const newIncident = new Incident({
+      type,
+      location,
+      description,
+      latitude,
+      longitude,
+      severity,
+      reportedBy: reportedBy || null,
+      status: 0, // Default status: Reported
+    });
+    
+    const savedIncident = await newIncident.save();
+    res.status(201).json(savedIncident);
+  } catch (error) {
+    console.error('Error creating incident:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// Update incident status
+router.patch('/:id', async (req, res) => {
+  try {
+    const { status, notes } = req.body;
+    
+    // Validate status
+    if (status === undefined || status < 0 || status > 3) {
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+    
+    const incident = await Incident.findById(req.params.id);
+    
+    if (!incident) {
+      return res.status(404).json({ message: 'Incident not found' });
+    }
+    
+    // Update incident
+    incident.status = status;
+    
+    // Add notes if provided
+    if (notes) {
+      incident.notes = incident.notes || [];
+      incident.notes.push({
+        content: notes,
+        timestamp: new Date()
+      });
+    }
+    
+    incident.updatedAt = new Date();
+    
+    const updatedIncident = await incident.save();
+    res.json(updatedIncident);
+  } catch (error) {
+    console.error('Error updating incident:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
 module.exports = router;
