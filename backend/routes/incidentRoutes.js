@@ -247,20 +247,38 @@ router.put("/complete/:id", async (req, res) => {
 });
 
 // Endpoint to get active incidents
+// Modify the existing active incidents endpoint
 router.get('/active', async (req, res) => {
   try {
-      // Get all incidents that are not resolved (status !== 3)
-      const activeIncidents = await Incident.find({
+      // Get query parameters
+      const { fromDate, toDate } = req.query;
+
+      // Base query for active (non-resolved) incidents
+      const query = {
           status: { $ne: 3 } // Not resolved
-      }).sort({ severity: -1, createdAt: -1 }); // Sort by severity (descending) then by newest
-      
+      };
+
+      // Add date filtering if dates are provided
+      if (fromDate) {
+          query.createdAt = query.createdAt || {};
+          query.createdAt.$gte = new Date(fromDate);
+      }
+
+      if (toDate) {
+          query.createdAt = query.createdAt || {};
+          query.createdAt.$lte = new Date(new Date(toDate).setHours(23, 59, 59));
+      }
+
+      // Find incidents based on the query
+      const activeIncidents = await Incident.find(query)
+          .sort({ severity: -1, createdAt: -1 }); // Sort by severity (descending) then by newest
+
       res.json(activeIncidents);
   } catch (error) {
       console.error("Error fetching active incidents:", error);
       res.status(500).json({ message: "Server error" });
   }
 });
-
 
 
 // Get all incidents

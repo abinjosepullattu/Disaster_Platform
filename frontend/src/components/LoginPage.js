@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import image from "../images/image6.jpg"
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -37,7 +38,7 @@ const LoginPage = () => {
       <div className="efgh">
         {/* Aside Image */}
         <div className="ijkl">
-          <img src="https://source.unsplash.com/400x500/?login,security" alt="Login Illustration" />
+          <img src={image} alt="Login Illustration" />
         </div>
 
         <div className="mnop">
@@ -61,7 +62,7 @@ const LoginPage = () => {
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #f4f4f4;
+               background: linear-gradient(130deg, #d4501f, #d4c9c412);
           }
           .efgh {
             display: flex;

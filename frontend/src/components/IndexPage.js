@@ -18,8 +18,23 @@ const IndexPage = () => {
   const [sendingEmail, setSendingEmail] = useState(false);
   const [emailMessage, setEmailMessage] = useState('');
 
+  // Date filtering states
+  const [fromDate, setFromDate] = useState('');
+  const [toDate, setToDate] = useState('');
+  const [filteredIncidents, setFilteredIncidents] = useState([]);
+
   const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o";
   const SEARCH_RADIUS = 10000; // 10km in meters
+
+   // Clear date filters
+const clearDateFilter = () => {
+  // Reset date inputs
+  setFromDate('');
+  setToDate('');
+  
+  // Reset to show all verified incidents
+  setFilteredIncidents(incidents);
+};
 
   // Get user's location on page load
   useEffect(() => {
@@ -51,17 +66,56 @@ const IndexPage = () => {
     }
   }, []);
 
-  // Fetch ongoing incidents
-  const fetchIncidents = async () => {
-    try {
-      const response = await axios.get("http://localhost:5000/api/incidents/active");
-      // Filter out incidents with status 0 (only show verified incidents with status 1, 2, 3)
-      const verifiedIncidents = response.data.filter(incident => incident.status > 0);
-      setIncidents(verifiedIncidents);
-    } catch (error) {
-      console.error("Error fetching incidents:", error);
+// Modify the fetchIncidents method to ensure it works correctly
+const fetchIncidents = async () => {
+  try {
+    // Prepare query parameters
+    const params = {};
+
+    // Add date filters if provided
+    if (fromDate) {
+      params.fromDate = new Date(fromDate).toISOString();
     }
-  };
+    if (toDate) {
+      params.toDate = new Date(toDate).toISOString();
+    }
+
+    // Fetch incidents with optional date filtering
+    const response = await axios.get("http://localhost:5000/api/incidents/active", { 
+      params 
+    });
+
+    // Filter out incidents with status 0 (only show verified incidents with status 1, 2, 3)
+    const verifiedIncidents = response.data.filter(incident => incident.status > 0);
+    
+    // Apply date filtering on the client-side
+    const dateFilteredIncidents = verifiedIncidents.filter(incident => {
+      const incidentDate = new Date(incident.createdAt);
+      
+      // If no date filters are set, return all incidents
+      if (!fromDate && !toDate) return true;
+      
+      // If only fromDate is set
+      if (fromDate && !toDate) {
+        return incidentDate >= new Date(fromDate);
+      }
+      
+      // If only toDate is set
+      if (!fromDate && toDate) {
+        return incidentDate <= new Date(toDate);
+      }
+      
+      // If both fromDate and toDate are set
+      return incidentDate >= new Date(fromDate) && incidentDate <= new Date(toDate);
+    });
+
+    // Update both full incidents list and filtered incidents
+    setIncidents(verifiedIncidents);
+    setFilteredIncidents(dateFilteredIncidents);
+  } catch (error) {
+    console.error("Error fetching incidents:", error);
+  }
+};
 
   // Find shelters within 10km radius
   const findNearbyShelters = async (location) => {
@@ -99,8 +153,15 @@ const IndexPage = () => {
     }
   };
 
-// Get directions for a shelter and send them via email
-const handleGetDirections = (shelter) => {
+  // Handle date filter submission
+  const handleDateFilter = () => {
+    fetchIncidents();
+  };
+  
+
+
+  // Get directions for a shelter and send them via email
+  const handleGetDirections = (shelter) => {
     setSelectedShelter(shelter);
     setShowEmailForm(true);
     setEmailMessage('');
@@ -189,44 +250,44 @@ const handleGetDirections = (shelter) => {
       </div>
 
       {/* Email Form Modal */}
-{/* Email Form Modal */}
-{showEmailForm && (
-  <div className="email-modal">
-    <div className="email-modal-content">
-      <h3>Get Directions to {selectedShelter?.location}</h3>
-      <p>We'll send a link that will open directions from your current location when you use it.</p>
-      
-      <form onSubmit={sendDirectionsEmail}>
-        <input
-          type="email"
-          placeholder="Your Email Address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="email-input"
-        />
-        <div className="email-modal-buttons">
-          <button 
-            type="submit" 
-            className="send-email-btn"
-            disabled={sendingEmail}
-          >
-            {sendingEmail ? 'Sending...' : 'Send Directions'}
-          </button>
-          <button 
-            type="button" 
-            className="cancel-btn"
-            onClick={() => setShowEmailForm(false)}
-          >
-            Cancel
-          </button>
+      {showEmailForm && (
+        <div className="email-modal">
+          <div className="email-modal-content">
+            <h3>Get Directions to {selectedShelter?.location}</h3>
+            <p>We'll send a link that will open directions from your current location when you use it.</p>
+            
+            <form onSubmit={sendDirectionsEmail}>
+              <input
+                type="email"
+                placeholder="Your Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="email-input"
+              />
+              <div className="email-modal-buttons">
+                <button 
+                  type="submit" 
+                  className="send-email-btn"
+                  disabled={sendingEmail}
+                >
+                  {sendingEmail ? 'Sending...' : 'Send Directions'}
+                </button>
+                <button 
+                  type="button" 
+                  className="cancel-btn"
+                  onClick={() => setShowEmailForm(false)}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+            
+            {emailMessage && <p className="email-message">{emailMessage}</p>}
+          </div>
         </div>
-      </form>
-      
-      {emailMessage && <p className="email-message">{emailMessage}</p>}
-    </div>
-  </div>
-)}
+      )}
+
       <div className="map-container">
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
           <GoogleMap
@@ -371,15 +432,63 @@ const handleGetDirections = (shelter) => {
 
       <div className="incidents-section">
         <h2>Active Verified Incidents</h2>
-        {incidents.length > 0 ? (
+        
+        {/* Date Filter Section */}
+        <div className="date-filter-section">
+  <h3>Filter Incidents by Date</h3>
+  <div className="date-filter-container">
+    <div className="date-input-wrapper">
+      <div className="date-input-group">
+        <label>From:</label>
+        <input 
+          type="date" 
+          value={fromDate} 
+          onChange={(e) => setFromDate(e.target.value)} 
+          className="date-input"
+        />
+      </div>
+      <div className="date-input-group">
+        <label>To:</label>
+        <input 
+          type="date" 
+          value={toDate} 
+          onChange={(e) => setToDate(e.target.value)} 
+          className="date-input"
+        />
+      </div>
+    </div>
+    <div className="date-filter-buttons">
+      <button 
+        onClick={handleDateFilter} 
+        className="apply-filter-btn"
+        disabled={!fromDate && !toDate}
+      >
+        Apply Filter
+      </button>
+      <button 
+        onClick={clearDateFilter} 
+        className="clear-filter-btn"
+        disabled={!fromDate && !toDate}
+      >
+        Clear Filter
+      </button>
+    </div>
+  </div>
+</div>
+        {filteredIncidents.length > 0 ? (
           <div className="incident-cards">
-            {incidents.map((incident) => (
-              <div className="incident-card" key={incident._id} style={{ borderLeft: `5px solid ${getSeverityColor(incident.severity)}` }}>
+            {filteredIncidents.map((incident) => (
+              <div 
+                className="incident-card" 
+                key={incident._id} 
+                style={{ borderLeft: `5px solid ${getSeverityColor(incident.severity)}` }}
+              >
                 <h3>{incident.type}</h3>
                 <p><strong>Location:</strong> {incident.location}</p>
                 <p><strong>Severity:</strong> {incident.severity}/5</p>
                 <p><strong>Status:</strong> {getStatusText(incident.status)}</p>
                 <p><strong>Description:</strong> {incident.description}</p>
+                <p><strong>Date:</strong> {new Date(incident.createdAt).toLocaleDateString()}</p>
                 <button onClick={() => {
                   setMapCenter({ lat: incident.latitude, lng: incident.longitude });
                   setSelectedIncident(incident);
@@ -388,7 +497,7 @@ const handleGetDirections = (shelter) => {
             ))}
           </div>
         ) : (
-          <p>No active verified incidents at this time.</p>
+          <p>No incidents found matching the selected date range.</p>
         )}
       </div>
 
