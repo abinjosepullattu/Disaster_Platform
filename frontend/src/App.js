@@ -74,7 +74,11 @@ import VolunteerTaskManagement from "./components/VolunteerTaskManagement";
 import VolunteerResourceUsage from "./components/VolunteerResourceManagement";
 import VolunteerCompFeed from "./components/ComplaintFeedbackVolunteer";
 import VolunteerAccountSettings from "./components/VolunteerAccountSettings";
-
+import IncidentReport from "./components/IncidentReportPage";
+import DonationPage from "./components/DonationPage";
+import ContributionPage from "./components/ContributionPage";
+import ComplaintPublic from "./components/ComplaintPublic";
+import PublicAccount from "./components/PublicAccount";
 
 //import FeedbackModal from "./components/FeedbackAdmin";
 function App() {
@@ -156,7 +160,23 @@ function App() {
         <Route path="/volunteer/rum" element={<VolunteerResourceUsage />} />
         <Route path="/volunteer/cf" element={<VolunteerCompFeed />} />
         <Route path="/volunteer/as" element={<VolunteerAccountSettings />} />
+        <Route path="/public/increp" element={<IncidentReport />} />
+        <Route path="/public/don" element={<DonationPage />} />
+        <Route path="/public/cont" element={<ContributionPage />} />
+        <Route path="/public/compl" element={<ComplaintPublic />} />
+        <Route path="/public/acnt" element={<PublicAccount />} />
 
+
+
+
+        
+        
+
+        
+
+        
+
+        
 
 
         
