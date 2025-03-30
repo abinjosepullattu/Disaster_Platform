@@ -69,6 +69,12 @@ import AdminTaskPage from "./components/AdminTaskManagement";
 import AdminResourcePage from "./components/AdminResourceManagement";
 import AdminDonationPage from "./components/AdminDonationManagement";
 import AdminAccountPage from "./components/AdminAccountSettings";
+import VolunteerShelterManagement from "./components/ShelterManagementVolunteer";
+import VolunteerTaskManagement from "./components/VolunteerTaskManagement";
+import VolunteerResourceUsage from "./components/VolunteerResourceManagement";
+import VolunteerCompFeed from "./components/ComplaintFeedbackVolunteer";
+import VolunteerAccountSettings from "./components/VolunteerAccountSettings";
+
 
 //import FeedbackModal from "./components/FeedbackAdmin";
 function App() {
@@ -145,8 +151,22 @@ function App() {
         <Route path="/admin/resource-page" element={<AdminResourcePage />} />
         <Route path="/admin/donation-page" element={<AdminDonationPage />} />
         <Route path="/admin/account" element={<AdminAccountPage />} />
+        <Route path="/volunteer/sm" element={<VolunteerShelterManagement />} />
+        <Route path="/volunteer/tm" element={<VolunteerTaskManagement />} />
+        <Route path="/volunteer/rum" element={<VolunteerResourceUsage />} />
+        <Route path="/volunteer/cf" element={<VolunteerCompFeed />} />
+        <Route path="/volunteer/as" element={<VolunteerAccountSettings />} />
 
 
+
+        
+
+        
+
+
+        
+
+      
         
 
         
