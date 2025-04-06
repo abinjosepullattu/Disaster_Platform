@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, LoadScript, Marker, Autocomplete } from "@react-google-maps/api";
-import "../styles/AdminIncidentPage.css";
+import AdminSidebar from "./AdminSidebar"; // Adjust path as needed
+import "../styles/AdminReportIncident.css";
 import { useUser } from "../context/UserContext";
 
 const AdminReportIncident = () => {
@@ -11,22 +12,90 @@ const AdminReportIncident = () => {
   const [marker, setMarker] = useState(null);
   const navigate = useNavigate();
   const autocompleteRef = useRef(null);
+  const mapRef = useRef(null);
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
-  const GOOGLE_MAPS_API_KEY ="AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // ✅ Load API key from .env
+  const GOOGLE_MAPS_API_KEY ="AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // API key
+  const libraries = ["places"];
 
-  const handleMapClick = (e) => {
-    setMarker({ lat: e.latLng.lat(), lng: e.latLng.lng() });
+  // Get user's current location when component mounts
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setMarker({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+          
+          // Reverse geocode to get address from coordinates
+          fetchAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
+        },
+        (error) => {
+          console.error("Error getting location:", error.message);
+          // Keep default coordinates if user denies permission
+          setMarker({ lat: 12.9716, lng: 77.5946 });
+        }
+      );
+    }
+  }, []);
+
+  // Fetch address from coordinates
+  const fetchAddressFromCoordinates = async (lat, lng) => {
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`
+      );
+      if (response.data.results.length > 0) {
+        setForm(prev => ({ ...prev, location: response.data.results[0].formatted_address }));
+      }
+    } catch (error) {
+      console.error("Error getting address:", error);
+    }
+  };
+
+  const handleMapClick = async (e) => {
+    const lat = e.latLng.lat();
+    const lng = e.latLng.lng();
+    setMarker({ lat, lng });
+
+    // Reverse Geocode to get Address from Lat/Lng
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`
+      );
+      if (response.data.results.length > 0) {
+        setForm(prev => ({ ...prev, location: response.data.results[0].formatted_address }));
+      }
+    } catch (error) {
+      console.error("Error getting address:", error);
+    }
   };
 
   const handlePlaceSelect = () => {
-    const place = autocompleteRef.current.getPlace();
-    if (place && place.geometry) {
-      setMarker({
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      });
-      setForm((prev) => ({ ...prev, location: place.formatted_address }));
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
+      if (place && place.geometry) {
+        setMarker({
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        });
+        setForm((prev) => ({ ...prev, location: place.formatted_address }));
+
+        // Center the map on the selected location
+        if (mapRef.current) {
+          mapRef.current.panTo({
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          });
+          mapRef.current.setZoom(15);
+        }
+      }
     }
+  };
+
+  const handleScriptLoad = () => {
+    setIsScriptLoaded(true);
   };
 
   const handleSubmit = async (e) => {
@@ -34,12 +103,6 @@ const AdminReportIncident = () => {
     if (!marker) return alert("⚠️ Please select a location on the map!");
   
     try {
-      // const token = localStorage.getItem("token");
-      // if (!token) {
-      //   alert("⚠️ Admin login required!");
-      //   return;
-      // }
-  
       // ✅ Step 1: Report the Incident
       const response = await axios.post(
         "http://localhost:5000/api/incidents/add",
@@ -51,22 +114,11 @@ const AdminReportIncident = () => {
           latitude: marker.lat,
           longitude: marker.lng,
           status: 1, // ✅ Automatically mark as Verified
-          userId:user.id
-        },
-        
+          userId: user.id
+        }
       );
   
       alert("✅ Incident added successfully and marked as Verified!");
-  
-      // ✅ Step 2: Send Email to Volunteers
-      // await axios.post(
-      //   "http://localhost:5000/api/incidents/notify-volunteers",
-      //   { incidentId: response.data.incident._id }, // ✅ Send incident ID
-      //   {
-      //     headers: { Authorization: `Bearer ${token}` },
-      //   }
-      // );
-  
       alert("📧 Email notifications sent to all volunteers.");
       navigate("/admin-home");
     } catch (error) {
@@ -75,57 +127,133 @@ const AdminReportIncident = () => {
     }
   };
   
-
   return (
-    <div className="admin-incident-container">
-      <h2>📍 Add Verified Incident</h2>
-      <p className="attention-message">⚠️ Ensure all details are accurate before submission.</p>
+    <div className="a14325631b452">
+      {/* Sidebar */}
+      <AdminSidebar />
 
-      <form onSubmit={handleSubmit} className="incident-form">
-        <label>📍 Search Location:</label>
-        <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
-          <Autocomplete onLoad={(ref) => (autocompleteRef.current = ref)} onPlaceChanged={handlePlaceSelect}>
-            <input type="text" placeholder="Search for a location..." className="search-box" />
-          </Autocomplete>
+      {/* Main Content */}
+      <main className="b14325631c452">
+        <div className="c14325631d452">
+          <h2 className="d14325631e452">📍 Add Verified Incident</h2>
+          <p className="e14325631f452">⚠️ Ensure all details are accurate before submission.</p>
 
-          <GoogleMap
-            mapContainerStyle={{ width: "100%", height: "400px" }}
-            zoom={10}
-            center={marker || { lat: 12.9716, lng: 77.5946 }}
-            onClick={handleMapClick}
-          >
-            {marker && <Marker position={marker} />}
-          </GoogleMap>
-        </LoadScript>
+          <form onSubmit={handleSubmit} className="f14325631g452">
+            {/* Google Maps Search Box and Map */}
+            <div className="g14325631h452">
+              <LoadScript
+                googleMapsApiKey={GOOGLE_MAPS_API_KEY}
+                libraries={libraries}
+                onLoad={handleScriptLoad}
+              >
+                {isScriptLoaded ? (
+                  <>
+                    <Autocomplete
+                      onLoad={(ref) => (autocompleteRef.current = ref)}
+                      onPlaceChanged={handlePlaceSelect}
+                    >
+                      <input
+                        type="text"
+                        placeholder="Search for a location..."
+                        className="h14325631i452"
+                        value={form.location}
+                        onChange={(e) => setForm({ ...form, location: e.target.value })}
+                      />
+                    </Autocomplete>
 
-        <label>📍 Location Name:</label>
-        <input type="text" value={form.location} placeholder="Enter location name" onChange={(e) => setForm({ ...form, location: e.target.value })} required />
+                    <GoogleMap
+                      mapContainerStyle={{ width: "100%", height: "400px" }}
+                      zoom={12}
+                      center={marker || { lat: 12.9716, lng: 77.5946 }}
+                      onClick={handleMapClick}
+                      onLoad={map => {
+                        mapRef.current = map;
+                      }}
+                    >
+                      {marker && <Marker position={marker} />}
+                    </GoogleMap>
+                  </>
+                ) : (
+                  <div className="i14325631j452">
+                    <div className="j14325631k452">
+                      <div className="k14325631l452"></div>
+                      <p>Loading map...</p>
+                    </div>
+                  </div>
+                )}
+              </LoadScript>
+            </div>
 
-        <label>🔥 Incident Type:</label>
-        <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} required>
-          <option value="" disabled>Select Incident Type</option>
-          <option value="Fire">Fire</option>
-          <option value="Flood">Flood</option>
-          <option value="Earthquake">Earthquake</option>
-          <option value="Landslide">Landslide</option>
-          <option value="Accident">Accident</option>
-          <option value="Other">Other</option>
-        </select>
+            {/* Location Name Field */}
+            <div className="l14325631m452">
+              <label className="m14325631n452">📍 Location Name:</label>
+              <input 
+                type="text" 
+                value={form.location} 
+                placeholder="Enter location name" 
+                onChange={(e) => setForm({ ...form, location: e.target.value })} 
+                required 
+                className="n14325631o452"
+              />
+            </div>
 
-        <label>⚠️ Severity Level:</label>
-        <select value={form.severity} onChange={(e) => setForm({ ...form, severity: e.target.value })} required>
-          <option value="1">Very Low</option>
-          <option value="2">Low</option>
-          <option value="3">Medium</option>
-          <option value="4">High</option>
-          <option value="5">Very High</option>
-        </select>
+            {/* Incident Type Field */}
+            <div className="o14325631p452">
+              <label className="p14325631q452">🔥 Incident Type:</label>
+              <select 
+                value={form.type} 
+                onChange={(e) => setForm({ ...form, type: e.target.value })} 
+                required
+                className="q14325631r452"
+              >
+                <option value="" disabled>Select Incident Type</option>
+                <option value="Fire">Fire</option>
+                <option value="Flood">Flood</option>
+                <option value="Earthquake">Earthquake</option>
+                <option value="Landslide">Landslide</option>
+                <option value="Accident">Accident</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
 
-        <label>📝 Description:</label>
-        <textarea placeholder="Describe the incident..." onChange={(e) => setForm({ ...form, description: e.target.value })} required />
+            {/* Severity Level Field */}
+            <div className="r14325631s452">
+              <label className="s14325631t452">⚠️ Severity Level:</label>
+              <select 
+                value={form.severity} 
+                onChange={(e) => setForm({ ...form, severity: e.target.value })} 
+                required
+                className="t14325631u452"
+              >
+                <option value="1">Very Low</option>
+                <option value="2">Low</option>
+                <option value="3">Medium</option>
+                <option value="4">High</option>
+                <option value="5">Very High</option>
+              </select>
+            </div>
 
-        <button type="submit">🚀 Add Verified Incident</button>
-      </form>
+            {/* Description Field */}
+            <div className="u14325631v452">
+              <label className="v14325631w452">📝 Description:</label>
+              <textarea 
+                placeholder="Describe the incident..." 
+                value={form.description}
+                onChange={(e) => setForm({ ...form, description: e.target.value })} 
+                required 
+                className="w14325631x452"
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="x14325631y452"
+            >
+              🚀 Add Verified Incident
+            </button>
+          </form>
+        </div>
+      </main>
     </div>
   );
 };

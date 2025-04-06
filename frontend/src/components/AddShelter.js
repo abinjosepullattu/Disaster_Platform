@@ -2,28 +2,107 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, LoadScript, Marker, Autocomplete } from "@react-google-maps/api";
+import AdminSidebar from "./AdminSidebar"; // Adjust path as needed
 import "../styles/AddShelter.css";
 
 const AddShelter = () => {
     const [location, setLocation] = useState("");
-    const [latitude, setLatitude] = useState(null);
-    const [longitude, setLongitude] = useState(null);
+    const [latitude, setLatitude] = useState(12.9716); // Default will be overridden by user's location
+    const [longitude, setLongitude] = useState(77.5946);
     const [totalCapacity, setTotalCapacity] = useState("");
-    const [contactDetails, setContactDetails] = useState("");
+    const [contactNumber, setContactNumber] = useState("");
     const [assignedVolunteer, setAssignedVolunteer] = useState("");
     const [volunteers, setVolunteers] = useState([]);
+    const [errors, setErrors] = useState({});
+    const [isScriptLoaded, setIsScriptLoaded] = useState(false);
     const autocompleteRef = useRef(null);
     const navigate = useNavigate();
+    const mapRef = useRef(null);
 
-    const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // ✅ Add API Key from .env
+    const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // API Key from .env
+    const libraries = ["places"];
 
+    // Get user's current location when component mounts
     useEffect(() => {
-        axios.get("http://localhost:5000/api/users/available-volunteers") // ✅ Corrected URL
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setLatitude(position.coords.latitude);
+                    setLongitude(position.coords.longitude);
+                    
+                    // Reverse geocode to get the address from coordinates
+                    fetchAddressFromCoordinates(position.coords.latitude, position.coords.longitude);
+                },
+                (error) => {
+                    console.error("Error getting location:", error.message);
+                    // Keep default coordinates if user denies permission
+                }
+            );
+        }
+    }, []);
+
+    // Fetch address from coordinates
+    const fetchAddressFromCoordinates = async (lat, lng) => {
+        try {
+            const response = await axios.get(
+                `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`
+            );
+            if (response.data.results.length > 0) {
+                setLocation(response.data.results[0].formatted_address);
+            }
+        } catch (error) {
+            console.error("Error getting address:", error);
+        }
+    };
+
+    // Fetch available volunteers
+    useEffect(() => {
+        axios.get("http://localhost:5000/api/users/available-volunteers")
             .then(response => setVolunteers(response.data))
             .catch(error => console.error("Error fetching volunteers", error));
     }, []);
 
-    // ✅ Function to handle location selection from search box
+    // Function to validate form
+    const validateForm = () => {
+        let tempErrors = {};
+        let formIsValid = true;
+
+        // Validate capacity
+        if (!totalCapacity || parseInt(totalCapacity) < 1) {
+            tempErrors.totalCapacity = "Capacity must be at least 1";
+            formIsValid = false;
+        }
+
+        // Validate contact (phone number format)
+        const phoneRegex = /^\d{10}$/;
+        if (!contactNumber || !phoneRegex.test(contactNumber)) {
+            tempErrors.contactNumber = "Please enter a valid 10-digit phone number";
+            formIsValid = false;
+        }
+
+        // Validate location
+        if (!location) {
+            tempErrors.location = "Location is required";
+            formIsValid = false;
+        }
+
+        // Validate coordinates
+        if (!latitude || !longitude) {
+            tempErrors.coordinates = "Please select a location on the map";
+            formIsValid = false;
+        }
+
+        // Validate volunteer assignment
+        if (!assignedVolunteer) {
+            tempErrors.assignedVolunteer = "Please select a volunteer";
+            formIsValid = false;
+        }
+
+        setErrors(tempErrors);
+        return formIsValid;
+    };
+
+    // Function to handle location selection from search box
     const handlePlaceSelect = () => {
         if (autocompleteRef.current) {
             const place = autocompleteRef.current.getPlace();
@@ -31,11 +110,20 @@ const AddShelter = () => {
                 setLocation(place.formatted_address);
                 setLatitude(place.geometry.location.lat());
                 setLongitude(place.geometry.location.lng());
+                
+                // Center the map on the selected location
+                if (mapRef.current) {
+                    mapRef.current.panTo({
+                        lat: place.geometry.location.lat(),
+                        lng: place.geometry.location.lng()
+                    });
+                    mapRef.current.setZoom(15);
+                }
             }
         }
     };
 
-    // ✅ Function to handle map click (update location dynamically)
+    // Function to handle map click (update location dynamically)
     const handleMapClick = async (e) => {
         const lat = e.latLng.lat();
         const lng = e.latLng.lng();
@@ -55,71 +143,168 @@ const AddShelter = () => {
         }
     };
 
-    // ✅ Function to handle form submission
+    // Function to handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!latitude || !longitude) {
-            return alert("⚠️ Please select a location using search or by clicking on the map.");
+        
+        if (!validateForm()) {
+            return;
         }
 
-        const shelterData = { location, latitude, longitude, totalCapacity, inmates: 0, contactDetails, assignedVolunteer };
+        const shelterData = { 
+            location, 
+            latitude, 
+            longitude, 
+            totalCapacity: parseInt(totalCapacity), 
+            inmates: 0, 
+            contactDetails: contactNumber, 
+            assignedVolunteer 
+        };
 
         try {
             await axios.post("http://localhost:5000/api/shelters/add", shelterData);
             alert("✅ Shelter added successfully!");
             navigate("/admin-home");
         } catch (error) {
-            alert("❌ Error adding shelter");
+            alert("❌ Error adding shelter: " + (error.response?.data?.message || error.message));
         }
     };
 
+    // Handle script load
+    const handleScriptLoad = () => {
+        setIsScriptLoaded(true);
+    };
+
     return (
-        <div className="shelter-container">
-            <h2>Add Shelter</h2>
+        <div className="sd23456789012">
+            {/* Sidebar */}
+            <AdminSidebar />
 
-            <form onSubmit={handleSubmit}>
-                {/* Google Maps Search Box */}
-                <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
-                    <Autocomplete onLoad={(ref) => (autocompleteRef.current = ref)} onPlaceChanged={handlePlaceSelect}>
-                        <input type="text" placeholder="Search for a location..." className="search-box" />
-                    </Autocomplete>
+            {/* Main Content */}
+            <main className="mc34567890123">
+                <div className="shelter-content-wrapper">
+                    <h2 className="pt45678901234">Add Shelter</h2>
 
-                    {/* Google Map */}
-                    <GoogleMap
-                        mapContainerStyle={{ width: "100%", height: "400px" }}
-                        zoom={10}
-                        center={{ lat: latitude || 12.9716, lng: longitude || 77.5946 }}
-                        onClick={handleMapClick}
-                    >
-                        {latitude && longitude && <Marker position={{ lat: latitude, lng: longitude }} />}
-                    </GoogleMap>
-                </LoadScript>
+                    <form onSubmit={handleSubmit} className="sf56789012345">
+                        {/* Google Maps Search Box and Map */}
+                        <div className="mp67890123456">
+                            <LoadScript
+                                googleMapsApiKey={GOOGLE_MAPS_API_KEY}
+                                libraries={libraries}
+                                onLoad={handleScriptLoad}
+                            >
+                                {isScriptLoaded ? (
+                                    <>
+                                        <Autocomplete
+                                            onLoad={(ref) => (autocompleteRef.current = ref)}
+                                            onPlaceChanged={handlePlaceSelect}
+                                        >
+                                            <input
+                                                type="text"
+                                                placeholder="Search for a location..."
+                                                className="sc89012345678"
+                                                value={location}
+                                                onChange={(e) => setLocation(e.target.value)}
+                                            />
+                                        </Autocomplete>
 
-                {/* Location Name Field */}
-                <input type="text" value={location} placeholder="Location Name" onChange={(e) => setLocation(e.target.value)} required />
+                                        <GoogleMap
+                                            mapContainerStyle={{ width: "100%", height: "400px" }}
+                                            zoom={15}
+                                            center={{ lat: latitude, lng: longitude }}
+                                            onClick={handleMapClick}
+                                            onLoad={map => {
+                                                mapRef.current = map;
+                                            }}
+                                        >
+                                            {latitude && longitude && <Marker position={{ lat: latitude, lng: longitude }} />}
+                                        </GoogleMap>
+                                    </>
+                                ) : (
+                                    <div className="loading-map">
+                                        <div className="map-loading-indicator">
+                                            <div className="spinner"></div>
+                                            <p>Loading map...</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </LoadScript>
+                        </div>
 
-                <input type="number" placeholder="Total Capacity" value={totalCapacity} onChange={(e) => setTotalCapacity(e.target.value)} required />
-                <input type="text" placeholder="Contact Details" value={contactDetails} onChange={(e) => setContactDetails(e.target.value)} required />
+                        {/* Location Name Field */}
+                        <div className="ln90123456789">
+                            <label className="ll01234567890">Location Name</label>
+                            <input 
+                                type="text" 
+                                value={location} 
+                                placeholder="Location Name" 
+                                onChange={(e) => setLocation(e.target.value)} 
+                                required 
+                                className="lf12345678901"
+                            />
+                            {errors.location && <p className="le23456789012">{errors.location}</p>}
+                        </div>
 
-                {/* Volunteer Selection Dropdown */}
-                <select value={assignedVolunteer} onChange={(e) => setAssignedVolunteer(e.target.value)} required>
-    <option value=""disabled selected>Select Volunteer</option>
-    {volunteers.length > 0 ? (
-        volunteers.map((volunteer) => (
-            <option key={volunteer._id} value={volunteer._id}>
-                {volunteer.userDetails.name || "Unnamed Volunteer"}
-            </option>
-        ))
-    ) : (
-        <option disabled>No available volunteers</option>
-    )}
-</select>
+                        <div className="tc34567890123">
+                            <label className="tl45678901234">Total Capacity</label>
+                            <input 
+                                type="number" 
+                                placeholder="Total Capacity" 
+                                value={totalCapacity} 
+                                onChange={(e) => setTotalCapacity(e.target.value)} 
+                                required 
+                                min="1"
+                                className="tf56789012345"
+                            />
+                            {errors.totalCapacity && <p className="te67890123456">{errors.totalCapacity}</p>}
+                        </div>
 
-                <button type="submit">Add Shelter</button>
-            </form>
+                        {/* Contact Details Field */}
+                        <div className="cd78901234567">
+                            <label className="cl89012345678">Contact Number</label>
+                            <input 
+                                type="text" 
+                                placeholder="10-digit phone number" 
+                                value={contactNumber} 
+                                onChange={(e) => setContactNumber(e.target.value)} 
+                                required 
+                                className="cf90123456789"
+                            />
+                            {errors.contactNumber && <p className="ce01234567890">{errors.contactNumber}</p>}
+                        </div>
 
-            {/* ✅ Back Button Below the Map */}
-            <button className="back-button" onClick={() => navigate(-1)}>⬅️ Back</button>
+                        {/* Volunteer Selection Dropdown */}
+                        <div className="vs12345678901">
+                            <label className="vl23456789012">Assigned Volunteer</label>
+                            <select 
+                                value={assignedVolunteer} 
+                                onChange={(e) => setAssignedVolunteer(e.target.value)} 
+                                required
+                                className="vf34567890123"
+                            >
+                                <option value="" disabled>Select Volunteer</option>
+                                {volunteers.length > 0 ? (
+                                    volunteers.map((volunteer) => (
+                                        <option key={volunteer._id} value={volunteer._id}>
+                                            {volunteer.userDetails.name || "Unnamed Volunteer"}
+                                        </option>
+                                    ))
+                                ) : (
+                                    <option disabled>No available volunteers</option>
+                                )}
+                            </select>
+                            {errors.assignedVolunteer && <p className="ve45678901234">{errors.assignedVolunteer}</p>}
+                        </div>
+
+                        <button 
+                            type="submit" 
+                            className="sb56789012345"
+                        >
+                            Add Shelter
+                        </button>
+                    </form>
+                </div>
+            </main>
         </div>
     );
 };

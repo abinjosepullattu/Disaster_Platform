@@ -62,6 +62,7 @@ router.get("/pending-volunteers", async (req, res) => {
 // Approve/Reject Volunteers
 router.post("/approve-volunteer", async (req, res) => {
   const { volunteerId, applicationStatus } = req.body;
+  console.log(req.body);
 
   try {
     const volunteer = await Volunteer.findById(volunteerId).populate("userId");

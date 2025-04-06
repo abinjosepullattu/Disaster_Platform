@@ -425,5 +425,25 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
+// Add this to your incident routes file
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const deletedIncident = await Incident.findByIdAndDelete(id);
+    
+    if (!deletedIncident) {
+      return res.status(404).json({ message: "Incident not found" });
+    }
+    
+    return res.status(200).json({ 
+      message: "Incident permanently deleted",
+      deletedId: id 
+    });
+  } catch (error) {
+    console.error("Error deleting incident:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 module.exports = router;

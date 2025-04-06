@@ -2,7 +2,7 @@
 .A1B2C3D4 {
     display: flex;
     background: #f4f4f4;
-    height: 100vh;
+    height: 100%;
     font-family: Arial, sans-serif;
 }
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
+import AdminSidebar from "./AdminSidebar";
 import "../styles/ViewContributionsAdmin.css";
 
 const AdminContributions = () => {
@@ -40,7 +41,6 @@ const AdminContributions = () => {
       setLoading(true);
       const response = await axios.get("http://localhost:5000/api/resourceTypes/contributions");
       
-      // Sort by date (newest first)
       const sortedContributions = response.data.sort((a, b) => 
         new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -77,7 +77,6 @@ const AdminContributions = () => {
         `http://localhost:5000/api/resourceTypes/approve-contribution/${contributionId}`
       );
       
-      // Update the local state
       setContributions(prevContributions => 
         prevContributions.map(contribution => 
           contribution._id === contributionId 
@@ -88,7 +87,6 @@ const AdminContributions = () => {
       
       setSuccessMessage("Contribution verified successfully!");
       
-      // Clear success message after 3 seconds
       setTimeout(() => {
         setSuccessMessage("");
       }, 3000);
@@ -109,15 +107,14 @@ const AdminContributions = () => {
   const getStatusLabel = (status) => {
     switch (status) {
       case 0:
-        return <span className="status-pending">Pending</span>;
+        return <span className="a12345678b9012-status-pending">Pending</span>;
       case 1:
-        return <span className="status-verified">Verified</span>;
+        return <span className="a12345678b9012-status-verified">Verified</span>;
       default:
-        return <span className="status-unknown">Unknown</span>;
+        return <span className="a12345678b9012-status-unknown">Unknown</span>;
     }
   };
 
-  // Filter contributions based on selected filters
   const filteredContributions = contributions.filter(contribution => {
     const matchesShelter = filters.shelter ? contribution.shelter._id === filters.shelter : true;
     const matchesStatus = filters.status !== "" ? contribution.status === parseInt(filters.status) : true;
@@ -133,158 +130,166 @@ const AdminContributions = () => {
   });
 
   return (
-    <div className="admin-contributions-container">
-      <h2>All Contributions</h2>
-      {error && <p className="error">{error}</p>}
-      {successMessage && <p className="success-message">{successMessage}</p>}
+    <div className="a12345678b9012">
+      <AdminSidebar />
+      <main className="b22345678b9012">
+        <div className="c32345678b9012">
+          <h2 className="d42345678b9012">All Contributions</h2>
+          {error && <p className="e52345678b9012">{error}</p>}
+          {successMessage && <p className="f62345678b9012">{successMessage}</p>}
 
-      {!loading && user && user.role === "admin" && (
-        <div className="filters-section">
-          <h3>Filter Contributions</h3>
-          <div className="filters-form">
-            <div className="filter-group">
-              <label htmlFor="shelter">Shelter:</label>
-              <select 
-                id="shelter" 
-                name="shelter" 
-                value={filters.shelter} 
-                onChange={handleFilterChange}
-              >
-                <option value="">All Shelters</option>
-                {shelters.map(shelter => (
-                  <option key={shelter._id} value={shelter._id}>
-                    {shelter.location}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="filter-group">
-              <label htmlFor="status">Status:</label>
-              <select 
-                id="status" 
-                name="status" 
-                value={filters.status} 
-                onChange={handleFilterChange}
-              >
-                <option value="">All Statuses</option>
-                <option value="0">Pending</option>
-                <option value="1">Verified</option>
-              </select>
-            </div>
-            
-            <div className="filter-group">
-              <label htmlFor="date">Date:</label>
-              <input 
-                type="date" 
-                id="date" 
-                name="date" 
-                value={filters.date} 
-                onChange={handleFilterChange}
-              />
-            </div>
-            
-            <button className="clear-filters-btn" onClick={clearFilters}>
-              Clear Filters
-            </button>
-          </div>
-        </div>
-      )}
-
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : user && user.role === "admin" ? (
-        <>
-          <div className="contributions-summary">
-            <div className="summary-card">
-              <h4>Total Contributions</h4>
-              <p className="count">{contributions.length}</p>
-            </div>
-            <div className="summary-card">
-              <h4>Pending</h4>
-              <p className="count pending">{contributions.filter(c => c.status === 0).length}</p>
-            </div>
-            <div className="summary-card">
-              <h4>Verified</h4>
-              <p className="count verified">{contributions.filter(c => c.status === 1).length}</p>
-            </div>
-          </div>
-
-          {filteredContributions.length > 0 ? (
-            <div className="contributions-list">
-              {filteredContributions.map((contribution) => (
-                <div key={contribution._id} className="contribution-card">
-                  <div className="contribution-header">
-                    <h3>Contribution from {contribution.contributorName}</h3>
-                    <div className="contribution-meta">
-                      <span className="contribution-date">
-                        Date: {formatDate(contribution.createdAt)}
-                      </span>
-                      <span className="contribution-status">
-                        Status: {getStatusLabel(contribution.status)}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="shelter-info">
-                    <p><strong>Shelter:</strong> {contribution.shelter.location}</p>
-                  </div>
-                  
-                  <div className="resources-table-container">
-                    <table className="resources-table">
-                      <thead>
-                        <tr>
-                          <th>Resource</th>
-                          <th>Quantity</th>
-                          <th>Unit</th>
-                          <th>Description</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {contribution.resources.map((resource, index) => (
-                          <tr key={index}>
-                            <td>{resource.resourceType.name}</td>
-                            <td>{resource.quantity}</td>
-                            <td>{resource.unit}</td>
-                            <td>{resource.description || "-"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  
-                  <div className="contribution-contact">
-                    <p><strong>Contributor:</strong> {contribution.contributorName}</p>
-                    <p><strong>Contact:</strong> {contribution.contributorContact}</p>
-                    {contribution.contributorId && (
-                      <p><strong>Contributor ID:</strong> {contribution.contributorId}</p>
-                    )}
-                  </div>
-                  
-                  {contribution.status === 0 && (
-                    <div className="verify-actions">
-                      <button
-                        onClick={() => verifyContribution(contribution._id)}
-                        className="verify-button"
-                      >
-                        Verify Contribution
-                      </button>
-                    </div>
-                  )}
+          {!loading && user && user.role === "admin" && (
+            <div className="g72345678b9012">
+              <h3 className="h82345678b9012">Filter Contributions</h3>
+              <div className="i92345678b9012">
+                <div className="j02345678b9012">
+                  <label htmlFor="shelter" className="k12345678b9012">Shelter:</label>
+                  <select 
+                    id="shelter" 
+                    name="shelter" 
+                    value={filters.shelter} 
+                    onChange={handleFilterChange}
+                    className="l22345678b9012"
+                  >
+                    <option value="">All Shelters</option>
+                    {shelters.map(shelter => (
+                      <option key={shelter._id} value={shelter._id}>
+                        {shelter.location}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div className="no-contributions">
-              <p>No contributions match your filter criteria.</p>
+                
+                <div className="m32345678b9012">
+                  <label htmlFor="status" className="n42345678b9012">Status:</label>
+                  <select 
+                    id="status" 
+                    name="status" 
+                    value={filters.status} 
+                    onChange={handleFilterChange}
+                    className="o52345678b9012"
+                  >
+                    <option value="">All Statuses</option>
+                    <option value="0">Pending</option>
+                    <option value="1">Verified</option>
+                  </select>
+                </div>
+                
+                <div className="p62345678b9012">
+                  <label htmlFor="date" className="q72345678b9012">Date:</label>
+                  <input 
+                    type="date" 
+                    id="date" 
+                    name="date" 
+                    value={filters.date} 
+                    onChange={handleFilterChange}
+                    className="r82345678b9012"
+                  />
+                </div>
+                
+                <button className="s92345678b9012" onClick={clearFilters}>
+                  Clear Filters
+                </button>
+              </div>
             </div>
           )}
-        </>
-      ) : (
-        <div className="access-denied">
-          <p>You don't have permission to view this page. Please log in as an administrator.</p>
+
+          {loading ? (
+            <div className="t02345678b9012">Loading...</div>
+          ) : user && user.role === "admin" ? (
+            <>
+              <div className="u12345678b9012">
+                <div className="v22345678b9012">
+                  <h4 className="w32345678b9012">Total Contributions</h4>
+                  <p className="x42345678b9012">{contributions.length}</p>
+                </div>
+                <div className="y52345678b9012">
+                  <h4 className="z62345678b9012">Pending</h4>
+                  <p className="a72345678b9012">{contributions.filter(c => c.status === 0).length}</p>
+                </div>
+                <div className="b82345678b9012">
+                  <h4 className="c92345678b9012">Verified</h4>
+                  <p className="d02345678b9012">{contributions.filter(c => c.status === 1).length}</p>
+                </div>
+              </div>
+
+              {filteredContributions.length > 0 ? (
+                <div className="e12345678b9012">
+                  {filteredContributions.map((contribution) => (
+                    <div key={contribution._id} className="f22345678b9012">
+                      <div className="g32345678b9012">
+                        <h3 className="h42345678b9012">Contribution from {contribution.contributorName}</h3>
+                        <div className="i52345678b9012">
+                          <span className="j62345678b9012">
+                            Date: {formatDate(contribution.createdAt)}
+                          </span>
+                          <span className="k72345678b9012">
+                            Status: {getStatusLabel(contribution.status)}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="l82345678b9012">
+                        <p className="m92345678b9012"><strong>Shelter:</strong> {contribution.shelter.location}</p>
+                      </div>
+                      
+                      <div className="n02345678b9012">
+                        <table className="o12345678b9012">
+                          <thead>
+                            <tr>
+                              <th>Resource</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {contribution.resources.map((resource, index) => (
+                              <tr key={index}>
+                                <td>{resource.resourceType.name}</td>
+                                <td>{resource.quantity}</td>
+                                <td>{resource.unit}</td>
+                                <td>{resource.description || "-"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                      <div className="p22345678b9012">
+                        <p className="q32345678b9012"><strong>Contributor:</strong> {contribution.contributorName}</p>
+                        <p className="r42345678b9012"><strong>Contact:</strong> {contribution.contributorContact}</p>
+                        {contribution.contributorId && (
+                          <p className="s52345678b9012"><strong>Contributor ID:</strong> {contribution.contributorId}</p>
+                        )}
+                      </div>
+                      
+                      {contribution.status === 0 && (
+                        <div className="t62345678b9012">
+                          <button
+                            onClick={() => verifyContribution(contribution._id)}
+                            className="u72345678b9012"
+                          >
+                            Verify Contribution
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="v82345678b9012">
+                  <p className="w92345678b9012">No contributions match your filter criteria.</p>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="x02345678b9012">
+              <p className="y12345678b9012">You don't have permission to view this page. Please log in as an administrator.</p>
+            </div>
+          )}
         </div>
-      )}
+      </main>
     </div>
   );
 };

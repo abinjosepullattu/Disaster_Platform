@@ -45,7 +45,7 @@ const AdminApprovalPage = () => {
       display: "flex",
       background: "#f4f4f4",
       color: "#333",
-      height: "100vh",
+      height: "100%",
     },
     mainContent: {
       flex: 1,

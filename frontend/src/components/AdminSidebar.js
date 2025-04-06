@@ -7,23 +7,18 @@ const AdminSidebar = () => {
 
   // Inline CSS for the sidebar
   const styles = {
-    sidebar: {
+    sidebarContainer: {
+      position: "relative",
       width: "250px",
+      minHeight: "100vh",
       background: "linear-gradient(to bottom, #2c3e50, #34495e)",
-      color: "white",
-      padding: "20px",
-      boxShadow: "2px 0 15px rgba(0,0,0,0.2)",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column",
-      overflowX: "hidden", // Add this line to prevent horizontal scrolling
-
     },
     sidebarContent: {
-      flex: 1,
-      overflowY: "hidden", // Changed from "auto" to "hidden"
-      overflowX: "hidden", // Add this to prevent horizontal scrolling in content
-
+      width: "100%",
+      padding: "20px",
+      boxSizing: "border-box",
+      position: "relative", // Ensure content stays above background
+      color: "white", // Set default text color
     },
     sidebarTitle: {
       textAlign: "center",
@@ -38,37 +33,40 @@ const AdminSidebar = () => {
       padding: "12px",
       margin: "8px 0",
       background: "rgba(255,255,255,0.1)",
-      color: "white",
+      color: "white", // Explicit white text
       border: "none",
       borderRadius: "5px",
       transition: "all 0.3s ease",
       cursor: "pointer",
+      display: "block", // Ensure proper button sizing
     },
     sidebarButtonHover: {
       background: "#3498db",
       transform: "translateX(5px)",
     },
+    buttonContainer: {
+      width: "100%",
+      marginTop: "20px", // Space after last item
+    },
     logoutButton: {
       width: "100%",
       padding: "12px",
-      marginTop: "20px",
+      margin: "8px 0",
       background: "#e74c3c",
       color: "white",
       border: "none",
       borderRadius: "6px",
-      transition: "background 0.3s ease",
-      position: "relative",
-      bottom: 0,
+      cursor: "pointer",
     },
     dashboardButton: {
       width: "100%",
       padding: "12px",
-      marginTop: "10px",
+      margin: "8px 0",
       background: "#2ecc71",
       color: "white",
       border: "none",
       borderRadius: "6px",
-      transition: "background 0.3s ease",
+      cursor: "pointer",
     }
   };
 
@@ -87,9 +85,10 @@ const AdminSidebar = () => {
   ];
 
   return (
-    <aside style={styles.sidebar}>
+    <div style={styles.sidebarContainer}>
       <div style={styles.sidebarContent}>
         <h2 style={styles.sidebarTitle}>Admin Panel</h2>
+        
         {sidebarItems.map((item, index) => (
           <button
             key={index}
@@ -104,25 +103,27 @@ const AdminSidebar = () => {
             {item.label}
           </button>
         ))}
+        
+        <div style={styles.buttonContainer}>
+          <button 
+            onClick={() => navigate("/admin-home")} 
+            style={styles.dashboardButton}
+          >
+            Dashboard
+          </button>
+          <button 
+            onClick={() => {
+              localStorage.removeItem("token");
+              localStorage.removeItem("role");
+              navigate("/login");
+            }} 
+            style={styles.logoutButton}
+          >
+            Logout
+          </button>
+        </div>
       </div>
-     
-      <button 
-        onClick={() => {
-          localStorage.removeItem("token");
-          localStorage.removeItem("role");
-          navigate("/login");
-        }} 
-        style={styles.logoutButton}
-      >
-        Logout
-      </button>
-      <button 
-        onClick={() => navigate("/admin-home")} 
-        style={styles.dashboardButton}
-      >
-        Dashboard
-      </button>
-    </aside>
+    </div>
   );
 };
 

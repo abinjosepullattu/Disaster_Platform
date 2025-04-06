@@ -1,111 +1,151 @@
-.admin-resource-allocation-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
+/* Main container */
+.a12b345678901 {
+  display: flex;
+  background: url('../images/image8.webp') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Main content area */
+.a13b456789012 {
+  flex: 1;
+  padding: 30px;
+  background: rgba(68, 90, 84, 0.788);
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
+/* Content wrapper */
+.a14b567890123 {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Page title */
+.a15b678901234 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  text-align: center;
+}
+
+/* Error message */
+.a16b789012345 {
+  color: red;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* Select inputs */
+.a17b890123456, .a21b234567890, .a22b345678901 {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Resources heading */
+.a18b901234567 {
+  margin-top: 20px;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+/* Resource item container */
+.a19b012345678 {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Resource row */
+.a20b123456789, .a23b456789012 {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+/* Input fields */
+.a24b567890123, .a25b678901234 {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* Description textarea */
+.a26b789012345 {
+  margin-bottom: 15px;
+}
+
+.a27b890123456 {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  resize: vertical;
+}
+
+/* Remove button container */
+.a28b901234567 {
+  text-align: right;
+}
+
+/* Buttons */
+.a29b012345678, .a30b123456789, .a31b234567890 {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin: 5px;
+}
+
+.a29b012345678:hover {
+  background-color: #2980b9;
+}
+
+.a30b123456789:hover, .a31b234567890:hover {
+  background-color: #2980b9;
+}
+
+/* Disabled button */
+.a31b234567890:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .a13b456789012 {
+    padding: 15px 10px;
   }
   
-  .admin-resource-allocation-container h2 {
-    color: #333;
-    margin-bottom: 20px;
-  }
-  
-  .error {
-    color: #d9534f;
-    margin-bottom: 15px;
-    padding: 10px;
-    background-color: #f8d7da;
-    border-radius: 4px;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  select, input, textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .resource-item {
-    border: 1px solid #eee;
+  .a14b567890123 {
     padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    position: relative;
   }
   
-  .resource-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-    align-items: center;
+  .a15b678901234 {
+    font-size: 24px;
   }
   
-  .resource-type-select, .unit-select {
-    flex: 1;
-  }
-  
-  .quantity-input, .total-amount-input {
-    flex: 1;
-  }
-  
-  .description-row {
-    margin-bottom: 0;
-  }
-  
-  .description-textarea {
-    width: 100%;
-    resize: vertical;
-    min-height: 80px;
-  }
-  
-  .resource-item {
-    /* Your existing styles */
-    display: flex;
+  .a20b123456789, .a23b456789012 {
     flex-direction: column;
   }
   
-  .remove-button-container {
-    align-self: flex-end;
-    margin-bottom: 10px;
+  .a24b567890123, .a25b678901234, .a17b890123456, .a21b234567890, .a22b345678901 {
+    width: 100%;
   }
-  
-  .remove-button {
-    background-color: #d9534f;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .add-button, .submit-button {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-  }
-  
-  .add-button {
-    background-color: #5bc0de;
-    color: white;
-    align-self: flex-start;
-    margin-bottom: 15px;
-  }
-  
-  .submit-button {
-    background-color: #5cb85c;
-    color: white;
-    margin-top: 10px;
-  }
-  
-  .submit-button:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
+}

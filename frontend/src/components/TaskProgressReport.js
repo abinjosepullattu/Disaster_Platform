@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import AdminSidebar from './AdminSidebar';
 import '../styles/TaskProgressReport.css';
-
 const TaskProgressReport = () => {
   const [taskProgress, setTaskProgress] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -85,21 +85,21 @@ const TaskProgressReport = () => {
     switch (task.task.taskType) {
       case 'Transportation and Distribution':
         return (
-          <div className="task-details transportation">
+          <div className="a1432563b7485 a1432563b7486">
             <h4>Transportation and Distribution</h4>
             <p>Delivery Status: {task.deliveryStatus}</p>
           </div>
         );
       case 'Preparing and Serving Food':
         return (
-          <div className="task-details food-service">
+          <div className="a1432563b7485 a1432563b7487">
             <h4>Preparing and Serving Food</h4>
             <p>Meals Served: {task.mealsServed}</p>
           </div>
         );
       case 'Rescue Operation Management':
         return (
-          <div className="task-details rescue">
+          <div className="a1432563b7485 a1432563b7488">
             <h4>Rescue Operation Details</h4>
             <p>People Found: {task.peopleFound}</p>
             <p>People Hospitalized: {task.peopleHospitalized}</p>
@@ -115,138 +115,141 @@ const TaskProgressReport = () => {
   };
   
   return (
-    <div className="container-fluid">
-      <div className="task-progress-container">
-        <h1 className="mb-4">
-          <i className="fas fa-clipboard-list me-2"></i>Task Progress Reports
-        </h1>
-        
-        <div className="filters-container">
-          <form onSubmit={handleFilterSubmit}>
-            <div className="filter-row">
-              <div className="filter-group">
-                <label htmlFor="fromDate" className="form-label">
-                  <i className="fas fa-calendar-alt me-2"></i>From Date
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="fromDate"
-                  name="fromDate"
-                  value={filters.fromDate}
-                  onChange={handleFilterChange}
-                />
-              </div>
-              
-              <div className="filter-group">
-                <label htmlFor="toDate" className="form-label">
-                  <i className="fas fa-calendar-alt me-2"></i>To Date
-                </label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="toDate"
-                  name="toDate"
-                  value={filters.toDate}
-                  onChange={handleFilterChange}
-                />
-              </div>
-              
-              <div className="filter-group">
-                <label htmlFor="taskType" className="form-label">
-                  <i className="fas fa-tasks me-2"></i>Task Type
-                </label>
-                <select
-                  className="form-select"
-                  id="taskType"
-                  name="taskType"
-                  value={filters.taskType}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">Select Task Type</option>
-                  {taskTypeOptions.map(type => (
-                    <option key={type} value={type}>{type}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="filter-group">
-                <label htmlFor="status" className="form-label">
-                  <i className="fas fa-check-circle me-2"></i>Status
-                </label>
-                <select
-                  className="form-select"
-                  id="status"
-                  name="status"
-                  value={filters.status}
-                  onChange={handleFilterChange}
-                >
-                  <option value="">Select Status</option>
-                  {statusOptions.map(status => (
-                    <option key={status} value={status}>{status}</option>
-                  ))}
-                </select>
-              </div>
-              
-              <div className="d-flex align-items-end gap-2">
-                <button type="submit" className="btn filter-button">
-                  <i className="fas fa-filter me-2"></i>Apply Filters
-                </button>
-                <button 
-                  type="button" 
-                  className="btn reset-button" 
-                  onClick={resetFilters}
-                >
-                  <i className="fas fa-redo me-2"></i>Reset
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-        
-        {loading && (
-          <div className="loading">
-            <i className="fas fa-spinner fa-spin me-2"></i>Loading task progress reports...
-          </div>
-        )}
-        
-        {error && <div className="error">{error}</div>}
-        
-        <div className="task-progress-list">
-          {taskProgress.length === 0 && !loading ? (
-            <div className="no-data">No task progress reports found</div>
-          ) : (
-            taskProgress.map(task => (
-              <div key={task._id} className="task-card">
-                <div className="task-header">
-                  <div className="task-title">
-                    <h3>{task.task.taskType}</h3>
-                    <span className={`status-badge ${task.completed ? 'completed' : 'in-progress'}`}>
-                      {task.completed ? 'Completed' : 'In Progress'}
-                    </span>
-                  </div>
-                  <div className="task-progress-bar">
-                    <div 
-                      className="progress-fill" 
-                      style={{ width: `${task.progressPercentage}%` }}
-                    ></div>
-                    <span className="progress-text">{task.progressPercentage}%</span>
-                  </div>
+    <div className="a1432563b7452">
+      <AdminSidebar />
+      <main className="a1432563b7453">
+        <div className="a1432563b7454">
+          <h1 className="a1432563b7455">
+            <i className="fas fa-clipboard-list me-2"></i>Task Progress Reports
+          </h1>
+          
+          <div className="a1432563b7456">
+            <form onSubmit={handleFilterSubmit}>
+              <div className="a1432563b7457">
+                <div className="a1432563b7458">
+                  <label htmlFor="fromDate" className="form-label">
+                    <i className="fas fa-calendar-alt me-2"></i>From Date
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="fromDate"
+                    name="fromDate"
+                    value={filters.fromDate}
+                    onChange={handleFilterChange}
+                  />
                 </div>
                 
-                <div className="task-content">
-                  <p><strong>Description:</strong> {task.task.description}</p>
-                  <p><strong>Incident:</strong> {task.task.incident}</p>
-                  <p><strong>Progress Description:</strong> {task.progressDescription}</p>
-                  <p><strong>Last Updated:</strong> {formatDate(task.lastUpdated)}</p>
-                  
-                  {renderTaskDetails(task)}
+                <div className="a1432563b7458">
+                  <label htmlFor="toDate" className="form-label">
+                    <i className="fas fa-calendar-alt me-2"></i>To Date
+                  </label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    id="toDate"
+                    name="toDate"
+                    value={filters.toDate}
+                    onChange={handleFilterChange}
+                  />
+                </div>
+                
+                <div className="a1432563b7458">
+                  <label htmlFor="taskType" className="form-label">
+                    <i className="fas fa-tasks me-2"></i>Task Type
+                  </label>
+                  <select
+                    className="form-select"
+                    id="taskType"
+                    name="taskType"
+                    value={filters.taskType}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="">Select Task Type</option>
+                    {taskTypeOptions.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="a1432563b7458">
+                  <label htmlFor="status" className="form-label">
+                    <i className="fas fa-check-circle me-2"></i>Status
+                  </label>
+                  <select
+                    className="form-select"
+                    id="status"
+                    name="status"
+                    value={filters.status}
+                    onChange={handleFilterChange}
+                  >
+                    <option value="">Select Status</option>
+                    {statusOptions.map(status => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="a1432563b7459">
+                  <button type="submit" className="btn a1432563b7460">
+                    <i className="fas fa-filter me-2"></i>Apply Filters
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn a1432563b7461" 
+                    onClick={resetFilters}
+                  >
+                    <i className="fas fa-redo me-2"></i>Reset
+                  </button>
                 </div>
               </div>
-            ))
+            </form>
+          </div>
+          
+          {loading && (
+            <div className="a1432563b7462">
+              <i className="fas fa-spinner fa-spin me-2"></i>Loading task progress reports...
+            </div>
           )}
+          
+          {error && <div className="a1432563b7463">{error}</div>}
+          
+          <div className="a1432563b7464">
+            {taskProgress.length === 0 && !loading ? (
+              <div className="a1432563b7465">No task progress reports found</div>
+            ) : (
+              taskProgress.map(task => (
+                <div key={task._id} className="a1432563b7466">
+                  <div className="a1432563b7467">
+                    <div className="a1432563b7468">
+                      <h3>{task.task.taskType}</h3>
+                      <span className={`a1432563b7469 ${task.completed ? 'a1432563b7470' : 'a1432563b7471'}`}>
+                        {task.completed ? 'Completed' : 'In Progress'}
+                      </span>
+                    </div>
+                    <div className="a1432563b7472">
+                      <div 
+                        className="a1432563b7473" 
+                        style={{ width: `${task.progressPercentage}%` }}
+                      ></div>
+                      <span className="a1432563b7474">{task.progressPercentage}%</span>
+                    </div>
+                  </div>
+                  
+                  <div className="a1432563b7475">
+                    <p><strong>Description:</strong> {task.task.description}</p>
+                    <p><strong>Incident:</strong> {task.task.incident}</p>
+                    <p><strong>Progress Description:</strong> {task.progressDescription}</p>
+                    <p><strong>Last Updated:</strong> {formatDate(task.lastUpdated)}</p>
+                    
+                    {renderTaskDetails(task)}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

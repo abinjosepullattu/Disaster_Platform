@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AdminSidebar from "./AdminSidebar";
 import "../styles/ResourceTypeForm.css";
 
 const ResourceTypeForm = () => {
@@ -55,37 +56,56 @@ const ResourceTypeForm = () => {
   };
 
   return (
-    <div className="resource-container">
-      <h2>📦 Manage Resource Types</h2>
+    <div className="a1b2345678901">
+      <AdminSidebar />
+      <main className="a1b2345678902">
+        <div className="a1b2345678903">
+          <h2 className="a1b2345678904">📦 Manage Resource Types</h2>
 
-      {message.text && <div className={`alert ${message.type}`}>{message.text}</div>}
-
-      <form onSubmit={handleSubmit} className="resource-form">
-        <input
-          type="text"
-          value={form.name}
-          placeholder="Enter resource type"
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Adding..." : "➕ Add Resource"}
-        </button>
-      </form>
-
-      <h3>📋 Existing Resource Types</h3>
-      {resourceTypes.length > 0 ? (
-        <div className="resource-list">
-          {resourceTypes.map((resource) => (
-            <div key={resource._id} className="resource-item">
-              <span>{resource.name}</span>
-              <button className="delete-btn" onClick={() => handleDelete(resource._id)}>🗑️</button>
+          {message.text && (
+            <div className={`a1b2345678905 ${message.type === "success" ? "a1b2345678906" : "a1b2345678907"}`}>
+              {message.text}
             </div>
-          ))}
+          )}
+
+          <form onSubmit={handleSubmit} className="a1b2345678908">
+            <input
+              type="text"
+              value={form.name}
+              placeholder="Enter resource type"
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="a1b2345678909"
+              required
+            />
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="a1b2345678910"
+            >
+              {loading ? "Adding..." : "➕ Add Resource"}
+            </button>
+          </form>
+
+          <h3 className="a1b2345678911">📋 Existing Resource Types</h3>
+          {resourceTypes.length > 0 ? (
+            <div className="a1b2345678912">
+              {resourceTypes.map((resource) => (
+                <div key={resource._id} className="a1b2345678913">
+                  <span>{resource.name}</span>
+                  <button 
+                    className="a1b2345678914" 
+                    onClick={() => handleDelete(resource._id)}
+                  >
+                    🗑️ Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="a1b2345678915">No resource types added yet.</p>
+          )}
         </div>
-      ) : (
-        <p className="no-resources">No resource types added yet.</p>
-      )}
+      </main>
     </div>
   );
 };

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
-import "../styles/ViewResourceUsage.css";
+import "../styles/ViewResourceUsageAdmin.css";
+import AdminSidebar from "./AdminSidebar";
 
 const AdminViewResourceUsage = () => {
   const { user } = useUser();
@@ -149,118 +150,136 @@ const AdminViewResourceUsage = () => {
   // Find the currently selected shelter object
   const selectedShelter = shelters.find(shelter => shelter._id === selectedShelterId);
 
-  if (loading && shelters.length === 0) return <div className="loading">Loading...</div>;
-  if (error && shelters.length === 0) return <div className="error">{error}</div>;
-  if (shelters.length === 0) return <p className="error">No shelters found in the system.</p>;
+  if (loading && shelters.length === 0) return <div className="a143b256317462">Loading...</div>;
+  if (error && shelters.length === 0) return <div className="a143b256317463">{error}</div>;
+  if (shelters.length === 0) return <p className="a143b256317463">No shelters found in the system.</p>;
 
   return (
-    <div className="view-usage-container">
-      <h2>Admin Resource Usage Dashboard</h2>
-      
-      <div className="shelter-selector">
-        <label htmlFor="shelter-select">Select Shelter:</label>
-        <select 
-          id="shelter-select" 
-          value={selectedShelterId} 
-          onChange={handleShelterChange}
-        >
-          <option value="">-- Select a Shelter --</option>
-          {shelters.map(shelter => (
-            <option key={shelter._id} value={shelter._id}>
-              {shelter.location}
-            </option>
-          ))}
-        </select>
-      </div>
-      
-      {selectedShelter && (
-        <div className="shelter-info">
-          <h3>Shelter: {selectedShelter.location}</h3>
-          <p><strong>Capacity:</strong> {selectedShelter.inmates}/{selectedShelter.totalCapacity}</p>
-          <p><strong>Contact:</strong> {selectedShelter.contactDetails}</p>
-          {selectedShelter.owner && (
-            <p><strong>Owner:</strong> {selectedShelter.owner.name || selectedShelter.owner}</p>
-          )}
-        </div>
-      )}
-
-      <div className="filter-section">
-        <h4>Filter Records</h4>
-        <div className="filter-controls">
-          <div className="filter-group">
-            <label>Start Date:</label>
-            <input type="date" name="startDate" value={filters.startDate} onChange={handleFilterChange} />
-          </div>
+    <div className="a143b256317452">
+      <AdminSidebar />
+      <main className="a143b256317453">
+        <div className="a143b256317454">
+          <h2 className="a143b256317455">Admin Resource Usage Dashboard</h2>
           
-          <div className="filter-group">
-            <label>End Date:</label>
-            <input type="date" name="endDate" value={filters.endDate} onChange={handleFilterChange} />
-          </div>
-          
-          <div className="filter-group">
-            <label>Resource Type:</label>
-            <select name="resourceType" value={filters.resourceType} onChange={handleFilterChange}>
-              <option value="">All Resources</option>
-              {resourceTypes.map(type => (
-                <option key={type._id} value={type._id}>{type.name}</option>
+          <div className="a143b256317501">
+            <label htmlFor="shelter-select">Select Shelter:</label>
+            <select 
+              id="shelter-select" 
+              value={selectedShelterId} 
+              onChange={handleShelterChange}
+              className="a143b256317502"
+            >
+              <option value="">-- Select a Shelter --</option>
+              {shelters.map(shelter => (
+                <option key={shelter._id} value={shelter._id}>
+                  {shelter.location}
+                </option>
               ))}
             </select>
           </div>
           
-          <div className="filter-actions">
-            <button onClick={applyFilters} className="filter-button">Apply Filters</button>
-            <button onClick={resetFilters} className="reset-button">Reset</button>
-          </div>
-        </div>
-      </div>
-
-      {loading && <div className="loading">Loading records...</div>}
-      
-      {!loading && Object.keys(groupedUsage).length > 0 ? (
-        <div className="usage-records-list">
-          {Object.entries(groupedUsage).map(([date, records]) => (
-            <div key={date} className="usage-date-group">
-              <div className="date-header">
-                <h4>Date: {date}</h4>
+          {selectedShelter && (
+            <div className="a143b256317503">
+              <h3 className="a143b256317504">Shelter: {selectedShelter.location}</h3>
+              <div className="a143b256317505">
+                <div className="a143b256317506">
+                  <strong>Capacity:</strong> {selectedShelter.inmates}/{selectedShelter.totalCapacity}
+                </div>
+                <div className="a143b256317506">
+                  <strong>Contact:</strong> {selectedShelter.contactDetails}
+                </div>
+                {selectedShelter.owner && (
+                  <div className="a143b256317506">
+                    <strong>Owner:</strong> {selectedShelter.owner.name || selectedShelter.owner}
+                  </div>
+                )}
               </div>
-              
-              {records.map((record) => (
-                <div key={record._id} className="usage-card">
-                  <div className="usage-header">
-                    <h5>Recorded: {formatDate(record.createdAt)}</h5>
-                    <span className="recorded-by">By: {record.volunteer?.name || "Unknown"}</span>
+            </div>
+          )}
+
+          <div className="a143b256317456">
+            <h4 className="a143b256317507">Filter Records</h4>
+            <div className="a143b256317457">
+              <div className="a143b256317508">
+                <div className="a143b256317458">
+                  <label>Start Date:</label>
+                  <input type="date" name="startDate" value={filters.startDate} onChange={handleFilterChange} />
+                </div>
+                
+                <div className="a143b256317458">
+                  <label>End Date:</label>
+                  <input type="date" name="endDate" value={filters.endDate} onChange={handleFilterChange} />
+                </div>
+                
+                <div className="a143b256317458">
+                  <label>Resource Type:</label>
+                  <select name="resourceType" value={filters.resourceType} onChange={handleFilterChange}>
+                    <option value="">All Resources</option>
+                    {resourceTypes.map(type => (
+                      <option key={type._id} value={type._id}>{type.name}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="a143b256317459">
+                  <button onClick={applyFilters} className="a143b256317460">Apply Filters</button>
+                  <button onClick={resetFilters} className="a143b256317461">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {loading && <div className="a143b256317462">Loading records...</div>}
+          
+          {!loading && Object.keys(groupedUsage).length > 0 ? (
+            <div className="a143b256317509">
+              {Object.entries(groupedUsage).map(([date, records]) => (
+                <div key={date} className="a143b256317510">
+                  <div className="a143b256317511">
+                    <h4>Date: {date}</h4>
                   </div>
                   
-                  <table className="resources-table">
-                    <thead>
-                      <tr>
-                        <th>Resource</th>
-                        <th>Quantity</th>
-                        <th>Unit</th>
-                        <th>Description</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {record.resources.map((resource, index) => (
-                        <tr key={index}>
-                          <td>{resource.resourceType?.name || "Unknown"}</td>
-                          <td>{resource.quantity}</td>
-                          <td>{resource.unit}</td>
-                          <td>{resource.description || "-"}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  
-                  {record.notes && <div className="usage-notes"><strong>Notes:</strong> {record.notes}</div>}
+                  {records.map((record) => (
+                    <div key={record._id} className="a143b256317512">
+                      <div className="a143b256317513">
+                        <h5>Recorded: {formatDate(record.createdAt)}</h5>
+                        <span className="a143b256317514">By: {record.volunteer?.name || "Unknown"}</span>
+                      </div>
+                      
+                      <div className="a143b256317515">
+                        <table className="a143b256317516">
+                          <thead>
+                            <tr>
+                              <th>Resource</th>
+                              <th>Quantity</th>
+                              <th>Unit</th>
+                              <th>Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {record.resources.map((resource, index) => (
+                              <tr key={index}>
+                                <td>{resource.resourceType?.name || "Unknown"}</td>
+                                <td>{resource.quantity}</td>
+                                <td>{resource.unit}</td>
+                                <td>{resource.description || "-"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                      {/* {record.notes && <div className="a143b256317517"><strong>Notes:</strong> {record.notes}</div>} */}
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-          ))}
+          ) : (
+            !loading && <p className="a143b256317518">No resource usage records found.</p>
+          )}
         </div>
-      ) : (
-        !loading && <p className="no-data">No resource usage records found.</p>
-      )}
+      </main>
     </div>
   );
 };

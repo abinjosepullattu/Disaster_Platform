@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import AdminSidebar from "./AdminSidebar";
 import "../styles/AdminDonationsView.css";
 
 const AdminCampaignDonationsView = () => {
@@ -48,13 +49,12 @@ const AdminCampaignDonationsView = () => {
                 })
             );
 
-            // Aggregate donations by user email
             const aggregatedDonations = donationsWithUserDetails.reduce((acc, donation) => {
                 const existingEntry = acc.find((d) => d.user.email === donation.user.email);
                 if (existingEntry) {
-                    existingEntry.amount += donation.amount; // Sum donation amounts
+                    existingEntry.amount += donation.amount;
                 } else {
-                    acc.push({ ...donation }); // Add new user entry
+                    acc.push({ ...donation });
                 }
                 return acc;
             }, []);
@@ -67,7 +67,6 @@ const AdminCampaignDonationsView = () => {
             setLoading(false);
         }
     };
-
 
     const handleSelectCampaign = (campaign) => {
         setSelectedCampaign(campaign);
@@ -113,81 +112,132 @@ const AdminCampaignDonationsView = () => {
     const formatCurrency = (amount) => `₹${parseFloat(amount).toFixed(2)}`;
 
     return (
-        <div className="admin-donations-container">
-            <h2>View Donations</h2>
-            {!showDetails ? (
-                <div className="campaign-selection-section">
-                    <div className="dropdown-container">
-                        <label htmlFor="campaign-select">Select Campaign:</label>
-                        <select id="campaign-select" className="campaign-select" onChange={handleChangeCampaign} disabled={campaignsLoading} value={selectedCampaign ? selectedCampaign._id : ""}>
-                            <option value="">-- Select a Campaign --</option>
-                            {campaigns.map(campaign => <option key={campaign._id} value={campaign._id}>{campaign.title}</option>)}
-                        </select>
-                    </div>
-                    {campaignsLoading && <div className="loading">Loading campaigns...</div>}
-                    {selectedCampaign && !loading && donations.length > 0 && (
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Donor</th>
-                                    <th>Email</th>
-                                    <th>Amount</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {donations.map(donation => (
-                                    <tr key={donation._id}>
-                                        <td className="donation-donor">{donation.user.name}</td>
-                                        <td className="donation-email">{donation.user.email}</td>
-                                        <td className="donation-amount">₹{parseFloat(donation.amount).toFixed(2)}</td>
-                                        <td className="donation-date">
-                                            {new Date(donation.createdAt).toLocaleDateString(undefined, {
-                                                month: 'long',
-                                                day: 'numeric',
-                                                year: 'numeric'
-                                            })}
-                                            <br />
-                                            at
-                                            <br />
-                                            {new Date(donation.createdAt).toLocaleTimeString(undefined, {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })}
-                                        </td>
-                                        <td>
-                                            <span className={`donation-status status-${donation.status.toLowerCase()}`}>
-                                                {donation.status}
-                                            </span>
-                                        </td>
-                                        <td className="donation-actions">
-                                            <button className="view-details-button" onClick={() => handleViewDetails(donation)}>
-                                                View Details
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+        <div className="a12345b6789012">
+            {/* Sidebar */}
+            <AdminSidebar />
+
+            {/* Main Content */}
+            <main className="b22345b6789012">
+                <div className="c32345b6789012">
+                    <h2 className="d42345b6789012">View Donations</h2>
+                    
+                    {error && <div className="e52345b6789012">{error}</div>}
+
+                    {!showDetails ? (
+                        <div className="f62345b6789012">
+                            <div className="g72345b6789012">
+                                <label htmlFor="h82345b6789012" className="i92345b6789012">Select Campaign:</label>
+                                <select 
+                                    id="h82345b6789012" 
+                                    className="j02345b6789012" 
+                                    onChange={handleChangeCampaign} 
+                                    disabled={campaignsLoading} 
+                                    value={selectedCampaign ? selectedCampaign._id : ""}
+                                >
+                                    <option value="">-- Select a Campaign --</option>
+                                    {campaigns.map(campaign => (
+                                        <option key={campaign._id} value={campaign._id}>{campaign.title}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {campaignsLoading && <div className="k12345b6789012">Loading campaigns...</div>}
+
+                            {selectedCampaign && !loading && donations.length > 0 && (
+                                <div className="l22345b6789012">
+                                    <table className="m32345b6789012">
+                                        <thead className="n42345b6789012">
+                                            <tr className="o52345b6789012">
+                                                <th className="p62345b6789012">Donor</th>
+                                                <th className="q72345b6789012">Email</th>
+                                                <th className="r82345b6789012">Amount</th>
+                                                <th className="s92345b6789012">Date</th>
+                                                <th className="t02345b6789012">Status</th>
+                                                <th className="u12345b6789012">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="v22345b6789012">
+                                            {donations.map(donation => (
+                                                <tr key={donation._id} className="w32345b6789012">
+                                                    <td className="x42345b6789012">{donation.user.name}</td>
+                                                    <td className="y52345b6789012">{donation.user.email}</td>
+                                                    <td className="z62345b6789012">{formatCurrency(donation.amount)}</td>
+                                                    <td className="a72345b6789012">
+                                                        {new Date(donation.createdAt).toLocaleDateString(undefined, {
+                                                            month: 'long',
+                                                            day: 'numeric',
+                                                            year: 'numeric'
+                                                        })}
+                                                        <br />
+                                                        at
+                                                        <br />
+                                                        {new Date(donation.createdAt).toLocaleTimeString(undefined, {
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })}
+                                                    </td>
+                                                    <td className="b82345b6789012">
+                                                        <span className={`c92345b6789012 d02345b6789012-${donation.status.toLowerCase()}`}>
+                                                            {donation.status}
+                                                        </span>
+                                                    </td>
+                                                    <td className="e12345b6789012">
+                                                        <button 
+                                                            className="f22345b6789012" 
+                                                            onClick={() => handleViewDetails(donation)}
+                                                        >
+                                                            View Details
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+
+                            {selectedCampaign && !loading && donations.length === 0 && (
+                                <div className="g32345b6789012">
+                                    No donations found for this campaign.
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="h42345b6789012">
+                            <h3 className="i52345b6789012">Donation Details</h3>
+                            <div className="j62345b6789012">
+                                <div className="k72345b6789012">
+                                    <h4 className="l82345b6789012">Payment Information</h4>
+                                    <div className="m92345b6789012">
+                                        <div className="n02345b6789012">Payment ID:</div>
+                                        <div className="o12345b6789012">{selectedDonation.razorpay_payment_id || "N/A"}</div>
+                                    </div>
+                                    <div className="p22345b6789012">
+                                        <div className="q32345b6789012">Amount:</div>
+                                        <div className="r42345b6789012">{formatCurrency(selectedDonation.amount)}</div>
+                                    </div>
+                                    <div className="s52345b6789012">
+                                        <div className="t62345b6789012">Status:</div>
+                                        <div className={`u72345b6789012 d02345b6789012-${selectedDonation.status.toLowerCase()}`}>
+                                            {selectedDonation.status}
+                                        </div>
+                                    </div>
+                                    <div className="v82345b6789012">
+                                        <div className="w92345b6789012">Date:</div>
+                                        <div className="x02345b6789012">{formatDate(selectedDonation.createdAt)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button 
+                                className="y12345b6789012" 
+                                onClick={() => setShowDetails(false)}
+                            >
+                                Back to Donations
+                            </button>
+                        </div>
                     )}
                 </div>
-            ) : (
-                <div className="donation-details-container">
-                    <h3>Donation Details</h3>
-                    <div className="donation-details-card">
-                        <div className="detail-section">
-                            <h4>Payment Information</h4>
-                            <div className="detail-row"><div className="detail-label">Payment ID:</div><div className="detail-value">{selectedDonation.razorpay_payment_id || "N/A"}</div></div>
-                            <div className="detail-row"><div className="detail-label">Amount:</div><div className="detail-value">{formatCurrency(selectedDonation.amount)}</div></div>
-                            <div className="detail-row"><div className="detail-label">Status:</div><div className={`detail-value status-${selectedDonation.status.toLowerCase()}`}>{selectedDonation.status}</div></div>
-                            <div className="detail-row"><div className="detail-label">Date:</div><div className="detail-value">{formatDate(selectedDonation.createdAt)}</div></div>
-                        </div>
-                    </div>
-                    <button className="back-button" onClick={() => setShowDetails(false)}>Back</button>
-                </div>
-            )}
+            </main>
         </div>
     );
 };

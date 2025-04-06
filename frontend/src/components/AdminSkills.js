@@ -14,7 +14,7 @@ const AdminAddSkill = () => {
   const styles = {
     container: {
       display: "flex",
-      height: "100vh",
+      height: "100%",
       fontFamily: "'Roboto', sans-serif",
       background: "#f0f2f5",
     },

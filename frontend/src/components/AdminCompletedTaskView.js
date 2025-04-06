@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/AdminCompletedTaskView.css';
 import { useUser } from "../context/UserContext";
+import AdminSidebar from './AdminSidebar';
 
-import FeedbackModal from './FeedbackAdmin'; // We'll create this component next
+import FeedbackModal from './FeedbackAdmin';
 
 const AdminCompletedTasksView = () => {
   const { user } = useUser();
@@ -156,7 +157,7 @@ const AdminCompletedTasksView = () => {
     switch (task.taskType) {
       case 'Transportation and Distribution':
         return (
-          <div className="task-details">
+          <div className="a143256b67467">
             <p><strong>Shelter:</strong> {task.shelter}</p>
             <p><strong>Resource Type:</strong> {task.resourceType}</p>
             <p><strong>Delivery Date & Time:</strong> {new Date(task.deliveryDateTime).toLocaleString()}</p>
@@ -164,7 +165,7 @@ const AdminCompletedTasksView = () => {
         );
       case 'Preparing and Serving Food':
         return (
-          <div className="task-details">
+          <div className="a143256b67467">
             <p><strong>Shelter:</strong> {task.shelter}</p>
           </div>
         );
@@ -179,18 +180,18 @@ const AdminCompletedTasksView = () => {
   // Render feedback information if it exists
   const renderFeedbackInfo = () => {
     if (feedbackLoading) {
-      return <div className="feedback-info loading">Checking feedback status...</div>;
+      return <div className="a143256b67480 a143256b67461">Checking feedback status...</div>;
     }
     
     if (existingFeedback) {
       return (
-        <div className="feedback-info submitted">
-          <p className="feedback-status">
-            <span className="feedback-icon">✓</span> 
+        <div className="a143256b67480 a143256b67481">
+          <p className="a143256b67482">
+            <span className="a143256b67483">✓</span> 
             Feedback submitted ({existingFeedback.rating}/4)
           </p>
           {existingFeedback.status === 1 && (
-            <span className="feedback-viewed-badge">Viewed by volunteer</span>
+            <span className="a143256b67484">Viewed by volunteer</span>
           )}
         </div>
       );
@@ -199,125 +200,145 @@ const AdminCompletedTasksView = () => {
     return null;
   };
 
+  // Get status class for styling
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 0:
+        return 'a143256b67462';
+      case 1:
+        return 'a143256b67463';
+      case 2:
+        return 'a143256b67464';
+      case 3:
+        return 'a143256b67465';
+      case 4:
+        return 'a143256b67466';
+      default:
+        return '';
+    }
+  };
+
   return (
-    <div className="admin-completed-tasks container">
-      <h2>Completed Task Verification</h2>
-      
-      <div className="task-filter">
-        <label htmlFor="taskType">Filter by Task Type:</label>
-        <select
-          id="taskType"
-          className="form-control"
-          value={selectedTaskType}
-          onChange={handleTaskTypeChange}
-        >
-          <option value="" disabled>Select Task Type</option>
-          {taskTypes.map(type => (
-            <option key={type._id} value={type.name}>
-              {type.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="sort-info">
-        {/* <p><i>Showing only the most recent completed task</i></p> */}
-      </div>
-
-      {loading && <div className="loading">Loading latest completed task...</div>}
-      
-      {error && <div className="error-message">{error}</div>}
-      
-      {!loading && !error && !latestTask && (
-        <div className="no-tasks">No completed tasks found.</div>
-      )}
-
-      {!loading && latestTask && (
-        <div className="tasks-list">
-          <div className="task-card completed-task">
-            <div className="task-header">
-              <h3>{latestTask.taskType}</h3>
-              <span className="task-status status-completed">Completed</span>
-            </div>
-            
-            <div className="task-content">
-              <div className="task-description">
-                <p><strong>Description:</strong> {latestTask.description}</p>
-                <p><strong>Created:</strong> {new Date(latestTask.createdAt).toLocaleString()}</p>
-              </div>
-              
-              <div className="task-incident">
-                <h4>Incident Details</h4>
-                {latestTask.incident ? (
-                  <>
-                    <p><strong>Location:</strong> {latestTask.incident.location}</p>
-                    <p><strong>Type:</strong> {latestTask.incident.type}</p>
-                    <p><strong>Severity:</strong> {latestTask.incident.severity}</p>
-                  </>
-                ) : (
-                  <p>No incident details available</p>
-                )}
-              </div>
-              
-              <div className="task-volunteer">
-                <h4>Volunteer Details</h4>
-                {latestTask.volunteer ? (
-                  <>
-                    <p><strong>Name:</strong> {latestTask.volunteer.name}</p>
-                    <p><strong>Email:</strong> {latestTask.volunteer.email}</p>
-                    <p><strong>Phone:</strong> {latestTask.volunteer.phone}</p>
-                  </>
-                ) : (
-                  <p>No volunteer information available</p>
-                )}
-              </div>
-              
-              {/* Render type-specific details */}
-              {renderTaskDetails(latestTask)}
-              
-              {/* Feedback information */}
-              {renderFeedbackInfo()}
-              
-              {/* Verification section with button */}
-              <div className="task-verification">
-                <button 
-                  className="btn btn-primary verify-btn"
-                  onClick={() => handleVerifyCompletion(latestTask._id)}
-                  disabled={verifyingTask}
-                >
-                  {verifyingTask ? 'Verifying...' : 'Verify Completion'}
-                </button>
-                
-                {/* Feedback Button - only show if no feedback exists */}
-                {!existingFeedback && latestTask.volunteer && (
-                  <button 
-                    className="btn btn-secondary feedback-btn"
-                    onClick={handleOpenFeedbackModal}
-                  >
-                    Provide Feedback
-                  </button>
-                )}
-                
-                <p className="verification-note">
-                  Verifying will mark this task as available for new assignments
-                </p>
-              </div>
-            </div>
+    <div className="a143256b67456">
+      <AdminSidebar />
+      <main className="a143256b67457">
+        <div className="a143256b67458">
+          <h2 className="a143256b67459">✅ Completed Task Verification</h2>
+          
+          {error && <div className="alert danger">{error}</div>}
+          
+          <div className="a143256b67460">
+            <label htmlFor="taskType">Filter by Task Type:</label>
+            <select
+              id="taskType"
+              value={selectedTaskType}
+              onChange={handleTaskTypeChange}
+            >
+              <option value="" disabled>Select Task Type</option>
+              {taskTypes.map(type => (
+                <option key={type._id} value={type.name}>
+                  {type.name}
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
-      )}
 
-      {/* Feedback Modal */}
-      {showFeedbackModal && latestTask && (
-        <FeedbackModal
-          show={showFeedbackModal}
-          onClose={handleCloseFeedbackModal}
-          onSubmit={handleSubmitFeedback}
-          volunteer={latestTask.volunteer}
-          task={latestTask}
-          isSubmitting={feedbackSubmitting}
-        />
-      )}
+          {loading && <div className="a143256b67461">⏳ Loading latest completed task...</div>}
+          
+          {!loading && !error && !latestTask && (
+            <div className="a143256b67468">📭 No completed tasks found.</div>
+          )}
+
+          {!loading && latestTask && (
+            <div className="a143256b67469">
+              <div className="a143256b67470">
+                <div className="a143256b67471">
+                  <h3>{latestTask.taskType}</h3>
+                  <span className={`a143256b67472 ${getStatusClass(4)}`}>
+                    Completed
+                  </span>
+                </div>
+                
+                <div className="a143256b67473">
+                  <div className="a143256b67474">
+                    <p><strong>Description:</strong> {latestTask.description}</p>
+                    <p><strong>Created:</strong> {new Date(latestTask.createdAt).toLocaleString()}</p>
+                  </div>
+                  
+                  <div className="a143256b67475">
+                    <h4>📍 Incident Details</h4>
+                    {latestTask.incident ? (
+                      <>
+                        <p><strong>Location:</strong> {latestTask.incident.location}</p>
+                        <p><strong>Type:</strong> {latestTask.incident.type}</p>
+                        <p><strong>Severity:</strong> {latestTask.incident.severity}</p>
+                      </>
+                    ) : (
+                      <p>No incident details available</p>
+                    )}
+                  </div>
+                  
+                  <div className="a143256b67476">
+                    <h4>👤 Volunteer Details</h4>
+                    {latestTask.volunteer ? (
+                      <>
+                        <p><strong>Name:</strong> {latestTask.volunteer.name}</p>
+                        <p><strong>Email:</strong> {latestTask.volunteer.email}</p>
+                        <p><strong>Phone:</strong> {latestTask.volunteer.phone}</p>
+                      </>
+                    ) : (
+                      <p>No volunteer information available</p>
+                    )}
+                  </div>
+                  
+                  {/* Render type-specific details */}
+                  {renderTaskDetails(latestTask)}
+                  
+                  {/* Feedback information */}
+                  {renderFeedbackInfo()}
+                  
+                  {/* Verification section with button */}
+                  <div className="a143256b67477">
+                    <button 
+                      className="a143256b67478"
+                      onClick={() => handleVerifyCompletion(latestTask._id)}
+                      disabled={verifyingTask}
+                    >
+                      {verifyingTask ? '⏳ Verifying...' : '✅ Verify Completion'}
+                    </button>
+                    
+                    {/* Feedback Button - only show if no feedback exists */}
+                    {!existingFeedback && latestTask.volunteer && (
+                      <button 
+                        className="a143256b67479"
+                        onClick={handleOpenFeedbackModal}
+                      >
+                        📝 Provide Feedback
+                      </button>
+                    )}
+                    
+                    <p className="a143256b67485">
+                      Verifying will mark this task as available for new assignments
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Feedback Modal */}
+          {showFeedbackModal && latestTask && (
+            <FeedbackModal
+              show={showFeedbackModal}
+              onClose={handleCloseFeedbackModal}
+              onSubmit={handleSubmitFeedback}
+              volunteer={latestTask.volunteer}
+              task={latestTask}
+              isSubmitting={feedbackSubmitting}
+            />
+          )}
+        </div>
+      </main>
     </div>
   );
 };

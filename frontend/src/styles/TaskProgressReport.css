@@ -1,109 +1,188 @@
-
-.task-progress-container {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+/* Main layout with sidebar */
+.a1432563b7452 {
+    display: flex;
+    background: url('../images/image8.webp') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Main content area */
+  .a1432563b7453 {
+    flex: 1;
     padding: 30px;
-    margin: 20px;
-}
-
-.filters-container {
+    background: rgba(68, 90, 84, 0.788);
+    overflow-y: auto;
+    min-height: 100vh;
+  }
+  
+  /* Task progress container */
+  .a1432563b7454 {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Page title */
+  .a1432563b7455 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    text-align: center;
+  }
+  
+  /* Filters container */
+  .a1432563b7456 {
     background-color: #f8f9fa;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
-}
-
-.filter-row {
+  }
+  
+  /* Filter row */
+  .a1432563b7457 {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
     align-items: center;
-}
-
-.filter-group {
+  }
+  
+  /* Filter group */
+  .a1432563b7458 {
     flex-grow: 1;
     min-width: 200px;
-}
-
-.filter-button, .reset-button {
-    transition: all 0.3s ease;
-}
-
-.filter-button {
+  }
+  
+  /* Button container */
+  .a1432563b7459 {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  
+  /* Filter button */
+  .a1432563b7460 {
     background-color: #007bff;
     color: white;
-}
-
-.reset-button {
+    transition: all 0.3s ease;
+  }
+  
+  /* Reset button */
+  .a1432563b7461 {
     background-color: #6c757d;
     color: white;
-}
-
-.filter-button:hover, .reset-button:hover {
+    transition: all 0.3s ease;
+  }
+  
+  .a1432563b7460:hover, .a1432563b7461:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-.task-card {
+  }
+  
+  /* Loading indicator */
+  .a1432563b7462 {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #6c757d;
+  }
+  
+  /* Error message */
+  .a1432563b7463 {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #dc3545;
+  }
+  
+  /* Task progress list */
+  .a1432563b7464 {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  /* No data message */
+  .a1432563b7465 {
+    text-align: center;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #6c757d;
+  }
+  
+  /* Task card */
+  .a1432563b7466 {
     background-color: #ffffff;
     border-radius: 10px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
     padding: 20px;
     transition: all 0.3s ease;
-}
-
-.task-card:hover {
+  }
+  
+  .a1432563b7466:hover {
     transform: scale(1.02);
     box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-}
-
-.task-header {
+  }
+  
+  /* Task header */
+  .a1432563b7467 {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
-}
-
-.task-title h3 {
+  }
+  
+  /* Task title */
+  .a1432563b7468 h3 {
     margin-bottom: 0;
     color: #343a40;
-}
-
-.status-badge {
+  }
+  
+  /* Status badge */
+  .a1432563b7469 {
     padding: 5px 10px;
     border-radius: 20px;
     font-size: 0.8em;
     font-weight: bold;
-}
-
-.status-badge.completed {
+  }
+  
+  /* Completed status */
+  .a1432563b7470 {
     background-color: #28a745;
     color: white;
-}
-
-.status-badge.in-progress {
+  }
+  
+  /* In progress status */
+  .a1432563b7471 {
     background-color: #ffc107;
     color: #212529;
-}
-
-.task-progress-bar {
+  }
+  
+  /* Progress bar container */
+  .a1432563b7472 {
     background-color: #e9ecef;
     border-radius: 10px;
     height: 20px;
     width: 200px;
     position: relative;
     overflow: hidden;
-}
-
-.progress-fill {
+  }
+  
+  /* Progress fill */
+  .a1432563b7473 {
     background-color: #007bff;
     height: 100%;
     transition: width 0.5s ease;
-}
-
-.progress-text {
+  }
+  
+  /* Progress text */
+  .a1432563b7474 {
     position: absolute;
     right: 5px;
     top: 50%;
@@ -111,63 +190,96 @@
     color: white;
     font-size: 0.8em;
     font-weight: bold;
-}
-
-.task-details {
+  }
+  
+  /* Task content */
+  .a1432563b7475 {
+    padding: 10px;
+  }
+  
+  /* Task details base */
+  .a1432563b7485 {
     background-color: #f1f3f5;
     border-radius: 8px;
     padding: 15px;
     margin-top: 15px;
-}
-
-.task-details.transportation {
+  }
+  
+  /* Transportation task type */
+  .a1432563b7486 {
     border-left: 4px solid #17a2b8;
-}
-
-.task-details.food-service {
+  }
+  
+  /* Food service task type */
+  .a1432563b7487 {
     border-left: 4px solid #28a745;
-}
-
-.task-details.rescue {
+  }
+  
+  /* Rescue task type */
+  .a1432563b7488 {
     border-left: 4px solid #dc3545;
-}
-
-.loading, .error, .no-data {
-    text-align: center;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-}
-
-.loading {
-    color: #6c757d;
-}
-
-.error {
-    color: #dc3545;
-}
-
-.no-data {
-    color: #6c757d;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .filter-row {
-        flex-direction: column;
-        align-items: stretch;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 992px) {
+    .a1432563b7454 {
+      padding: 15px;
     }
-
-    .filter-group {
-        min-width: 100%;
+  }
+  
+  @media (max-width: 768px) {
+    .a1432563b7453 {
+      padding: 15px 10px;
     }
-
-    .d-flex {
-        flex-direction: column;
+    
+    .a1432563b7457 {
+      flex-direction: column;
+      align-items: stretch;
     }
-
-    .btn {
-        width: 100%;
-        margin-bottom: 10px;
+    
+    .a1432563b7458 {
+      min-width: 100%;
     }
-}
+    
+    .a1432563b7459 {
+      flex-direction: column;
+      width: 100%;
+    }
+    
+    .a1432563b7460, .a1432563b7461 {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    
+    .a1432563b7467 {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .a1432563b7472 {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .a1432563b7453 {
+      padding: 10px 5px;
+    }
+    
+    .a1432563b7454 {
+      padding: 10px;
+    }
+    
+    .a1432563b7455 {
+      font-size: 20px;
+    }
+    
+    .a1432563b7456 {
+      padding: 10px;
+    }
+    
+    .a1432563b7475, .a1432563b7485 {
+      padding: 10px;
+    }
+  }

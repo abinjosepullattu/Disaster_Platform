@@ -2,7 +2,7 @@
 .X9Y8Z7 {
     display: flex;
     background: #f4f4f4;
-    height: 100vh;
+    height: 100%;
     font-family: Arial, sans-serif;
   }
   
@@ -34,7 +34,7 @@
   
   /* Card style for each option */
   .M4N5O6 {
-    background: linear-gradient(45deg, #ff7e5f, #feb47b);
+    background: linear-gradient(45deg, #5ff8ff, #287579);
     color: white;
     padding: 20px;
     border-radius: 8px;
@@ -47,7 +47,7 @@
   
   .M4N5O6:hover {
     transform: scale(1.05);
-    background: linear-gradient(45deg, #ff6a50, #fdac6a);
+    background: linear-gradient(45deg, #50dfff, #2374b2);
   }
   
   /* Card header inside button */

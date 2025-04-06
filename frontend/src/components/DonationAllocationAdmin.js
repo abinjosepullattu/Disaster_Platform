@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
+import AdminSidebar from "./AdminSidebar";
 import "../styles/DonationAllocationAdmin.css";
 
 const DonationAllocation = () => {
@@ -15,7 +16,6 @@ const DonationAllocation = () => {
   const [success, setSuccess] = useState("");
   const [allocationHistory, setAllocationHistory] = useState([]);
 
-  // Define available units
   const availableUnits = [
     "kg", "g", "liters", "ml", "pieces", "boxes", "packs", "bottles", 
     "cartons", "cans", "pairs", "rolls", "sets", "units"
@@ -53,7 +53,6 @@ const DonationAllocation = () => {
     const updatedAllocations = [...allocations];
     updatedAllocations[index][field] = value;
     
-    // Auto-calculate cost if quantity or cost per unit changes
     if (field === "quantity" || field === "cost") {
       const quantity = parseFloat(field === "quantity" ? value : updatedAllocations[index].quantity) || 0;
       const cost = parseFloat(field === "cost" ? value : updatedAllocations[index].cost) || 0;
@@ -106,8 +105,6 @@ const DonationAllocation = () => {
       alert("Funds Allocated Successfully");
       setSuccess("Funds allocated successfully!");
       setAllocations([{ resourceType: "", quantity: "", unit: "", cost: "", description: "" }]);
-      
-      // Refresh data
       fetchInitialData();
     } catch (err) {
       console.error("Error allocating donations:", err);
@@ -135,148 +132,162 @@ const DonationAllocation = () => {
 
   if (!user || user.role !== "admin") {
     return (
-      <div className="permission-denied">
-        <h2>Donation Allocation</h2>
-        <p>You don't have permission to access this page.</p>
+      <div className="a123456b789012">
+        <AdminSidebar />
+        <main className="b223456b789012">
+          <div className="c323456b789012">
+            <h2>Donation Allocation</h2>
+            <p>You don't have permission to access this page.</p>
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="donation-allocation-container">
-      <h1>Donation Allocation Dashboard</h1>
-      
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
-      
-      <div className="summary-card">
-        <h2>Donation Summary</h2>
-        <div className="summary-stats">
-          <div className="stat-item">
-            <div className="stat-label">Total Donations</div>
-            <div className="stat-value">{formatCurrency(donations.total)}</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-label">Allocated</div>
-            <div className="stat-value">{formatCurrency(donations.allocated)}</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-label">Available Balance</div>
-            <div className="stat-value">{formatCurrency(donations.remaining)}</div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="allocation-form-container">
-        <h2>Allocate Funds</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="allocations-section">
-            <h3>Resource Allocations</h3>
-            {allocations.map((allocation, index) => (
-              <div key={index} className="allocation-item">
-                <div className="allocation-row">
-                  <div className="form-group">
-                    <label>Resource:</label>
-                    <select 
-                      value={allocation.resourceType} 
-                      onChange={(e) => handleAllocationChange(index, "resourceType", e.target.value)}
-                      required
-                    >
-                      <option value="">Select Resource</option>
-                      {resourceTypes.map(type => (
-                        <option key={type.id} value={type.id}>{type.name}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Quantity:</label>
-                    <input 
-                      type="number" 
-                      value={allocation.quantity} 
-                      onChange={(e) => handleAllocationChange(index, "quantity", e.target.value)}
-                      required
-                      min="0.01"
-                      step="0.01"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Unit:</label>
-                    <select 
-                      value={allocation.unit} 
-                      onChange={(e) => handleAllocationChange(index, "unit", e.target.value)}
-                      required
-                    >
-                      <option value="">Select Unit</option>
-                      {availableUnits.map(unit => (
-                        <option key={unit} value={unit}>{unit}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Cost (₹):</label>
-                    <input 
-                      type="number" 
-                      value={allocation.cost} 
-                      onChange={(e) => handleAllocationChange(index, "cost", e.target.value)}
-                      required
-                      min="0.01"
-                      step="0.01"
-                    />
-                  </div>
-                </div>
-                
-                <div className="allocation-row">
-                  <div className="form-group description">
-                    <label>Description (optional):</label>
-                    <textarea 
-                      value={allocation.description} 
-                      onChange={(e) => handleAllocationChange(index, "description", e.target.value)}
-                      placeholder="Additional details"
-                    />
-                  </div>
-                  
-                  <div className="item-cost">
-                    <label>Cost: </label>
-                    {formatCurrency(parseFloat(allocation.quantity || 0) * parseFloat(allocation.cost || 0))}
-                  </div>
-                  
-                  {allocations.length > 1 && (
-                    <button 
-                      type="button" 
-                      className="remove-btn" 
-                      onClick={() => removeAllocationField(index)}
-                    >
-                      Remove
-                    </button>
-                  )}
-                </div>
+    <div className="a123456b789012">
+      <AdminSidebar />
+      <main className="b223456b789012">
+        <div className="c323456b789012">
+          <h1 className="d423456b789012">Donation Allocation Dashboard</h1>
+          
+          {error && <div className="e523456b789012">{error}</div>}
+          {success && <div className="f623456b789012">{success}</div>}
+          
+          <div className="g723456b789012">
+            <h2 className="h823456b789012">Donation Summary</h2>
+            <div className="i923456b789012">
+              <div className="j023456b789012">
+                <div className="k123456b789012">Total Donations</div>
+                <div className="l223456b789012">{formatCurrency(donations.total)}</div>
               </div>
-            ))}
-            
-            <button type="button" className="add-btn" onClick={addAllocationField}>
-              + Add Resource
-            </button>
-            
-            <div className="allocation-summary">
-              <h4>Summary</h4>
-              <p>Total Cost: {formatCurrency(calculateTotalAllocationCost())}</p>
-              <p>Remaining After Allocation: {formatCurrency(donations.remaining - calculateTotalAllocationCost())}</p>
+              <div className="m323456b789012">
+                <div className="n423456b789012">Allocated</div>
+                <div className="o523456b789012">{formatCurrency(donations.allocated)}</div>
+              </div>
+              <div className="p623456b789012">
+                <div className="q723456b789012">Available Balance</div>
+                <div className="r823456b789012">{formatCurrency(donations.remaining)}</div>
+              </div>
             </div>
           </div>
           
-          <button 
-            type="submit" 
-            className="submit-btn" 
-            disabled={loading || calculateTotalAllocationCost() <= 0 || calculateTotalAllocationCost() > donations.remaining}
-          >
-            {loading ? "Processing..." : "Allocate Funds"}
-          </button>
-        </form>
-      </div>
-      
+          <div className="s923456b789012">
+            <h2 className="t023456b789012">Allocate Funds</h2>
+            <form onSubmit={handleSubmit} className="u123456b789012">
+              <div className="v223456b789012">
+                <h3 className="w323456b789012">Resource Allocations</h3>
+                {allocations.map((allocation, index) => (
+                  <div key={index} className="x423456b789012">
+                    <div className="y523456b789012">
+                      <div className="z623456b789012">
+                        <label className="a723456b789012">Resource:</label>
+                        <select 
+                          className="b823456b789012"
+                          value={allocation.resourceType} 
+                          onChange={(e) => handleAllocationChange(index, "resourceType", e.target.value)}
+                          required
+                        >
+                          <option value="">Select Resource</option>
+                          {resourceTypes.map(type => (
+                            <option key={type.id} value={type.id}>{type.name}</option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <div className="c923456b789012">
+                        <label className="d023456b789012">Quantity:</label>
+                        <input 
+                          type="number" 
+                          className="e123456b789012"
+                          value={allocation.quantity} 
+                          onChange={(e) => handleAllocationChange(index, "quantity", e.target.value)}
+                          required
+                          min="0.01"
+                          step="0.01"
+                        />
+                      </div>
+                      
+                      <div className="f223456b789012">
+                        <label className="g323456b789012">Unit:</label>
+                        <select 
+                          className="h423456b789012"
+                          value={allocation.unit} 
+                          onChange={(e) => handleAllocationChange(index, "unit", e.target.value)}
+                          required
+                        >
+                          <option value="">Select Unit</option>
+                          {availableUnits.map(unit => (
+                            <option key={unit} value={unit}>{unit}</option>
+                          ))}
+                        </select>
+                      </div>
+                      
+                      <div className="i523456b789012">
+                        <label className="j623456b789012">Cost (₹):</label>
+                        <input 
+                          type="number" 
+                          className="k723456b789012"
+                          value={allocation.cost} 
+                          onChange={(e) => handleAllocationChange(index, "cost", e.target.value)}
+                          required
+                          min="0.01"
+                          step="0.01"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="l823456b789012">
+                      <div className="m923456b789012">
+                        <label className="n023456b789012">Description (optional):</label>
+                        <textarea 
+                          className="o123456b789012"
+                          value={allocation.description} 
+                          onChange={(e) => handleAllocationChange(index, "description", e.target.value)}
+                          placeholder="Additional details"
+                        />
+                      </div>
+                      
+                      <div className="p223456b789012">
+                        <label className="q323456b789012">Cost: </label>
+                        {formatCurrency(parseFloat(allocation.quantity || 0) * parseFloat(allocation.cost || 0))}
+                      </div>
+                      
+                      {allocations.length > 1 && (
+                        <button 
+                          type="button" 
+                          className="r423456b789012" 
+                          onClick={() => removeAllocationField(index)}
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                
+                <button type="button" className="s523456b789012" onClick={addAllocationField}>
+                  + Add Resource
+                </button>
+                
+                <div className="t623456b789012">
+                  <h4 className="u723456b789012">Summary</h4>
+                  <p className="v823456b789012">Total Cost: {formatCurrency(calculateTotalAllocationCost())}</p>
+                  <p className="w923456b789012">Remaining After Allocation: {formatCurrency(donations.remaining - calculateTotalAllocationCost())}</p>
+                </div>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="x023456b789012" 
+                disabled={loading || calculateTotalAllocationCost() <= 0 || calculateTotalAllocationCost() > donations.remaining}
+              >
+                {loading ? "Processing..." : "Allocate Funds"}
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
     </div>
   );
 };

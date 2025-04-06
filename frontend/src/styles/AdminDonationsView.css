@@ -1,312 +1,306 @@
-.admin-donations-container {
+/* Main Container */
+.a12345b6789012 {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Main Content */
+.b22345b6789012 {
+  flex: 1;
+  padding: 2rem;
+  margin-left: 50px;
+}
+
+.c32345b6789012 {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: 'Arial', sans-serif;
 }
 
-.admin-donations-container h2 {
+/* Headings */
+.d42345b6789012 {
   color: #2c3e50;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 600;
   border-bottom: 2px solid #3498db;
-  padding-bottom: 10px;
+  padding-bottom: 0.5rem;
 }
 
-/* User Search Section */
-.user-search-section {
-  margin-bottom: 30px;
-}
-
-.search-container {
-  display: flex;
-  margin-bottom: 20px;
-}
-
-.search-input {
-  flex: 1;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px 0 0 4px;
-  font-size: 16px;
-}
-
-.search-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 0 4px 4px 0;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.search-button:hover {
-  background-color: #2980b9;
-}
-
-.search-button:disabled {
-  background-color: #95a5a6;
-  cursor: not-allowed;
-}
-
-.users-list {
-  border: 1px solid #ddd;
+/* Error Message */
+.e52345b6789012 {
+  color: #e74c3c;
+  background-color: #fde8e8;
+  padding: 1rem;
   border-radius: 4px;
-  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border-left: 4px solid #e74c3c;
 }
 
-.users-list h3 {
-  background-color: #f8f9fa;
-  margin: 0;
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
+/* Campaign Selection Section */
+.f62345b6789012 {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.user-item {
-  display: flex;
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  align-items: center;
+.g72345b6789012 {
+  margin-bottom: 2rem;
 }
 
-.user-item:last-child {
-  border-bottom: none;
-}
-
-.user-item:hover {
-  background-color: #f5f5f5;
-}
-
-.user-name {
-  font-weight: bold;
-  flex: 1;
-}
-
-.user-email {
-  color: #7f8c8d;
-  flex: 2;
-}
-
-.user-action {
-  color: #3498db;
-  font-weight: bold;
-}
-
-.no-results {
-  padding: 20px;
-  text-align: center;
-  color: #7f8c8d;
-  background-color: #f8f9fa;
-  border: 1px dashed #ddd;
-  border-radius: 4px;
-}
-
-/* User Donations Section */
-.user-donations-section {
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.user-info {
-  background-color: #f8f9fa;
-  padding: 20px;
-  border-bottom: 1px solid #ddd;
-  position: relative;
-}
-
-.user-info h3 {
-  margin-top: 0;
-  color: #2c3e50;
-}
-
-.user-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  margin-bottom: 15px;
-  font-size: 14px;
-}
-
-.back-button {
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 8px 15px;
-  cursor: pointer;
-  transition: all 0.3s;
-  font-weight: bold;
+.i92345b6789012 {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
   color: #34495e;
 }
 
-.back-button:hover {
-  background-color: #eee;
-}
-
-.loading, .error-message, .no-donations {
-  padding: 30px;
-  text-align: center;
-}
-
-.error-message {
-  color: #e74c3c;
-}
-
-/* Donations List */
-.donations-list {
-  padding: 20px;
-}
-
-.donation-header {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-  font-weight: bold;
-  padding: 10px 15px;
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #ddd;
-  margin-bottom: 10px;
-}
-
-.donation-row {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  align-items: center;
-}
-
-.donation-row:last-child {
-  border-bottom: none;
-}
-
-.donation-row:hover {
-  background-color: #f9f9f9;
-}
-
-.donation-amount {
-  font-weight: bold;
-  color: #16a085;
-}
-
-.donation-date {
-  color: #7f8c8d;
-  font-size: 0.9em;
-}
-
-.donation-status {
-  padding: 4px 8px;
+.j02345b6789012 {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.j02345b6789012:focus {
+  border-color: #3498db;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Loading Message */
+.k12345b6789012 {
   text-align: center;
-  font-size: 0.9em;
-  font-weight: bold;
+  padding: 1rem;
+  color: #7f8c8d;
+  font-style: italic;
 }
 
-.status-completed, .status-successful {
-  background-color: #e8f8f5;
-  color: #16a085;
+/* Table Container */
+.l22345b6789012 {
+  overflow-x: auto;
+  margin-top: 1.5rem;
 }
 
-.status-pending {
-  background-color: #fef9e7;
-  color: #f39c12;
+/* Table Styles */
+.m32345b6789012 {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
 }
 
-.status-failed {
-  background-color: #fdedec;
-  color: #e74c3c;
-}
-
-.view-details-button {
+.n42345b6789012 {
   background-color: #3498db;
   color: white;
+}
+
+.o52345b6789012 th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 500;
+}
+
+.p62345b6789012, .q72345b6789012, .r82345b6789012, .s92345b6789012, .t02345b6789012, .u12345b6789012 {
+  font-weight: 500;
+}
+
+.v22345b6789012 tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.w32345b6789012:hover {
+  background-color: #f1f8fe;
+}
+
+.x42345b6789012, .y52345b6789012, .z62345b6789012, .a72345b6789012, .b82345b6789012, .e12345b6789012 {
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* Status Badges */
+.c92345b6789012 {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.d02345b6789012-paid {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.d02345b6789012-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.d02345b6789012-failed {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* View Details Button */
+.f22345b6789012 {
+  background-color: #3498db;
+  color: white;
+  padding: 0.5rem 1rem;
   border: none;
-  padding: 6px 12px;
   border-radius: 4px;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.view-details-button:hover {
+.f22345b6789012:hover {
   background-color: #2980b9;
 }
 
-.donation-summary {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  display: flex;
-  justify-content: space-between;
+/* No Donations Message */
+.g32345b6789012 {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+  font-style: italic;
 }
 
-/* Donation Details */
-.donation-details-container {
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+/* Donation Details Section */
+.h42345b6789012 {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.donation-details-container h3 {
+.i52345b6789012 {
   color: #2c3e50;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 10px;
-  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
 }
 
-.donation-details-card {
-  background-color: #f9f9f9;
-  border-radius: 4px;
-  padding: 20px;
-  margin-bottom: 20px;
+.j62345b6789012 {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.detail-section {
-  margin-bottom: 25px;
-  padding-bottom: 20px;
+.k72345b6789012 {
+  margin-bottom: 1.5rem;
+}
+
+.l82345b6789012 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+/* Detail Rows */
+.m92345b6789012, .p22345b6789012, .s52345b6789012, .v82345b6789012 {
+  display: flex;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid #eee;
 }
 
-.detail-section:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-  padding-bottom: 0;
+.n02345b6789012, .q32345b6789012, .t62345b6789012, .w92345b6789012 {
+  font-weight: 500;
+  color: #34495e;
+  width: 150px;
 }
 
-.detail-section h4 {
-  color: #3498db;
-  margin-top: 0;
-  margin-bottom: 15px;
-}
-
-.detail-row {
-  display: flex;
-  margin-bottom: 8px;
-}
-
-.detail-label {
-  font-weight: bold;
-  width: 130px;
-  color: #7f8c8d;
-}
-
-.detail-value {
+.o12345b6789012, .r42345b6789012, .u72345b6789012, .x02345b6789012 {
   flex: 1;
 }
 
-.detail-notes {
-  background-color: #fff;
-  padding: 15px;
+/* Back Button */
+.y12345b6789012 {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
   border-radius: 4px;
-  border: 1px solid #eee;
-  white-space: pre-line;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.details-actions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
+.y12345b6789012:hover {
+  background-color: #5a6268;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .b22345b6789012 {
+      margin-left: 0;
+      padding: 1rem;
+  }
+
+  .m32345b6789012 {
+      display: block;
+  }
+
+  .n42345b6789012 {
+      display: none;
+  }
+
+  .w32345b6789012 {
+      display: block;
+      margin-bottom: 1rem;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      padding: 1rem;
+  }
+
+  .x42345b6789012, .y52345b6789012, .z62345b6789012, .a72345b6789012, .b82345b6789012, .e12345b6789012 {
+      display: block;
+      padding: 0.5rem 0;
+      text-align: right;
+      position: relative;
+  }
+
+  .x42345b6789012::before, 
+  .y52345b6789012::before, 
+  .z62345b6789012::before, 
+  .a72345b6789012::before, 
+  .b82345b6789012::before, 
+  .e12345b6789012::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 0.5rem;
+      font-weight: bold;
+      text-align: left;
+  }
+
+  .x42345b6789012 {
+      background-color: #3498db;
+      color: white;
+      border-radius: 4px 4px 0 0;
+      padding-left: 0.5rem;
+  }
+
+  .e12345b6789012 {
+      border-radius: 0 0 4px 4px;
+      text-align: center;
+  }
+
+  .e12345b6789012::before {
+      display: none;
+  }
+
+  /* Detail rows in mobile */
+  .m92345b6789012, .p22345b6789012, .s52345b6789012, .v82345b6789012 {
+      flex-direction: column;
+  }
+
+  .n02345b6789012, .q32345b6789012, .t62345b6789012, .w92345b6789012 {
+      width: 100%;
+      margin-bottom: 0.5rem;
+  }
 }
