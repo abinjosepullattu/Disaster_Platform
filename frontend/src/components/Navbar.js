@@ -9,13 +9,55 @@ const NavBar = ({ activeButton, setActiveButton }) => {
   // Sync activeButton with current route whenever location changes
   useEffect(() => {
     const path = location.pathname;
-    if (path.includes('/volunteer/sm')) setActiveButton(0);
-    else if (path.includes('/volunteer/tm')) setActiveButton(1);
-    else if (path.includes('/volunteer/rum')) setActiveButton(2);
-    else if (path.includes('/volunteer/cf')) setActiveButton(3);
-    else if (path.includes('/volunteer/as')) setActiveButton(4);
-    else if (path.includes('/volunteer/verify-contribute')) setActiveButton(5);
-  }, [location.pathname, setActiveButton]);
+    
+    // Create a mapping of ALL possible paths to button indexes
+    const pathToButtonMap = {
+      // Shelter Management paths
+      '/volunteer/sm': 0,
+      '/assigned-shelters': 0,
+      '/accepted-shelters': 0,
+      '/volunteer/view-allocated': 0,
+      '/add-inmates/:shelterId': 0,
+
+      
+      // Task Management paths
+      '/volunteer/tasks': 1,
+      '/volunteer/tm': 1,
+      '/volunteer/accepted-task': 1,
+      '/volunteer/completed-tasks': 1,
+      
+      // Resource Usage paths
+      '/volunteer/res-usage': 2,
+      '/volunteer/res-usage-details': 2,
+      '/volunteer/rum': 2,
+      
+      // Complaints & Feedback paths
+      '/volunteer/cf': 3,
+      '/volunteer/feedback-view': 3,
+      '/user/complaint': 3,
+      '/user/view-complaint': 3,
+      
+      // Account paths
+      '/volunteer/profile': 4,
+      '/volunteer/edit-profile': 4,
+      '/volunteer/change-password': 4,
+      '/volunteer/as': 4,
+
+      
+      // Contributions paths
+      '/volunteer/verify-contribute': 5
+      // '/volunteer/verify-contributions': 5,
+      // '/volunteer/contribution-list': 5
+    };
+
+    // Find the matching path
+    const matchedButton = pathToButtonMap[path] !== undefined ? 
+      pathToButtonMap[path] : 
+      activeButton; // Keep current active button if no match found
+
+    setActiveButton(matchedButton);
+  }, [location.pathname, setActiveButton, activeButton]);
+
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -48,6 +90,7 @@ const NavBar = ({ activeButton, setActiveButton }) => {
               onClick={() => handleNavigation("/volunteer/sm", 0)}>
             Shelter Management
           </li>
+
           <li className={`l6789012345 ${activeButton === 1 ? 'a7890123456' : ''}`} 
               onClick={() => handleNavigation("/volunteer/tm", 1)}>
             Task Management
