@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../context/UserContext';
+import NavBar from '../components/Navbar';
 import '../styles/MarkProgressForm.css';
 
 const TaskProgressForm = () => {
@@ -12,16 +13,17 @@ const TaskProgressForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [task, setTask] = useState(null);
+  const [activeButton, setActiveButton] = useState(3); // Assuming progress form is button 3
   const [formData, setFormData] = useState({
     progressDescription: '',
     progressPercentage: 0,
     completed: false,
     deliveryStatus: 'Not Started',
-    mealsServed: '',  // Changed from 0 to empty string
-    peopleFound: '',  // Changed from 0 to empty string
-    peopleHospitalized: '',  // Changed from 0 to empty string
-    peopleMissing: '',  // Changed from 0 to empty string
-    peopleLost: '',  // Changed from 0 to empty string
+    mealsServed: '',
+    peopleFound: '',
+    peopleHospitalized: '',
+    peopleMissing: '',
+    peopleLost: '',
     updates: []
   });
 
@@ -42,10 +44,8 @@ const TaskProgressForm = () => {
         setTask(response.data);
         
         try {
-          // Check if there's existing progress
           const progressResponse = await axios.get(`http://localhost:5000/api/taskprogress/task/${taskId}`);
           if (progressResponse.data) {
-            // If there are any zero values, convert them to empty strings
             const formattedData = { ...progressResponse.data };
             ['mealsServed', 'peopleFound', 'peopleHospitalized', 'peopleMissing', 'peopleLost'].forEach(field => {
               if (formattedData[field] === 0) {
@@ -56,7 +56,6 @@ const TaskProgressForm = () => {
           }
         } catch (progressErr) {
           console.log("No existing progress found, using defaults");
-          // Just continue with default values if no progress exists
         }
         
         setLoading(false);
@@ -74,7 +73,6 @@ const TaskProgressForm = () => {
     const { name, value, type, checked } = e.target;
     
     if (type === 'number') {
-      // For number fields, store as empty string if empty or convert to number
       setFormData({
         ...formData,
         [name]: value === '' ? '' : Number(value)
@@ -98,7 +96,6 @@ const TaskProgressForm = () => {
     try {
       setLoading(true);
       
-      // Convert empty strings to 0 for submission to API
       const processedData = { ...formData };
       ['mealsServed', 'peopleFound', 'peopleHospitalized', 'peopleMissing', 'peopleLost'].forEach(field => {
         if (processedData[field] === '') {
@@ -113,7 +110,6 @@ const TaskProgressForm = () => {
         lastUpdated: new Date()
       };
 
-      // Add current progress description as an update
       if (formData.progressDescription.trim()) {
         submitData.updates = [
           ...formData.updates,
@@ -129,7 +125,6 @@ const TaskProgressForm = () => {
       
       setLoading(false);
       
-      // Redirect after a short delay
       setTimeout(() => {
         if (formData.completed) {
           window.location.href = '/volunteer-home';
@@ -144,22 +139,21 @@ const TaskProgressForm = () => {
     }
   };
 
-  // Render different form fields based on task type
   const renderTaskSpecificFields = () => {
     if (!task) return null;
 
     switch (task.taskType) {
       case 'Transportation and Distribution':
         return (
-          <div className="form-section">
-            <h3>Transportation Details</h3>
-            <div className="form-group">
-              <label>Delivery Status:</label>
+          <div className="a12345678b90123">
+            <h3 className="a12345678b90124">Transportation Details</h3>
+            <div className="a12345678b90125">
+              <label className="a12345678b90126">Delivery Status:</label>
               <select
                 name="deliveryStatus"
                 value={formData.deliveryStatus}
                 onChange={handleInputChange}
-                className="form-control"
+                className="a12345678b90127"
               >
                 <option value="Not Started">Not Started</option>
                 <option value="In Transit">In Transit</option>
@@ -168,208 +162,212 @@ const TaskProgressForm = () => {
             </div>
           </div>
         );
-      // case 'Resource Distribution':
-        // return (
-        //   <div className="form-section">
-        //     <h3>Transportation Details</h3>
-        //     <div className="form-group">
-        //       <label>Delivery Status:</label>
-        //       <select
-        //         name="deliveryStatus"
-        //         value={formData.deliveryStatus}
-        //         onChange={handleInputChange}
-        //         className="form-control"
-        //       >
-        //         <option value="Not Started">Not Started</option>
-        //         <option value="In Transit">In Transit</option>
-        //         <option value="Delivered">Delivered</option>
-        //       </select>
-        //     </div>
-        //   </div>
-        // );
       case 'Preparing and Serving Food':
         return (
-          <div className="form-section">
-            <h3>Food Service Details</h3>
-            <div className="form-group">
-              <label>Meals Served:</label>
+          <div className="a12345678b90123">
+            <h3 className="a12345678b90124">Food Service Details</h3>
+            <div className="a12345678b90125">
+              <label className="a12345678b90126">Meals Served:</label>
               <input
                 type="number"
                 name="mealsServed"
                 value={formData.mealsServed}
                 onChange={handleInputChange}
-                className="form-control"
+                className="a12345678b90128"
                 min="0"
                 placeholder="Enter number of meals"
               />
             </div>
           </div>
         );
-      
       case 'Rescue Operation Management':
         return (
-          <div className="form-section">
-            <h3>Rescue Operation Details</h3>
-            <div className="form-group">
-              <label>People Found:</label>
+          <div className="a12345678b90123">
+            <h3 className="a12345678b90124">Rescue Operation Details</h3>
+            <div className="a12345678b90125">
+              <label className="a12345678b90126">People Found:</label>
               <input
                 type="number"
                 name="peopleFound"
                 value={formData.peopleFound}
                 onChange={handleInputChange}
-                className="form-control"
+                className="a12345678b90128"
                 min="0"
                 placeholder="Enter number"
               />
             </div>
-            <div className="form-group">
-              <label>People Hospitalized:</label>
+            <div className="a12345678b90125">
+              <label className="a12345678b90126">People Hospitalized:</label>
               <input
                 type="number"
                 name="peopleHospitalized"
                 value={formData.peopleHospitalized}
                 onChange={handleInputChange}
-                className="form-control"
+                className="a12345678b90128"
                 min="0"
                 placeholder="Enter number"
               />
             </div>
-            <div className="form-group">
-              <label>People Missing:</label>
+            <div className="a12345678b90125">
+              <label className="a12345678b90126">People Missing:</label>
               <input
                 type="number"
                 name="peopleMissing"
                 value={formData.peopleMissing}
                 onChange={handleInputChange}
-                className="form-control"
+                className="a12345678b90128"
                 min="0"
                 placeholder="Enter number"
               />
             </div>
-            <div className="form-group">
-              <label>People Lost:</label>
+            <div className="a12345678b90125">
+              <label className="a12345678b90126">People Lost:</label>
               <input
                 type="number"
                 name="peopleLost"
                 value={formData.peopleLost}
                 onChange={handleInputChange}
-                className="form-control"
+                className="a12345678b90128"
                 min="0"
                 placeholder="Enter number"
               />
             </div>
           </div>
         );
-      
       default:
         return null;
     }
   };
 
-  // Show loading state
   if (loading && !task) {
-    return <div className="loading">Loading task details...</div>;
+    return (
+      <div className="a12345678b90129">
+        <NavBar activeButton={activeButton} setActiveButton={setActiveButton} />
+        <div className="a12345678b90130">
+          <div className="a12345678b90131"></div>
+          <p>Loading task details...</p>
+        </div>
+      </div>
+    );
   }
 
-  // Show error
   if (error && !task) {
-    return <div className="error-container">{error}</div>;
+    return (
+      <div className="a12345678b90129">
+        <NavBar activeButton={activeButton} setActiveButton={setActiveButton} />
+        <div className="a12345678b90132">{error}</div>
+      </div>
+    );
   }
 
   return (
-    <div className="task-progress-form container">
-      <h2>Update Task Progress</h2>
+    <div className="a12345678b90129">
+      <NavBar activeButton={activeButton} setActiveButton={setActiveButton} />
       
-      {task && (
-        <div className="task-info">
-          <h3>{task.taskType}</h3>
-          <p>{task.description}</p>
+      <main className="a12345678b90133">
+        <div className="a12345678b90134">
+          <h2 className="a12345678b90135">Update Task Progress</h2>
+          
+          {task && (
+            <div className="a12345678b90136">
+              <h3 className="a12345678b90137">{task.taskType}</h3>
+              <p className="a12345678b90138">{task.description}</p>
+            </div>
+          )}
+
+          {error && <div className="a12345678b90139">{error}</div>}
+          {success && <div className="a12345678b90140">{success}</div>}
+
+          <form onSubmit={handleSubmit} className="a12345678b90141">
+            <div className="a12345678b90123">
+              <h3 className="a12345678b90124">General Progress</h3>
+              <div className="a12345678b90125">
+                <label className="a12345678b90126">Progress Description:</label>
+                <textarea
+                  name="progressDescription"
+                  value={formData.progressDescription}
+                  onChange={handleInputChange}
+                  className="a12345678b90142"
+                  rows="4"
+                  placeholder="Describe your current progress..."
+                  required
+                />
+              </div>
+
+              <div className="a12345678b90125">
+                <label className="a12345678b90126">Progress Percentage: {formData.progressPercentage}%</label>
+                <input
+                  type="range"
+                  name="progressPercentage"
+                  value={formData.progressPercentage}
+                  onChange={handleInputChange}
+                  className="a12345678b90143"
+                  min="0"
+                  max="100"
+                  step="5"
+                />
+              </div>
+
+              <div className="a12345678b90144">
+                <label className="a12345678b90145">
+                  <input
+                    type="checkbox"
+                    name="completed"
+                    checked={formData.completed}
+                    onChange={handleInputChange}
+                    className="a12345678b90146"
+                  />
+                  <span className="a12345678b90147">Mark as Completed</span>
+                </label>
+              </div>
+            </div>
+
+            {renderTaskSpecificFields()}
+
+            <div className="a12345678b90148">
+              <button 
+                type="button" 
+                className="a12345678b90149"
+                onClick={() => navigate('/volunteer/accepted-tasks')}
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                className="a12345678b90150"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <span className="a12345678b90151"></span>
+                    Saving...
+                  </>
+                ) : 'Save Progress'}
+              </button>
+            </div>
+          </form>
+
+          {formData.updates && formData.updates.length > 0 && (
+            <div className="a12345678b90152">
+              <h3 className="a12345678b90153">Previous Updates</h3>
+              <ul className="a12345678b90154">
+                {formData.updates.map((update, index) => (
+                  <li key={index} className="a12345678b90155">
+                    <div className="a12345678b90156">
+                      {new Date(update.timestamp).toLocaleString()}
+                    </div>
+                    <div className="a12345678b90157">{update.description}</div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
-      )}
-
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
-
-      <form onSubmit={handleSubmit}>
-        <div className="form-section">
-          <h3>General Progress</h3>
-          <div className="form-group">
-            <label>Progress Description:</label>
-            <textarea
-              name="progressDescription"
-              value={formData.progressDescription}
-              onChange={handleInputChange}
-              className="form-control"
-              rows="4"
-              placeholder="Describe your current progress..."
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Progress Percentage: {formData.progressPercentage}%</label>
-            <input
-              type="range"
-              name="progressPercentage"
-              value={formData.progressPercentage}
-              onChange={handleInputChange}
-              className="form-control-range"
-              min="0"
-              max="100"
-              step="5"
-            />
-          </div>
-
-          <div className="form-group checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                name="completed"
-                checked={formData.completed}
-                onChange={handleInputChange}
-              />
-              Mark as Completed
-            </label>
-          </div>
-        </div>
-
-        {/* Render task-specific fields */}
-        {renderTaskSpecificFields()}
-
-        <div className="form-actions">
-          <button 
-            type="button" 
-            className="btn btn-secondary"
-            onClick={() => navigate('/volunteer/accepted-tasks')}
-          >
-            Cancel
-          </button>
-          <button 
-            type="submit" 
-            className="btn btn-primary"
-            disabled={loading}
-          >
-            {loading ? 'Saving...' : 'Save Progress'}
-          </button>
-        </div>
-      </form>
-
-      {/* Display previous updates if any */}
-      {formData.updates && formData.updates.length > 0 && (
-        <div className="previous-updates">
-          <h3>Previous Updates</h3>
-          <ul className="updates-list">
-            {formData.updates.map((update, index) => (
-              <li key={index} className="update-item">
-                <div className="update-time">
-                  {new Date(update.timestamp).toLocaleString()}
-                </div>
-                <div className="update-description">{update.description}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      </main>
+      
+      <footer className="ft1234567890">
+        <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
+import NavBar from "../components/Navbar";
 import "../styles/VerifyContributionVolunteer.css";
 
 const VerifyContributions = () => {
@@ -10,6 +11,7 @@ const VerifyContributions = () => {
   const [error, setError] = useState("");
   const [shelter, setShelter] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
+  const [activeButton, setActiveButton] = useState(5); // Assuming verify contributions is button 5
 
   useEffect(() => {
     if (user) {
@@ -89,96 +91,126 @@ const VerifyContributions = () => {
   const getStatusLabel = (status) => {
     switch (status) {
       case 0:
-        return <span className="status-pending">Pending</span>;
+        return <span className="a123456789012b33">Pending</span>;
       case 1:
-        return <span className="status-verified">Verified</span>;
+        return <span className="a123456789012b34">Verified</span>;
       default:
-        return <span className="status-unknown">Unknown</span>;
+        return <span className="a123456789012b35">Unknown</span>;
     }
   };
 
   return (
-    <div className="verify-contributions-container">
-      <h2>Verify Contributions</h2>
-      {error && <p className="error">{error}</p>}
-      {successMessage && <p className="success-message">{successMessage}</p>}
+    <div className="a123456789012b00">
+      <NavBar activeButton={activeButton} setActiveButton={setActiveButton} />
+      
+      <main className="a123456789012b01">
+        <div className="a123456789012b02">
+          <h2 className="a123456789012b03">Verify Contributions</h2>
+          
+          {error && <p className="a123456789012b04">{error}</p>}
+          {successMessage && <p className="a123456789012b05">{successMessage}</p>}
 
-      {loading ? (
-        <div className="loading">Loading...</div>
-      ) : shelter ? (
-        <>
-          <div className="shelter-info">
-            <h3>Assigned Shelter: {shelter.location}</h3>
-          </div>
-
-          {contributions.length > 0 ? (
-            <div className="contributions-list">
-              {contributions.map((contribution) => (
-                <div key={contribution._id} className="contribution-card">
-                  <div className="contribution-header">
-                    <h3>Contribution from {contribution.contributorName}</h3>
-                    <div className="contribution-meta">
-                      <span className="contribution-date">
-                        Date: {formatDate(contribution.createdAt)}
-                      </span>
-                      <span className="contribution-status">
-                        Status: {getStatusLabel(contribution.status)}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="resources-table-container">
-                    <table className="resources-table">
-                      <thead>
-                        <tr>
-                          <th>Resource</th>
-                          <th>Quantity</th>
-                          <th>Unit</th>
-                          <th>Description</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {contribution.resources.map((resource, index) => (
-                          <tr key={index}>
-                            <td>{resource.resourceType.name}</td>
-                            <td>{resource.quantity}</td>
-                            <td>{resource.unit}</td>
-                            <td>{resource.description || "-"}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                  
-                  <div className="contribution-contact">
-                    <p><strong>Contributor:</strong> {contribution.contributorName}</p>
-                    <p><strong>Contact:</strong> {contribution.contributorContact}</p>
-                  </div>
-                  
-                  {contribution.status === 0 && (
-                    <div className="verify-actions">
-                      <button
-                        onClick={() => verifyContribution(contribution._id)}
-                        className="verify-button"
-                      >
-                        Verify Contribution
-                      </button>
-                    </div>
-                  )}
-                </div>
-              ))}
+          {loading ? (
+            <div className="a123456789012b06">
+              <div className="a123456789012b07"></div>
+              <p>Loading...</p>
             </div>
+          ) : shelter ? (
+            <>
+              <div className="a123456789012b08">
+                <h3 className="a123456789012b09">Assigned Shelter: {shelter.location}</h3>
+                <div className="a123456789012b10">
+                  <div className="a123456789012b11">
+                    <span className="a123456789012b12">Capacity:</span>
+                    <span className="a123456789012b13">{shelter.inmates || 0}/{shelter.totalCapacity || 0}</span>
+                  </div>
+                  <div className="a123456789012b11">
+                    <span className="a123456789012b12">Contact:</span>
+                    <span className="a123456789012b13">{shelter.contactDetails || "Not Available"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {contributions.length > 0 ? (
+                <div className="a123456789012b14">
+                  {contributions.map((contribution) => (
+                    <div key={contribution._id} className="a123456789012b15">
+                      <div className="a123456789012b16">
+                        <h3 className="a123456789012b17">Contribution from {contribution.contributorName}</h3>
+                        <div className="a123456789012b18">
+                          <span className="a123456789012b19">
+                            Date: {formatDate(contribution.createdAt)}
+                          </span>
+                          <span className="a123456789012b20">
+                            Status: {getStatusLabel(contribution.status)}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="a123456789012b21">
+                        <table className="a123456789012b22">
+                          <thead className="a123456789012b23">
+                            <tr>
+                              <th className="a123456789012b24">Resource</th>
+                              <th className="a123456789012b24">Quantity</th>
+                              <th className="a123456789012b24">Unit</th>
+                              <th className="a123456789012b24">Description</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {contribution.resources.map((resource, index) => (
+                              <tr key={index} className={index % 2 === 0 ? "a123456789012b25" : "a123456789012b26"}>
+                                <td className="a123456789012b27">{resource.resourceType.name}</td>
+                                <td className="a123456789012b27">{resource.quantity}</td>
+                                <td className="a123456789012b27">{resource.unit}</td>
+                                <td className="a123456789012b27">{resource.description || "-"}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                      <div className="a123456789012b28">
+                        <p><strong>Contributor:</strong> {contribution.contributorName}</p>
+                        <p><strong>Contact:</strong> {contribution.contributorContact}</p>
+                      </div>
+                      
+                      {contribution.status === 0 && (
+                        <div className="a123456789012b29">
+                          <button
+                            onClick={() => verifyContribution(contribution._id)}
+                            className="a123456789012b30"
+                          >
+                            Verify Contribution
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="a123456789012b31">
+                  <svg className="a123456789012b32" viewBox="0 0 24 24">
+                    <path d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"/>
+                  </svg>
+                  <p>There are no contributions for this shelter yet.</p>
+                </div>
+              )}
+            </>
           ) : (
-            <div className="no-contributions">
-              <p>There are no contributions for this shelter yet.</p>
+            <div className="a123456789012b31">
+              <svg className="a123456789012b32" viewBox="0 0 24 24">
+                <path d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"/>
+              </svg>
+              <p>You don't have any assigned shelters. Please contact an administrator.</p>
             </div>
           )}
-        </>
-      ) : (
-        <div className="no-shelter">
-          <p>You don't have any assigned shelters. Please contact an administrator.</p>
         </div>
-      )}
+      </main>
+      
+      <footer className="ft1234567890">
+        <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

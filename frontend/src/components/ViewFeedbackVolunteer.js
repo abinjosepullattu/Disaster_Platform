@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUser } from "../context/UserContext";
+import NavBar from '../components/Navbar';
 import '../styles/ViewFeedbackVolunteer.css';
 
 const VolunteerFeedbackView = () => {
@@ -9,8 +10,8 @@ const VolunteerFeedbackView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [markingAsViewed, setMarkingAsViewed] = useState(false);
+  const [activeButton, setActiveButton] = useState(3); // Assuming feedback is button 3
 
-  // Fetch all feedback for the current volunteer
   useEffect(() => {
     const fetchFeedback = async () => {
       setLoading(true);
@@ -34,15 +35,13 @@ const VolunteerFeedbackView = () => {
     fetchFeedback();
   }, [user]);
 
-  // Mark feedback as viewed
   const markFeedbackAsViewed = async (feedbackId) => {
     setMarkingAsViewed(true);
     try {
       await axios.patch(`http://localhost:5000/api/feedback/${feedbackId}/view`, {
-        status: 1 // Mark as viewed
+        status: 1
       });
       
-      // Update the local state to reflect the change
       setFeedbackList(prevList => 
         prevList.map(feedback => 
           feedback._id === feedbackId ? { ...feedback, status: 1 } : feedback
@@ -57,11 +56,10 @@ const VolunteerFeedbackView = () => {
     }
   };
 
-  // Format date to a readable string
   const formatDate = (dateString) => {
     const options = { 
       year: 'numeric', 
-      month: 'long', 
+      month: 'short', 
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
@@ -69,84 +67,132 @@ const VolunteerFeedbackView = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Render star rating
   const renderStarRating = (rating) => {
-    const stars = [];
-    for (let i = 1; i <= 4; i++) {
-      stars.push(
-        <span key={i} className={i <= rating ? "star filled" : "star"}>
-          ★
-        </span>
-      );
-    }
-    return <div className="star-rating">{stars}</div>;
+    return (
+      <div className="a1234567890123b">
+        {[...Array(4)].map((_, i) => (
+          <span 
+            key={i} 
+            className={`a1234567890124b ${i < rating ? 'a1234567890125b' : 'a1234567890126b'}`}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    );
   };
 
   return (
-    <div className="volunteer-feedback container">
-      <h2>My Feedback</h2>
+    <div className="a1234567890127b">
+      <NavBar activeButton={activeButton} setActiveButton={setActiveButton} />
       
-      {loading && <div className="loading">Loading your feedback...</div>}
-      
-      {error && <div className="error-message">{error}</div>}
-      
-      {!loading && !error && feedbackList.length === 0 && (
-        <div className="no-feedback">
-          <p>You haven't received any feedback yet.</p>
-          <p>Feedback will appear here after you complete tasks and administrators review your work.</p>
-        </div>
-      )}
-      
-      {!loading && !error && feedbackList.length > 0 && (
-        <div className="feedback-list">
-          {feedbackList.map(feedback => (
-            <div key={feedback._id} className={`feedback-card ${feedback.status === 1 ? 'viewed' : 'new'}`}>
-              <div className="feedback-header">
-                <h3>
-                  {feedback.taskId?.taskType || 'Task'}
-                  {feedback.status === 0 && <span className="new-badge">New</span>}
-                </h3>
-                <div className="feedback-date">{formatDate(feedback.createdAt)}</div>
-              </div>
-              
-              <div className="feedback-content">
-                <div className="feedback-rating">
-                  {renderStarRating(feedback.rating)}
-                  <span className="rating-text">{feedback.rating}/4</span>
-                </div>
-                
-                {feedback.comments && (
-                  <div className="feedback-comments">
-                    <h4>Comments</h4>
-                    <p>{feedback.comments}</p>
-                  </div>
-                )}
-                
-                <div className="feedback-details">
-                  <p><strong>From:</strong> {feedback.adminId?.name || 'Administrator'}</p>
-                  <p><strong>Task:</strong> {feedback.taskId?.description || 'Task description not available'}</p>
-                </div>
-                
-                {feedback.status === 0 && (
-                  <button 
-                    className="btn btn-primary mark-viewed-btn"
-                    onClick={() => markFeedbackAsViewed(feedback._id)}
-                    disabled={markingAsViewed}
-                  >
-                    {markingAsViewed ? 'Marking...' : 'Mark as Viewed'}
-                  </button>
-                )}
-                
-                {feedback.status === 1 && (
-                  <div className="viewed-status">
-                    <span className="viewed-icon">✓</span> You've viewed this feedback
-                  </div>
-                )}
-              </div>
+      <main className="a1234567890128b">
+        <div className="a1234567890129b">
+          <h2 className="a1234567890130b">My Feedback</h2>
+          
+          {loading && (
+            <div className="a1234567890131b">
+              <div className="a1234567890132b"></div>
+              <p>Loading your feedback...</p>
             </div>
-          ))}
+          )}
+          
+          {error && (
+            <div className="a1234567890133b">
+              <svg className="a1234567890134b" viewBox="0 0 24 24">
+                <path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+              </svg>
+              {error}
+            </div>
+          )}
+          
+          {!loading && !error && feedbackList.length === 0 && (
+            <div className="a1234567890135b">
+              <svg className="a1234567890136b" viewBox="0 0 24 24">
+                <path d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"/>
+              </svg>
+              <p>You don't have any feedback yet.</p>
+            </div>
+          )}
+          
+          {!loading && !error && feedbackList.length > 0 && (
+            <div className="a1234567890137b">
+              {feedbackList.map(feedback => (
+                <div 
+                  key={feedback._id} 
+                  className={`a1234567890138b ${feedback.status === 1 ? 'a1234567890139b' : 'a1234567890140b'}`}
+                >
+                  <div className="a1234567890141b">
+                    <h3 className="a1234567890142b">
+                      {feedback.taskId?.taskType || 'Task'}
+                      {feedback.status === 0 && (
+                        <span className="a1234567890143b">New</span>
+                      )}
+                    </h3>
+                    <div className="a1234567890144b">{formatDate(feedback.createdAt)}</div>
+                  </div>
+                  
+                  <div className="a1234567890145b">
+                    <div className="a1234567890146b">
+                      {renderStarRating(feedback.rating)}
+                      <span className="a1234567890147b">{feedback.rating}/4</span>
+                    </div>
+                    
+                    {feedback.comments && (
+                      <div className="a1234567890148b">
+                        <h4 className="a1234567890149b">Comments</h4>
+                        <p className="a1234567890150b">{feedback.comments}</p>
+                      </div>
+                    )}
+                    
+                    <div className="a1234567890151b">
+                      <p><strong>From:</strong> {feedback.adminId?.name || 'Administrator'}</p>
+                      <p><strong>Task:</strong> {feedback.taskId?.description || 'Task description not available'}</p>
+                    </div>
+                    
+                    {feedback.status === 0 && (
+                      <button 
+                        className="a1234567890152b"
+                        onClick={() => markFeedbackAsViewed(feedback._id)}
+                        disabled={markingAsViewed}
+                      >
+                        {markingAsViewed ? (
+                          <>
+                            <svg className="a1234567890153b" viewBox="0 0 24 24">
+                              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
+                            </svg>
+                            Marking...
+                          </>
+                        ) : (
+                          <>
+                            <svg className="a1234567890154b" viewBox="0 0 24 24">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                            </svg>
+                            Mark as Viewed
+                          </>
+                        )}
+                      </button>
+                    )}
+                    
+                    {feedback.status === 1 && (
+                      <div className="a1234567890155b">
+                        <svg className="a1234567890156b" viewBox="0 0 24 24">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Viewed
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </main>
+      
+      <footer className="ft1234567890">
+        <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

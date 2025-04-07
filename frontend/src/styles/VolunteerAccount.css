@@ -131,16 +131,16 @@
   /* Footer */
   .ft1234567890 {
     padding: 1.5rem;
-    background-color: #f1f3f5;
+    background-color: #536cce61;
     border-top: 1px solid #e9ecef;
     text-align: center;
-  }
+}
   
-  .cp1234567890 {
-    margin: 0;
-    color: #6c757d;
-    font-size: 0.875rem;
-  }
+.cp1234567890 {
+  margin: 0;
+  color: #6c757d;
+  font-size: 0.875rem;
+}
   
   /* SVG icons general style */
   .sv1234567890 {

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../styles/EditProfile.css";
+import "../styles/VolunteerEditProfile.css";
 import { useUser } from "../context/UserContext";
+import NavBar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
 
 const VolunteerEditProfile = () => {
   const { user } = useUser();
@@ -12,10 +14,14 @@ const VolunteerEditProfile = () => {
     age: "",
   });
   const [message, setMessage] = useState(null);
+  const [activeButton, setActiveButton] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchProfile();
-  }, []);
+    if (user?.id) {
+      fetchProfile();
+    }
+  }, [user]);
 
   const fetchProfile = async () => {
     try {
@@ -39,12 +45,9 @@ const VolunteerEditProfile = () => {
     }
   
     try {
-      console.log("User Data:", user);
-
       const response = await axios.put(
-        `http://localhost:5000/api/profile/edit/${user.id}`, // Ensure correct user ID
-        formData,
-
+        `http://localhost:5000/api/profile/edit/${user.id}`,
+        formData
       );
   
       setMessage({ type: "success", text: response.data.message });
@@ -55,23 +58,82 @@ const VolunteerEditProfile = () => {
       });
     }
   };
-  
+
+  if (!formData.name) return <div className="a1b234567890123">Loading profile...</div>;
 
   return (
-    <div className="edit-profile-container">
-      <h2>Edit Profile</h2>
-      {message && <p className={message.type === "error" ? "error-message" : "success-message"}>{message.text}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>Full Name</label>
-        <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-        <label>Phone Number</label>
-        <input type="text" name="phone" value={formData.phone} onChange={handleChange} required />
-        <label>Address</label>
-        <input type="text" name="address" value={formData.address} onChange={handleChange} required />
-        <label>Age</label>
-        <input type="number" name="age" value={formData.age} onChange={handleChange} required />
-        <button type="submit">Save Changes</button>
-      </form>
+    <div className="a1b234567890124">
+      <NavBar activeButton={activeButton} setActiveButton={setActiveButton} />
+      
+      <main className="a1b234567890125">
+        <div className="a1b234567890126">
+          <h2 className="a1b234567890127">Edit Profile</h2>
+          
+          {message && (
+            <div className={`a1b234567890128 ${message.type === "error" ? "a1b234567890129" : "a1b234567890130"}`}>
+              {message.text}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="a1b234567890131">
+            <div className="a1b234567890132">
+              <label className="a1b234567890133">Full Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="a1b234567890134"
+                required
+              />
+            </div>
+            
+            <div className="a1b234567890132">
+              <label className="a1b234567890133">Phone Number</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className="a1b234567890134"
+                required
+              />
+            </div>
+            
+            <div className="a1b234567890132">
+              <label className="a1b234567890133">Address</label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                className="a1b234567890134"
+                required
+              />
+            </div>
+            
+            <div className="a1b234567890132">
+              <label className="a1b234567890133">Age</label>
+              <input
+                type="number"
+                name="age"
+                value={formData.age}
+                onChange={handleChange}
+                className="a1b234567890134"
+                required
+              />
+            </div>
+            
+            <button type="submit" className="a1b234567890135">
+              Save Changes
+            </button>
+          </form>
+        </div>
+      </main>
+      
+      <footer className="ft1234567890">
+        <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

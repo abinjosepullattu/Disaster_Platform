@@ -229,11 +229,11 @@ const ProfilePage = () => {
                     <span className="o12345678901b2-label">Name:</span>
                     <span className="p22345678901b2-value">{profile.name}</span>
                   </div>
-                  
+{/*                   
                   <div className="q32345678901b2-detail-item">
                     <span className="r42345678901b2-label">Email:</span>
                     <span className="s52345678901b2-value">{profile.email}</span>
-                  </div>
+                  </div> */}
                   
                   <div className="t62345678901b2-detail-item">
                     <span className="u72345678901b2-label">Phone:</span>
