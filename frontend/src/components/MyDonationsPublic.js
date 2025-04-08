@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
+import PublicNavbar from "../components/PublicNavbar";
 import "../styles/MyDonationsPublic.css";
 
 const MyDonations = () => {
@@ -26,11 +27,8 @@ const MyDonations = () => {
         setLoading(true);
         const response = await axios.get(`http://localhost:5000/api/donations/user-donations/${user.id}`);
         
-        // Fetch campaign details for each donation
         const donationsWithCampaignDetails = await Promise.all(
           response.data.map(async (donation) => {
-            console.log("Donation object:", JSON.stringify(donation, null, 2));
-
             try {
               const campaignResponse = await axios.get(
                 `http://localhost:5000/api/donations/e/campaigns/${donation.campaignId._id}` 
@@ -71,7 +69,6 @@ const MyDonations = () => {
 
   const handlePrint = useCallback(() => {
     if (printRef.current) {
-      // Create a new window for printing
       const printWindow = window.open('', '_blank');
       
       if (!printWindow) {
@@ -79,10 +76,8 @@ const MyDonations = () => {
         return;
       }
       
-      // Get the HTML content from our receipt container
       const content = printRef.current.innerHTML;
       
-      // Add necessary styles directly to the print window
       printWindow.document.write(`
         <html>
           <head>
@@ -94,31 +89,31 @@ const MyDonations = () => {
                 line-height: 1.5;
                 padding: 20px;
               }
-              .donation-bill {
+              .a00000000010023 {
                 max-width: 800px;
                 margin: 0 auto;
                 border: 1px solid #ddd;
                 padding: 30px;
               }
-              .bill-header h1 {
+              .a00000000010024 h1 {
                 color: #2c3e50;
                 margin-bottom: 5px;
               }
-              .org-details h2 {
+              .a00000000010025 h2 {
                 color: #3498db;
                 margin-bottom: 5px;
               }
-              .org-details p {
+              .a00000000010025 p {
                 margin: 3px 0;
               }
-              .bill-info, .donor-details, .donation-details {
+              .a00000000010026, .a00000000010027, .a00000000010028 {
                 margin: 20px 0;
               }
-              .bill-row {
+              .a00000000010029 {
                 display: flex;
                 margin: 8px 0;
               }
-              .bill-label {
+              .a00000000010030 {
                 font-weight: bold;
                 width: 120px;
               }
@@ -127,12 +122,12 @@ const MyDonations = () => {
                 padding-bottom: 5px;
                 color: #2c3e50;
               }
-              .bill-footer {
+              .a00000000010031 {
                 margin-top: 40px;
                 border-top: 1px solid #eee;
                 padding-top: 20px;
               }
-              .small-text {
+              .a00000000010032 {
                 font-size: 0.8em;
                 color: #7f8c8d;
                 margin-top: 20px;
@@ -145,14 +140,10 @@ const MyDonations = () => {
         </html>
       `);
       
-      // Wait for content to load, then print
       printWindow.document.close();
       
-      // Allow time for styles to apply
       setTimeout(() => {
         printWindow.print();
-        
-        // Close the window after printing (or after a delay if user cancels)
         setTimeout(() => {
           if (!printWindow.closed) {
             printWindow.close();
@@ -168,141 +159,163 @@ const MyDonations = () => {
   };
 
   if (loading) {
-    return <div className="loading">Loading your donations...</div>;
+    return (
+      <div className="a00000000010001">
+        <PublicNavbar />
+        <div className="a00000000010002">
+          <div className="a00000000010003"></div>
+          <p>Loading your donations...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error && donations.length === 0) {
     return (
-      <div className="error-container">
-        <div className="error-message">{error}</div>
-        <button className="login-button" onClick={() => navigate("/login")}>
-          Go to Login
-        </button>
+      <div className="a00000000010001">
+        <PublicNavbar />
+        <div className="a00000000010004">
+          <div className="a00000000010005">{error}</div>
+          <button 
+            className="a00000000010006" 
+            onClick={() => navigate("/login")}
+          >
+            Go to Login
+          </button>
+        </div>
       </div>
     );
   }
 
   if (donations.length === 0 && !loading) {
     return (
-      <div className="no-donations-container">
-        <h2>My Donations</h2>
-        <p>You haven't made any donations yet.</p>
-        {/* <button className="view-campaigns-button" onClick={() => navigate()}>
-          View Available Campaigns
-        </button> */}
+      <div className="a00000000010001">
+        <PublicNavbar />
+        <div className="a00000000010007">
+          <h2 className="a00000000010008">My Donations</h2>
+          <p className="a00000000010009">You haven't made any donations yet.</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="my-donations-container">
+    <div className="a00000000010001">
+      <PublicNavbar />
+      
       {showBill ? (
-        <div className="donation-bill-container">
-          <div id="donation-bill" className="donation-bill" ref={printRef}>
-            <div className="bill-header">
-              <h1>Donation Receipt</h1>
-              <div className="org-details">
-                <h2>Disaster Relief Fund</h2>
-                <p> Observatory Hills, Vikas Bhavan P.O, Thiruvananthapuram – 695033</p>
-                <p>Email: drap7907@gmail.com | Phone: +91 7907067848</p>
+        <div className="a00000000010010">
+          <div id="donation-bill" className="a00000000010011" ref={printRef}>
+            <div className="a00000000010012">
+              <h1 className="a00000000010013">Donation Receipt</h1>
+              <div className="a00000000010014">
+                <h2 className="a00000000010015">Disaster Relief Fund</h2>
+                <p className="a00000000010016">Observatory Hills, Vikas Bhavan P.O, Thiruvananthapuram – 695033</p>
+                <p className="a00000000010016">Email: drap7907@gmail.com | Phone: +91 7907067848</p>
               </div>
             </div>
             
-            <div className="bill-info">
-              <div className="bill-row">
-                <span className="bill-label">Receipt No:</span>
-                <span className="bill-value">{selectedDonation.razorpay_payment_id}</span>
+            <div className="a00000000010017">
+              <div className="a00000000010018">
+                <span className="a00000000010019">Receipt No:</span>
+                <span className="a00000000010020">{selectedDonation.razorpay_payment_id}</span>
               </div>
-              <div className="bill-row">
-                <span className="bill-label">Date:</span>
-                <span className="bill-value">{formatDate(selectedDonation.createdAt)}</span>
+              <div className="a00000000010018">
+                <span className="a00000000010019">Date:</span>
+                <span className="a00000000010020">{formatDate(selectedDonation.createdAt)}</span>
               </div>
             </div>
             
-            <div className="donor-details">
-              <h3>Donor Information</h3>
-              <div className="bill-row">
-                <span className="bill-label">Name:</span>
-                <span className="bill-value">{user.name}</span>
+            <div className="a00000000010021">
+              <h3 className="a00000000010022">Donor Information</h3>
+              <div className="a00000000010018">
+                <span className="a00000000010019">Name:</span>
+                <span className="a00000000010020">{user.name}</span>
               </div>
-              <div className="bill-row">
-                <span className="bill-label">Email:</span>
-                <span className="bill-value">{user.email}</span>
+              <div className="a00000000010018">
+                <span className="a00000000010019">Email:</span>
+                <span className="a00000000010020">{user.email}</span>
               </div>
               {user.phone && (
-                <div className="bill-row">
-                  <span className="bill-label">Phone:</span>
-                  <span className="bill-value">{user.phone}</span>
+                <div className="a00000000010018">
+                  <span className="a00000000010019">Phone:</span>
+                  <span className="a00000000010020">{user.phone}</span>
                 </div>
               )}
             </div>
             
-            <div className="donation-details">
-              <h3>Donation Details</h3>
-              <div className="bill-row">
-                <span className="bill-label">Campaign:</span>
-                <span className="bill-value">{selectedDonation.campaign.title}</span>
+            <div className="a00000000010023">
+              <h3 className="a00000000010022">Donation Details</h3>
+              <div className="a00000000010018">
+                <span className="a00000000010019">Campaign:</span>
+                <span className="a00000000010020">{selectedDonation.campaign.title}</span>
               </div>
-              <div className="bill-row">
-                <span className="bill-label">Amount:</span>
-                <span className="bill-value">₹{selectedDonation.amount.toFixed(2)}</span>
+              <div className="a00000000010018">
+                <span className="a00000000010019">Amount:</span>
+                <span className="a00000000010020">₹{selectedDonation.amount.toFixed(2)}</span>
               </div>
-              <div className="bill-row">
-                <span className="bill-label">Status:</span>
-                <span className="bill-value">{selectedDonation.status}</span>
+              <div className="a00000000010018">
+                <span className="a00000000010019">Status:</span>
+                <span className="a00000000010020">{selectedDonation.status}</span>
               </div>
             </div>
             
-            <div className="bill-footer">
-              <p>Thank you for your generous donation!</p>
-              <p>Your contribution helps us provide essential relief to those affected by disasters.</p>
-              <p className="small-text">This is an official receipt for your donation. Please keep it for tax purposes.</p>
+            <div className="a00000000010024">
+              <p className="a00000000010025">Thank you for your generous donation!</p>
+              <p className="a00000000010025">Your contribution helps us provide essential relief to those affected by disasters.</p>
+              <p className="a00000000010026">This is an official receipt for your donation. Please keep it for tax purposes.</p>
             </div>
           </div>
           
-          <div className="bill-actions">
-            <button className="print-button" onClick={handlePrint}>
+          <div className="a00000000010027">
+            <button className="a00000000010028" onClick={handlePrint}>
               Print Receipt
             </button>
-            <button className="print-button" onClick={() => setShowBill(false)}>
+            <button className="a00000000010029" onClick={() => setShowBill(false)}>
               Back to Donations
             </button>
           </div>
         </div>
       ) : (
-        <>
-          <h2>My Donations</h2>
-          <div className="donations-list">
-            {donations.map((donation) => (
-              <div key={donation._id} className="donation-card">
-                <div className="donation-details">
-                  <h3>{donation.campaign.title}</h3>
-                  <p className="donation-amount">₹{donation.amount.toFixed(2)}</p>
-                  <p className="donation-date">Donated on: {formatDate(donation.createdAt)}</p>
-                  <p className={`donation-status ${donation.status.toLowerCase()}`}>
-                    Status: {donation.status}
-                  </p>
-                  <p className="donation-id">Payment ID: {donation.razorpay_payment_id}</p>
+        <main className="a00000000010030">
+          <div className="a00000000010031">
+            <h2 className="a00000000010032">My Donations</h2>
+            <div className="a00000000010033">
+              {donations.map((donation) => (
+                <div key={donation._id} className="a00000000010034">
+                  <div className="a00000000010035">
+                    <h3 className="a00000000010036">{donation.campaign.title}</h3>
+                    <p className="a00000000010037">₹{donation.amount.toFixed(2)}</p>
+                    <p className="a00000000010038">Donated on: {formatDate(donation.createdAt)}</p>
+                    <p className={`a00000000010039 ${donation.status.toLowerCase()}`}>
+                      Status: {donation.status}
+                    </p>
+                    <p className="a00000000010040">Payment ID: {donation.razorpay_payment_id}</p>
+                  </div>
+                  <div className="a00000000010041">
+                    <button
+                      className="a00000000010042"
+                      onClick={() => handleGenerateBill(donation)}
+                    >
+                      Generate Receipt
+                    </button>
+                  </div>
                 </div>
-                <div className="donation-actions">
-                  <button
-                    className="generate-bill-button"
-                    onClick={() => handleGenerateBill(donation)}
-                  >
-                    Generate Receipt
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <button
+              className="a00000000010043"
+              onClick={() => navigate(-1)}
+            >
+              Back to Campaigns
+            </button>
           </div>
-          <button
-            className="back-button"
-            onClick={() => navigate(-1)}
-          >
-            Back to Campaigns
-          </button>
-        </>
+        </main>
       )}
+      
+      <footer className="k1234567l890">
+        <p className="l2345678m901">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+      </footer>
     </div>
   );
 };

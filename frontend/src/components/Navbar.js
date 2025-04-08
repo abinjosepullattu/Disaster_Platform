@@ -45,9 +45,11 @@ const NavBar = ({ activeButton, setActiveButton }) => {
 
       
       // Contributions paths
-      '/volunteer/verify-contribute': 5
+      '/volunteer/verify-contribute': 5,
       // '/volunteer/verify-contributions': 5,
       // '/volunteer/contribution-list': 5
+      '-1': 6
+
     };
 
     // Find the matching path

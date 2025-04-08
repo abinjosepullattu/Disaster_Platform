@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import image from "../images/image6.jpg"
+import "../styles/LoginPage.css"
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

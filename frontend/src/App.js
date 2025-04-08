@@ -68,7 +68,7 @@ import ViewComplaints from "./components/ViewComplaintStatus";
 import AdminComplaintManagement from "./components/AdminComplaintManagement";
 import IncidentReportsPage from "./components/IncidentReportsPage";
 import TaskProgressReport from "./components/TaskProgressReport";
-
+import SubmitComplaintPublic from "./components/SubmitComplaintPublic";
 
 
 
@@ -89,6 +89,8 @@ import DonationPage from "./components/DonationPage";
 import ContributionPage from "./components/ContributionPage";
 import ComplaintPublic from "./components/ComplaintPublic";
 import PublicAccount from "./components/PublicAccount";
+
+import ViewComplaintpublic from "./components/ViewComplaintPublic";
 
 //import FeedbackModal from "./components/FeedbackAdmin";
 function App() {
@@ -186,6 +188,13 @@ function App() {
         <Route path="/public/cont" element={<ContributionPage />} />
         <Route path="/public/compl" element={<ComplaintPublic />} />
         <Route path="/public/acnt" element={<PublicAccount />} />
+        <Route path="/public/acnt" element={<PublicAccount />} />
+
+        <Route path="/public/complaint" element={<SubmitComplaintPublic />} />
+        <Route path="/public/view-complaint" element={<ViewComplaintpublic />} />
+
+
+        
 
 
 
