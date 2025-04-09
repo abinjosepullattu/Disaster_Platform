@@ -182,6 +182,7 @@ const AdminResourceAllocation = () => {
                     onChange={(e) => handleResourceChange(index, "quantity", e.target.value)}
                     required
                     className="a24b567890123"
+                    min={0}
                   />
                   
                   <input 

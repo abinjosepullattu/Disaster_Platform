@@ -761,6 +761,8 @@ background: linear-gradient(135deg, #374350, #827ac1de, #2a333d);
         
         .toggle-password {
           position: absolute;
+              width: fit-content;
+
           right: 10px;
           top: 50%;
           transform: translateY(-50%);

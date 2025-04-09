@@ -3,13 +3,14 @@ import axios from "axios";
 import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/Navbar";
-import "../styles/ViewAssignedShelters.css" 
+import "../styles/ViewAssignedShelters.css";
 
 const ViewAssignedShelters = () => {
     const navigate = useNavigate();
     const { user } = useUser();
     const [shelters, setShelters] = useState([]);
     const [volunteerId, setVolunteerId] = useState(null);
+    const [taskStatus, setTaskStatus] = useState(null);
     const [activeButton, setActiveButton] = useState(0);
     const [loading, setLoading] = useState(true);
 
@@ -27,8 +28,14 @@ const ViewAssignedShelters = () => {
                 setVolunteerId(fetchedVolunteerId);
 
                 if (fetchedVolunteerId) {
-                    const sheltersResponse = await axios.get(`http://localhost:5000/api/shelters/assigned-shelters/${fetchedVolunteerId}`);
-                    setShelters(sheltersResponse.data);
+                    const response = await axios.get(`http://localhost:5000/api/shelters/assigned-shelters/${fetchedVolunteerId}`);
+                    // Combine shelter data with taskStatus from the response
+                    const sheltersWithStatus = response.data.shelters.map(shelter => ({
+                        ...shelter,
+                        taskStatus: response.data.taskStatus || 1 // Default to 1 if status is missing
+                    }));
+                    setShelters(sheltersWithStatus);
+                    setTaskStatus(response.data.taskStatus);
                 }
             } catch (error) {
                 console.error("Error fetching volunteer ID or assigned shelters:", error);
@@ -48,12 +55,84 @@ const ViewAssignedShelters = () => {
     
         try {
             await axios.put(`http://localhost:5000/api/shelters/update-task/${shelterId}/${volunteerId}`, { taskStatus: status });
-    
-            setShelters(shelters.map(shelter =>
-                shelter._id === shelterId ? { ...shelter, taskStatus: status } : shelter
-            ));
+            
+            if (status === 2) {
+                alert("Task accepted successfully!");
+            } else if (status === 3) {
+                alert("Task rejected successfully!");
+            } else if (status === 4) {
+                alert("Task marked as verified!");
+            }
+            
+            // Update the task status for all shelters since it's shared
+            setShelters(shelters.map(shelter => ({
+                ...shelter,
+                taskStatus: status
+            })));
+            setTaskStatus(status);
         } catch (error) {
             console.error("Error updating task status:", error);
+            alert("Failed to update task status. Please try again.");
+        }
+    };
+
+    const renderTaskActions = (shelter) => {
+        // Use the taskStatus from the shelter object (which now includes it)
+        const status = shelter.taskStatus || 1; // Default to 1 if missing
+        
+        switch(status) {
+            case 1: // Waiting for approval
+                return (
+                    <div className="a12b34567890138">
+                        <button 
+                            onClick={() => handleTaskAction(shelter._id, 2)} 
+                            className="a12b34567890139"
+                        >
+                            <svg className="a12b34567890157" viewBox="0 0 24 24">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                            </svg>
+                            Accept Task
+                        </button>
+                        <button 
+                            onClick={() => handleTaskAction(shelter._id, 3)} 
+                            className="a12b34567890140"
+                        >
+                            <svg className="a12b34567890158" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+                            </svg>
+                            Reject Task
+                        </button>
+                    </div>
+                );
+            case 2: // Accepted
+                return (
+                    <div className="a12b34567890141">
+                        <svg className="a12b34567890159" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        Task Accepted
+                    </div>
+                );
+            case 3: // Rejected
+                return (
+                    <div className="a12b34567890142">
+                        <svg className="a12b34567890160" viewBox="0 0 24 24">
+                            <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
+                        </svg>
+                        Task Rejected
+                    </div>
+                );
+            case 4: // Verified
+                return (
+                    <div className="a12b34567890143">
+                        <svg className="a12b34567890161" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                        </svg>
+                        Marked as Verified
+                    </div>
+                );
+            default:
+                return <p>No action required</p>;
         }
     };
 
@@ -77,7 +156,6 @@ const ViewAssignedShelters = () => {
                     {shelters.length === 0 ? (
                         <div className="a12b34567890128">
                             <div className="a12b34567890147">
-                                {/* <img src="/images/no-shelters.svg" alt="No shelters" className="a12b34567890148" /> */}
                                 <h3 className="a12b34567890149">No Shelters Assigned Yet</h3>
                                 <p className="a12b34567890150">You'll see your assigned shelters here when they become available</p>
                             </div>
@@ -126,44 +204,8 @@ const ViewAssignedShelters = () => {
                                             View on Map
                                         </button>
 
-                                        <div className="a12b34567890138">
-                                            <button 
-                                                onClick={() => handleTaskAction(shelter._id, 2)} 
-                                                className="a12b34567890139"
-                                            >
-                                                <svg className="a12b34567890157" viewBox="0 0 24 24">
-                                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
-                                                </svg>
-                                                Accept Task
-                                            </button>
-                                            <button 
-                                                onClick={() => handleTaskAction(shelter._id, 3)} 
-                                                className="a12b34567890140"
-                                            >
-                                                <svg className="a12b34567890158" viewBox="0 0 24 24">
-                                                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-                                                </svg>
-                                                Reject Task
-                                            </button>
-                                        </div>
+                                        {renderTaskActions(shelter)}
                                     </div>
-
-                                    {shelter.taskStatus === 2 && (
-                                        <div className="a12b34567890141">
-                                            <svg className="a12b34567890159" viewBox="0 0 24 24">
-                                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                            </svg>
-                                            Task Accepted
-                                        </div>
-                                    )}
-                                    {shelter.taskStatus === 3 && (
-                                        <div className="a12b34567890142">
-                                            <svg className="a12b34567890160" viewBox="0 0 24 24">
-                                                <path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/>
-                                            </svg>
-                                            Task Rejected
-                                        </div>
-                                    )}
                                 </div>
                             ))}
                         </div>

@@ -66,6 +66,55 @@ const ViewShelterAdmin = () => {
     }
   };
 
+  const renderVolunteerStatus = (volunteer) => {
+    if (!volunteer) {
+      return <p>No volunteer assigned</p>;
+    }
+
+    switch(volunteer.taskStatus) {
+      case 0:
+        return <p className="status-no-active">No active volunteer</p>;
+      case 1:
+        return (
+          <div className="status-waiting">
+            <p><strong>⏳ Waiting for volunteer approval</strong></p>
+            <p>Name: {volunteer.name}</p>
+            <p>Email: {volunteer.email}</p>
+            <p>Phone: {volunteer.phone}</p>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="status-approved">
+            <p><strong>✅ Volunteer assigned</strong></p>
+            <p>Name: {volunteer.name}</p>
+            <p>Email: {volunteer.email}</p>
+            <p>Phone: {volunteer.phone}</p>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="status-rejected">
+            <p><strong>❌ Volunteer rejected</strong></p>
+            <p>Name: {volunteer.name}</p>
+            <p>Email: {volunteer.email}</p>
+            <p>Phone: {volunteer.phone}</p>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="status-completed">
+            <p><strong>✔️ Task marked as completed</strong></p>
+            <p>Name: {volunteer.name}</p>
+            <p>Email: {volunteer.email}</p>
+            <p>Phone: {volunteer.phone}</p>
+          </div>
+        );
+      default:
+        return <p>No volunteer assigned</p>;
+    }
+  };
+
   return (
     <div className="a1b2345678901">
       <AdminSidebar />
@@ -94,19 +143,7 @@ const ViewShelterAdmin = () => {
                     <td data-label="Inmates">{shelter.inmates}</td>
                     <td data-label="Volunteer">
                       <div className="volunteer-info">
-                        {shelter.volunteer ? (
-                          shelter.volunteer.approvalStatus ? (
-                            <p className="a6b7890123456">{shelter.volunteer.approvalStatus}</p>
-                          ) : (
-                            <div>
-                              <p><strong>Name:</strong> {shelter.volunteer.name}</p>
-                              <p><strong>Email:</strong> {shelter.volunteer.email}</p>
-                              <p><strong>Phone:</strong> {shelter.volunteer.phone}</p>
-                            </div>
-                          )
-                        ) : (
-                          <p>No volunteer assigned</p>
-                        )}
+                        {renderVolunteerStatus(shelter.volunteer)}
                       </div>
                     </td>
                     <td data-label="Map">

@@ -204,11 +204,63 @@
     color: #6c757d;
     font-size: 0.875rem;
   }
+
+  /* Mark Completion Button */
+.a123b4567890148 {
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  margin-left: 10px; /* Space from Add/Delete button */
+}
+
+.a123b4567890148:hover {
+  background-color: #45a049; /* Darker green on hover */
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.a123b4567890148:active {
+  transform: translateY(0);
+}
+
+/* Checkmark icon in the button */
+.a123b4567890149 {
+  width: 18px;
+  height: 18px;
+  fill: white;
+}
+
+/* Button container - update existing if needed */
+.a123b4567890145 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+/* Responsive adjustments */
+/* @media (max-width: 768px) {
+
+  
+
+} */
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
     .a123b4567890126 {
       padding: 1rem;
+    }
+    .a123b4567890145 {
+      flex-direction: column;
     }
     
     .a123b4567890127 {
@@ -217,6 +269,29 @@
     
     .a123b4567890136 {
       grid-template-columns: 1fr;
+    }
+    .a123b4567890148 {
+      margin-left: 0;
+      margin-top: 10px;
+      width: 100%;
+      justify-content: center;
+    }
+    .a123b4567890145 {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .a123b4567890148,
+    .a123b4567890146 {
+      margin-left: 0;
+      margin-top: 10px;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .a123b4567890150 {
+      justify-content: center;
+      text-align: center;
     }
   }
   
@@ -237,3 +312,37 @@
       padding: 0.75rem 1rem;
     }
   }
+
+  /* Completed status display */
+.a123b4567890150 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background-color: #e8f5e9; /* Light green background */
+  color: #2e7d32; /* Dark green text */
+  border-radius: 5px;
+  font-weight: 600;
+  border: 1px solid #c8e6c9;
+}
+
+.a123b4567890151 {
+  width: 18px;
+  height: 18px;
+  fill: #2e7d32; /* Dark green checkmark */
+}
+
+/* Update button container to handle both buttons and status */
+.a123b4567890145 {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+  gap: 10px;
+  align-items: center;
+  min-height: 40px; /* Ensure consistent height */
+}
+
+/* Responsive adjustments */
+/* @media (max-width: 768px) {
+
+} */

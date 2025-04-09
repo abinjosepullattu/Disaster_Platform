@@ -102,6 +102,7 @@ const CampaignPage = () => {
                                     type="number"
                                     placeholder="Target Amount"
                                     value={goalAmount}
+                                    min={1}
                                     onChange={(e) => setGoalAmount(e.target.value)}
                                     className="p6432b56317524"
                                     required

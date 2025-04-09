@@ -211,3 +211,22 @@
     padding: 10px;
   }
 }
+.status-no-active {
+  color: gray;
+}
+
+.status-waiting {
+  color: orange;
+}
+
+.status-approved {
+  color: green;
+}
+
+.status-rejected {
+  color: red;
+}
+
+.status-completed {
+  color: blue;
+}

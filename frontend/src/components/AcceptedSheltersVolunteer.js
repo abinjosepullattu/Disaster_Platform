@@ -11,7 +11,7 @@ const AcceptedShelters = () => {
   const navigate = useNavigate();
   const [volunteerId, setVolunteerId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeButton, setActiveButton] = useState(1); // Assuming this is the second tab in navbar
+  const [activeButton, setActiveButton] = useState(1);
 
   useEffect(() => {
     const fetchVolunteerId = async () => {
@@ -19,30 +19,56 @@ const AcceptedShelters = () => {
         console.error("User ID missing. Please log in again.");
         return;
       }
-
+  
       try {
         setLoading(true);
+        // First get the volunteer ID
         const volunteerResponse = await axios.get(
           `http://localhost:5000/api/shelters/volunteer-id/${user.id}`
         );
         const fetchedVolunteerId = volunteerResponse.data.volunteerId;
         setVolunteerId(fetchedVolunteerId);
-
+  
         if (fetchedVolunteerId) {
+          // Then get the accepted shelters with taskStatus included
           const sheltersResponse = await axios.get(
             `http://localhost:5000/api/shelters/accepted/${fetchedVolunteerId}`
           );
+          console.log("Shelters response:", sheltersResponse.data); // Debug log
           setShelters(sheltersResponse.data);
         }
       } catch (error) {
-        console.error("Error fetching volunteer ID or assigned shelters:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchVolunteerId();
   }, [user]);
+
+  const handleMarkCompletion = async (shelterId) => {
+    if (!volunteerId) {
+      console.error("Volunteer ID is missing.");
+      return;
+    }
+
+    try {
+      await axios.put(
+        `http://localhost:5000/api/shelters/update-task/${shelterId}/${volunteerId}`,
+        { taskStatus: 4 }
+      );
+      alert("Task marked as completed successfully!");
+      
+      // Update local state
+      setShelters(shelters.map(shelter =>
+        shelter._id === shelterId ? { ...shelter, taskStatus: 4 } : shelter
+      ));
+    } catch (error) {
+      console.error("Error marking task as completed:", error);
+      alert("Failed to mark task as completed. Please try again.");
+    }
+  };
 
   if (loading) return (
     <div className="a123b4567890123">
@@ -108,15 +134,35 @@ const AcceptedShelters = () => {
                   </div>
                   
                   <div className="a123b4567890145">
-                    <button 
-                      onClick={() => navigate(`/add-inmates/${shelter._id}`)}
-                      className="a123b4567890146"
-                    >
-                      <svg className="a123b4567890147" viewBox="0 0 24 24">
-                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-                      </svg>
-                      Add/Delete Inmates
-                    </button>
+                    {shelter.taskStatus === 4 ? (
+                      <div className="a123b4567890150">
+                        <svg className="a123b4567890151" viewBox="0 0 24 24">
+                          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                        </svg>
+                        <span>Marked as Completed</span>
+                      </div>
+                    ) : (
+                      <>
+                        <button 
+                          onClick={() => navigate(`/add-inmates/${shelter._id}`)}
+                          className="a123b4567890146"
+                        >
+                          <svg className="a123b4567890147" viewBox="0 0 24 24">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                          </svg>
+                          Add/Delete Inmates
+                        </button>
+                        <button 
+                          onClick={() => handleMarkCompletion(shelter._id)}
+                          className="a123b4567890148"
+                        >
+                          <svg className="a123b4567890149" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                          </svg>
+                          Mark Completion
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}

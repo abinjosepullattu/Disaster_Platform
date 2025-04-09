@@ -12,6 +12,12 @@ const EditProfile = () => {
     address: "",
     age: "",
   });
+  const [errors, setErrors] = useState({
+    name: "",
+    phone: "",
+    address: "",
+    age: "",
+  });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -31,15 +37,61 @@ const EditProfile = () => {
     }
   };
 
+  const validateField = (name, value) => {
+    let error = "";
+    switch (name) {
+      case "name":
+        if (!value.trim()) error = "Name is required";
+        else if (value.trim().length < 3) error = "Name must be at least 3 characters";
+        break;
+      case "phone":
+        if (!value) error = "Phone number is required";
+        else if (!/^\d{10}$/.test(value)) error = "Invalid phone number (10 digits required)";
+        break;
+      case "address":
+        if (!value.trim()) error = "Address is required";
+        break;
+      case "age":
+        if (!value) error = "Age is required";
+        else if (value < 18) error = "Must be 18 or older";
+        else if (value > 100) error = "Invalid age";
+        break;
+      default:
+        break;
+    }
+    return error;
+  };
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Validate field on change
+    const error = validateField(name, value);
+    setErrors({ ...errors, [name]: error });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+    
+    Object.keys(formData).forEach(field => {
+      const error = validateField(field, formData[field]);
+      if (error) {
+        newErrors[field] = error;
+        isValid = false;
+      }
+    });
+    
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.phone || !formData.address || !formData.age) {
-      setMessage({ type: "error", text: "All fields are required." });
+    if (!validateForm()) {
+      setMessage({ type: "error", text: "Please fix the errors in the form." });
       return;
     }
   
@@ -80,60 +132,77 @@ const EditProfile = () => {
           )}
 
           <form onSubmit={handleSubmit} className="i9234567890b12-form">
-            <div className="j0234567890b12-form-group">
+            <div className={`j0234567890b12-form-group ${errors.name ? "error-field" : ""}`}>
               <label className="k1234567890b12-label">Full Name</label>
               <input 
                 type="text" 
                 name="name" 
                 value={formData.name} 
                 onChange={handleChange} 
-                className="l2234567890b12-input"
-                required 
+                className={`l2234567890b12-input ${errors.name ? "input-error" : ""}`}
               />
+              {errors.name && (
+                <span className="error-message" style={{ color: "#ff0000", fontSize: "0.8rem" }}>
+                  {errors.name}
+                </span>
+              )}
             </div>
             
-            <div className="m3234567890b12-form-group">
+            <div className={`m3234567890b12-form-group ${errors.phone ? "error-field" : ""}`}>
               <label className="n4234567890b12-label">Phone Number</label>
               <input 
                 type="tel" 
                 name="phone" 
                 value={formData.phone} 
                 onChange={handleChange} 
-                className="o5234567890b12-input"
-                required 
+                className={`o5234567890b12-input ${errors.phone ? "input-error" : ""}`}
+                maxLength="10"
               />
+              {errors.phone && (
+                <span className="error-message" style={{ color: "#ff0000", fontSize: "0.8rem" }}>
+                  {errors.phone}
+                </span>
+              )}
             </div>
             
-            <div className="p6234567890b12-form-group">
+            <div className={`p6234567890b12-form-group ${errors.address ? "error-field" : ""}`}>
               <label className="q7234567890b12-label">Address</label>
               <input 
                 type="text" 
                 name="address" 
                 value={formData.address} 
                 onChange={handleChange} 
-                className="r8234567890b12-input"
-                required 
+                className={`r8234567890b12-input ${errors.address ? "input-error" : ""}`}
               />
+              {errors.address && (
+                <span className="error-message" style={{ color: "#ff0000", fontSize: "0.8rem" }}>
+                  {errors.address}
+                </span>
+              )}
             </div>
             
-            <div className="s9234567890b12-form-group">
+            <div className={`s9234567890b12-form-group ${errors.age ? "error-field" : ""}`}>
               <label className="t0234567890b12-label">Age</label>
               <input 
                 type="number" 
                 name="age" 
                 value={formData.age} 
                 onChange={handleChange} 
-                className="u1234567890b12-input"
+                className={`u1234567890b12-input ${errors.age ? "input-error" : ""}`}
                 min="18"
                 max="100"
-                required 
               />
+              {errors.age && (
+                <span className="error-message" style={{ color: "#ff0000", fontSize: "0.8rem" }}>
+                  {errors.age}
+                </span>
+              )}
             </div>
             
             <button 
               type="submit" 
               className="v2234567890b12-submit-btn"
-              disabled={loading}
+              disabled={loading || Object.values(errors).some(error => error)}
             >
               {loading ? (
                 <>
@@ -147,6 +216,7 @@ const EditProfile = () => {
           </form>
         </div>
       </main>
+
     </div>
   );
 };

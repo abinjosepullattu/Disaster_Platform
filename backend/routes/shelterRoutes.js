@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Shelter = require('../models/Shelter');
 const Volunteer = require("../models/Volunteer");
-const User = require("../models/user");
+const User= require("../models/user");
 const multer = require("multer");
 const nodemailer = require("nodemailer");
 
@@ -140,18 +140,18 @@ router.delete("/delete/:shelterId", async (req, res) => {
     }
 });
 //list assigned shelters
-router.get("/assigned-shelters/:volunteerId", async (req, res) => {
-  try {
-      const { volunteerId } = req.params;
+// router.get("/assigned-shelters/:volunteerId", async (req, res) => {
+//   try {
+//       const { volunteerId } = req.params;
 
-      // Find shelters assigned to this volunteer
-      const shelters = await Shelter.find({ assignedVolunteer: volunteerId });
+//       // Find shelters assigned to this volunteer
+//       const shelters = await Shelter.find({ assignedVolunteer: volunteerId });
 
-      res.json(shelters);
-  } catch (error) {
-      res.status(500).json({ message: "Server Error", error });
-  }
-});
+//       res.json(shelters);
+//   } catch (error) {
+//       res.status(500).json({ message: "Server Error", error });
+//   }
+// });
 
 
 router.get("/assigned-shelters/:volunteerId", async (req, res) => {
@@ -164,6 +164,7 @@ router.get("/assigned-shelters/:volunteerId", async (req, res) => {
       // Fetch taskStatus from the volunteers collection
       const volunteer = await Volunteer.findById(volunteerId);
       const taskStatus = volunteer ? volunteer.taskStatus : null;
+      console.log(taskStatus)
 
       res.json({ shelters, taskStatus });
   } catch (error) {
@@ -172,26 +173,49 @@ router.get("/assigned-shelters/:volunteerId", async (req, res) => {
 });
 
 //to accept or decline task
+// router.put("/update-task/:shelterId/:volunteerId", async (req, res) => {
+//   try {
+//       const { shelterId, volunteerId } = req.params;
+//       const { taskStatus } = req.body;
+
+//       // Ensure taskStatus is either 2 (Accepted) or 3 (Rejected)
+//       if (![2, 3].includes(taskStatus)) {
+//           return res.status(400).json({ message: "Invalid task status" });
+//       }
+
+//       // Update taskStatus in the volunteers collection
+//       await Volunteer.findByIdAndUpdate(volunteerId, { taskStatus });
+
+//       res.json({ message: `Task ${taskStatus === 2 ? "accepted" : "rejected"} successfully` });
+//   } catch (error) {
+//       res.status(500).json({ message: "Server Error", error });
+//   }
+// });
+
+// Update your route to accept status 4
 router.put("/update-task/:shelterId/:volunteerId", async (req, res) => {
   try {
       const { shelterId, volunteerId } = req.params;
       const { taskStatus } = req.body;
 
-      // Ensure taskStatus is either 2 (Accepted) or 3 (Rejected)
-      if (![2, 3].includes(taskStatus)) {
+      // Update to include status 4 (Completed)
+      if (![2, 3, 4].includes(taskStatus)) {
           return res.status(400).json({ message: "Invalid task status" });
       }
 
       // Update taskStatus in the volunteers collection
       await Volunteer.findByIdAndUpdate(volunteerId, { taskStatus });
 
-      res.json({ message: `Task ${taskStatus === 2 ? "accepted" : "rejected"} successfully` });
+      let statusMessage = "";
+      if (taskStatus === 2) statusMessage = "accepted";
+      else if (taskStatus === 3) statusMessage = "rejected";
+      else if (taskStatus === 4) statusMessage = "completed";
+
+      res.json({ message: `Task ${statusMessage} successfully` });
   } catch (error) {
       res.status(500).json({ message: "Server Error", error });
   }
 });
-
-
 
 router.get("/volunteer-id/:userId", async (req, res) => {
   try {
@@ -210,31 +234,41 @@ router.get("/volunteer-id/:userId", async (req, res) => {
 
 // GET accepted shelter for a specific volunteer (taskStatus === 2)
 router.get("/accepted/:volunteerId", async (req, res) => {
-    try {
-      const { volunteerId } = req.params;
-      // Find shelters where the assignedVolunteer equals the volunteerId
-      const shelters = await Shelter.find({ assignedVolunteer: volunteerId }).lean();
-  
-      // Filter only those shelters where the volunteer's taskStatus is accepted (2)
-      const acceptedShelters = await Promise.all(
-        shelters.map(async (shelter) => {
-          const volunteer = await Volunteer.findById(shelter.assignedVolunteer).lean();
-          if (!volunteer || volunteer.taskStatus !== 2) return null;
-          // Get volunteer's user details
-          const user = await User.findById(volunteer.userId).lean();
-          return {
-            ...shelter,
-            volunteer: user ? { name: user.name, email: user.email, phone: user.phone } : null,
-          };
-        })
-      );
-  
-      res.json(acceptedShelters.filter((s) => s)); // Remove any nulls
-    } catch (error) {
-      console.error("Error fetching accepted shelters:", error);
-      res.status(500).json({ error: "Internal Server Error" });
+  try {
+    const { volunteerId } = req.params;
+    
+    // Find all shelters assigned to this volunteer
+    const shelters = await Shelter.find({ assignedVolunteer: volunteerId }).lean();
+
+    // Get the volunteer's details once
+    const volunteer = await Volunteer.findById(volunteerId).lean();
+    if (!volunteer) {
+      return res.json([]);
     }
-  });
+
+    // Get the user details for the volunteer
+    const user = await User.findById(volunteer.userId).lean();
+
+    // Filter and map shelters
+    const acceptedShelters = shelters.map((shelter) => {
+      return {
+        ...shelter,
+        taskStatus: volunteer.taskStatus, // Include taskStatus in the response
+        volunteer: user ? { 
+          name: user.name, 
+          email: user.email, 
+          phone: user.phone 
+        } : null,
+      };
+    }).filter(shelter => volunteer.taskStatus === 2 || volunteer.taskStatus === 4); // Only accepted (2) or completed (4) shelters
+
+    console.log("Returning shelters:", acceptedShelters); // Debug log
+    res.json(acceptedShelters);
+  } catch (error) {
+    console.error("Error fetching accepted shelters:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
   // Get nearby shelters within a specified radius (km)
 router.get('/nearby', async (req, res) => {
