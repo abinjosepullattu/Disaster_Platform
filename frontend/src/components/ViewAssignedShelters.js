@@ -77,7 +77,7 @@ const ViewAssignedShelters = () => {
                     {shelters.length === 0 ? (
                         <div className="a12b34567890128">
                             <div className="a12b34567890147">
-                                <img src="/images/no-shelters.svg" alt="No shelters" className="a12b34567890148" />
+                                {/* <img src="/images/no-shelters.svg" alt="No shelters" className="a12b34567890148" /> */}
                                 <h3 className="a12b34567890149">No Shelters Assigned Yet</h3>
                                 <p className="a12b34567890150">You'll see your assigned shelters here when they become available</p>
                             </div>
@@ -171,8 +171,8 @@ const ViewAssignedShelters = () => {
                 </div>
             </main>
             
-            <footer className="ft1234567890">
-                <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+            <footer className="f123o4567">
+                <p className="p123r4567">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
             </footer>
         </div>
     );

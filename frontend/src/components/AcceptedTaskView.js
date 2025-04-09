@@ -209,8 +209,8 @@ const AcceptedTasksView = () => {
         </div>
       </main>
       
-      <footer className="ft1234567890">
-        <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+      <footer className="f123o4567">
+        <p className="c8901234567">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
       </footer>
     </div>
   );

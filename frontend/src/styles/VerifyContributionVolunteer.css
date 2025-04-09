@@ -37,12 +37,12 @@
 
 /* Error message */
 .a123456789012b04 {
-  background-color: #ffdddd;
-  color: #d63031;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #746464;
   padding: 1rem;
   border-radius: 4px;
   margin-bottom: 1rem;
-  border-left: 4px solid #d63031;
+  border-left: 4px solid #3498db;
 }
 
 /* Success message */

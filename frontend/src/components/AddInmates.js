@@ -97,8 +97,8 @@ const AddInmates = () => {
         <div className="a1234b567890127">
           <div className="a1234b567890128"></div>
         </div>
-        <footer className="ft1234567890">
-          <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+        <footer className="f7890123456">
+          <p className="c8901234567">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
         </footer>
       </div>
     );
@@ -239,8 +239,8 @@ const AddInmates = () => {
         </div>
       </main>
       
-      <footer className="ft1234567890">
-        <p className="cp1234567890">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
+      <footer className="f7890123456">
+        <p className="c8901234567">© 2025 Disaster Relief Assistance Platform. All rights reserved.</p>
       </footer>
     </div>
   );
