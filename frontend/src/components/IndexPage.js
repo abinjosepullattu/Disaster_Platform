@@ -26,15 +26,15 @@ const IndexPage = () => {
   const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o";
   const SEARCH_RADIUS = 10000; // 10km in meters
 
-   // Clear date filters
-const clearDateFilter = () => {
-  // Reset date inputs
-  setFromDate('');
-  setToDate('');
-  
-  // Reset to show all verified incidents
-  setFilteredIncidents(incidents);
-};
+  // Clear date filters
+  const clearDateFilter = () => {
+    // Reset date inputs
+    setFromDate('');
+    setToDate('');
+    
+    // Reset to show all verified incidents
+    setFilteredIncidents(incidents);
+  };
 
   // Get user's location on page load
   useEffect(() => {
@@ -66,56 +66,56 @@ const clearDateFilter = () => {
     }
   }, []);
 
-// Modify the fetchIncidents method to ensure it works correctly
-const fetchIncidents = async () => {
-  try {
-    // Prepare query parameters
-    const params = {};
+  // Modify the fetchIncidents method to ensure it works correctly
+  const fetchIncidents = async () => {
+    try {
+      // Prepare query parameters
+      const params = {};
 
-    // Add date filters if provided
-    if (fromDate) {
-      params.fromDate = new Date(fromDate).toISOString();
-    }
-    if (toDate) {
-      params.toDate = new Date(toDate).toISOString();
-    }
-
-    // Fetch incidents with optional date filtering
-    const response = await axios.get("http://localhost:5000/api/incidents/active", { 
-      params 
-    });
-
-    // Filter out incidents with status 0 (only show verified incidents with status 1, 2, 3)
-    const verifiedIncidents = response.data.filter(incident => incident.status > 0);
-    
-    // Apply date filtering on the client-side
-    const dateFilteredIncidents = verifiedIncidents.filter(incident => {
-      const incidentDate = new Date(incident.createdAt);
-      
-      // If no date filters are set, return all incidents
-      if (!fromDate && !toDate) return true;
-      
-      // If only fromDate is set
-      if (fromDate && !toDate) {
-        return incidentDate >= new Date(fromDate);
+      // Add date filters if provided
+      if (fromDate) {
+        params.fromDate = new Date(fromDate).toISOString();
       }
-      
-      // If only toDate is set
-      if (!fromDate && toDate) {
-        return incidentDate <= new Date(toDate);
+      if (toDate) {
+        params.toDate = new Date(toDate).toISOString();
       }
-      
-      // If both fromDate and toDate are set
-      return incidentDate >= new Date(fromDate) && incidentDate <= new Date(toDate);
-    });
 
-    // Update both full incidents list and filtered incidents
-    setIncidents(verifiedIncidents);
-    setFilteredIncidents(dateFilteredIncidents);
-  } catch (error) {
-    console.error("Error fetching incidents:", error);
-  }
-};
+      // Fetch incidents with optional date filtering
+      const response = await axios.get("http://localhost:5000/api/incidents/active", { 
+        params 
+      });
+
+      // Filter out incidents with status 0 (only show verified incidents with status 1, 2, 3)
+      const verifiedIncidents = response.data.filter(incident => incident.status > 0);
+      
+      // Apply date filtering on the client-side
+      const dateFilteredIncidents = verifiedIncidents.filter(incident => {
+        const incidentDate = new Date(incident.createdAt);
+        
+        // If no date filters are set, return all incidents
+        if (!fromDate && !toDate) return true;
+        
+        // If only fromDate is set
+        if (fromDate && !toDate) {
+          return incidentDate >= new Date(fromDate);
+        }
+        
+        // If only toDate is set
+        if (!fromDate && toDate) {
+          return incidentDate <= new Date(toDate);
+        }
+        
+        // If both fromDate and toDate are set
+        return incidentDate >= new Date(fromDate) && incidentDate <= new Date(toDate);
+      });
+
+      // Update both full incidents list and filtered incidents
+      setIncidents(verifiedIncidents);
+      setFilteredIncidents(dateFilteredIncidents);
+    } catch (error) {
+      console.error("Error fetching incidents:", error);
+    }
+  };
 
   // Find shelters within 10km radius
   const findNearbyShelters = async (location) => {
@@ -158,8 +158,6 @@ const fetchIncidents = async () => {
     fetchIncidents();
   };
   
-
-
   // Get directions for a shelter and send them via email
   const handleGetDirections = (shelter) => {
     setSelectedShelter(shelter);
@@ -223,36 +221,51 @@ const fetchIncidents = async () => {
     }
   };
 
+  // Get severity badge class
+  const getSeverityBadgeClass = (severity) => {
+    return `a12345678901234567-severity-badge a12345678901234567-severity-${severity}`;
+  };
+
+  // Get status badge class
+  const getStatusBadgeClass = (status) => {
+    const statusClassMap = {
+      1: "a12345678901234567-status-badge a12345678901234567-status-verified",
+      2: "a12345678901234567-status-badge a12345678901234567-status-in-progress",
+      3: "a12345678901234567-status-badge a12345678901234567-status-resolved"
+    };
+    return statusClassMap[status] || "";
+  };
+
   return (
-    <div className="index-container">
-      <header className="header">
+    <div className="a12345678901234567-index-container">
+      <header className="a12345678901234567-header">
         <div>
-        <h1>Disaster Relief Platform</h1>
+          <h1>Disaster Relief Platform</h1>
         </div>
-        <div className="auth-buttons">
-          <button onClick={() => navigate("/login")} className="btn-login">Login</button>
-          <button onClick={() => navigate("/signup")} className="btn-signup">Sign Up</button>
+        <div className="a12345678901234567-auth-buttons">
+          <button onClick={() => navigate("/login")} className="a12345678901234567-btn-login">Login</button>
+          <button onClick={() => navigate("/signup")} className="a12345678901234567-btn-signup">Sign Up</button>
         </div>
       </header>
 
-      <div className="search-section">
+      <div className="a12345678901234567-search-section">
         <h2>Find Nearby Shelters</h2>
-        <div className="search-box">
+        <div className="a12345678901234567-search-box">
           <input
             type="text"
             id="searchLocation"
             placeholder="Enter your location..."
             onKeyPress={handleKeyPress}
-            className="search-input"
+            className="a12345678901234567-search-input"
           />
-          <button onClick={handleSearch} className="search-button">Search</button>
+          <button onClick={handleSearch} className="a12345678901234567-search-button">Search</button>
         </div>
       </div>
 
       {/* Email Form Modal */}
       {showEmailForm && (
-        <div className="email-modal">
-          <div className="email-modal-content">
+        <div className="a12345678901234567-email-modal">
+          <div className="a12345678901234567-email-modal-content">
             <h3>Get Directions to {selectedShelter?.location}</h3>
             <p>We'll send a link that will open directions from your current location when you use it.</p>
             
@@ -263,19 +276,19 @@ const fetchIncidents = async () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="email-input"
+                className="a12345678901234567-email-input"
               />
-              <div className="email-modal-buttons">
+              <div className="a12345678901234567-email-modal-buttons">
                 <button 
                   type="submit" 
-                  className="send-email-btn"
+                  className="a12345678901234567-send-email-btn"
                   disabled={sendingEmail}
                 >
                   {sendingEmail ? 'Sending...' : 'Send Directions'}
                 </button>
                 <button 
                   type="button" 
-                  className="cancel-btn"
+                  className="a12345678901234567-cancel-btn"
                   onClick={() => setShowEmailForm(false)}
                 >
                   Cancel
@@ -283,12 +296,12 @@ const fetchIncidents = async () => {
               </div>
             </form>
             
-            {emailMessage && <p className="email-message">{emailMessage}</p>}
+            {emailMessage && <p className="a12345678901234567-email-message">{emailMessage}</p>}
           </div>
         </div>
       )}
 
-      <div className="map-container">
+      <div className="a12345678901234567-map-container">
         <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
           <GoogleMap
             mapContainerStyle={{ width: "100%", height: "400px" }}
@@ -355,7 +368,7 @@ const fetchIncidents = async () => {
                 position={{ lat: selectedShelter.latitude, lng: selectedShelter.longitude }}
                 onCloseClick={() => setSelectedShelter(null)}
               >
-                <div className="info-window">
+                <div className="a12345678901234567-info-window">
                   <h3>Shelter</h3>
                   <p><strong>Location:</strong> {selectedShelter.location}</p>
                   <p><strong>Capacity:</strong> {selectedShelter.inmates}/{selectedShelter.totalCapacity}</p>
@@ -366,7 +379,7 @@ const fetchIncidents = async () => {
                       e.stopPropagation();
                       handleGetDirections(selectedShelter);
                     }}
-                    className="directions-btn"
+                    className="a12345678901234567-directions-btn"
                   >
                     Get Directions
                   </button>
@@ -380,44 +393,70 @@ const fetchIncidents = async () => {
                 position={{ lat: selectedIncident.latitude, lng: selectedIncident.longitude }}
                 onCloseClick={() => setSelectedIncident(null)}
               >
-                <div className="info-window">
+                <div className="a12345678901234567-info-window">
                   <h3>Incident: {selectedIncident.type}</h3>
                   <p><strong>Location:</strong> {selectedIncident.location}</p>
-                  <p><strong>Severity:</strong> {selectedIncident.severity}/5</p>
-                  <p><strong>Status:</strong> {getStatusText(selectedIncident.status)}</p>
+                  <p>
+                    <strong>Severity:</strong> {selectedIncident.severity}/5
+                    <span className={getSeverityBadgeClass(selectedIncident.severity)}></span>
+                  </p>
+                  <p>
+                    <strong>Status:</strong> {getStatusText(selectedIncident.status)}
+                    <span className={getStatusBadgeClass(selectedIncident.status)}></span>
+                  </p>
                   <p><strong>Description:</strong> {selectedIncident.description}</p>
                 </div>
               </InfoWindow>
             )}
+
+            {/* Map Legend */}
+            <div className="a12345678901234567-map-legend">
+              <div className="a12345678901234567-legend-item">
+                <div className="a12345678901234567-legend-color" style={{backgroundColor: "#0088FF"}}></div>
+                <span>Your Location</span>
+              </div>
+              <div className="a12345678901234567-legend-item">
+                <div className="a12345678901234567-legend-color" style={{backgroundColor: "#4caf50"}}></div>
+                <span>Available Shelter</span>
+              </div>
+              <div className="a12345678901234567-legend-item">
+                <div className="a12345678901234567-legend-color" style={{backgroundColor: "#ff9800"}}></div>
+                <span>Full Shelter</span>
+              </div>
+              <div className="a12345678901234567-legend-item">
+                <div className="a12345678901234567-legend-color" style={{backgroundColor: "#ff0000"}}></div>
+                <span>Incident</span>
+              </div>
+            </div>
           </GoogleMap>
         </LoadScript>
       </div>
 
-      <div className="shelters-list">
+      <div className="a12345678901234567-shelters-list">
         <h2>Nearby Shelters</h2>
         {loading ? (
-          <p>Loading shelters...</p>
+          <div className="a12345678901234567-loading-shelters">Loading shelters...</div>
         ) : nearbyShelters.length > 0 ? (
-          <div className="shelter-cards">
+          <div className="a12345678901234567-shelter-cards">
             {nearbyShelters.map((shelter) => (
-              <div className={`shelter-card ${shelter.available ? "available" : "full"}`} key={shelter._id}>
+              <div className={`a12345678901234567-shelter-card ${shelter.available ? "available" : "full"}`} key={shelter._id}>
                 <h3>{shelter.location}</h3>
                 <p><strong>Capacity:</strong> {shelter.inmates}/{shelter.totalCapacity}</p>
                 <p><strong>Status:</strong> {shelter.available ? "Available" : "Full"}</p>
                 <p><strong>Contact:</strong> {shelter.contactDetails}</p>
-                <div className="shelter-card-buttons">
+                <div className="a12345678901234567-shelter-card-buttons">
                   <button 
                     onClick={() => {
                       setMapCenter({ lat: shelter.latitude, lng: shelter.longitude });
                       setSelectedShelter(shelter);
                     }}
-                    className="view-map-btn"
+                    className="a12345678901234567-view-map-btn"
                   >
                     View on Map
                   </button>
                   <button 
                     onClick={() => handleGetDirections(shelter)}
-                    className="directions-btn"
+                    className="a12345678901234567-directions-btn"
                   >
                     Get Directions
                   </button>
@@ -430,78 +469,101 @@ const fetchIncidents = async () => {
         )}
       </div>
 
-      <div className="incidents-section">
+      <div className="a12345678901234567-incidents-section">
         <h2>Active Verified Incidents</h2>
         
         {/* Date Filter Section */}
-        <div className="date-filter-section">
-  <h3>Filter Incidents by Date</h3>
-  <div className="date-filter-container">
-    <div className="date-input-wrapper">
-      <div className="date-input-group">
-        <label>From:</label>
-        <input 
-          type="date" 
-          value={fromDate} 
-          onChange={(e) => setFromDate(e.target.value)} 
-          className="date-input"
-        />
-      </div>
-      <div className="date-input-group">
-        <label>To:</label>
-        <input 
-          type="date" 
-          value={toDate} 
-          onChange={(e) => setToDate(e.target.value)} 
-          className="date-input"
-        />
-      </div>
-    </div>
-    <div className="date-filter-buttons">
-      <button 
-        onClick={handleDateFilter} 
-        className="apply-filter-btn"
-        disabled={!fromDate && !toDate}
-      >
-        Apply Filter
-      </button>
-      <button 
-        onClick={clearDateFilter} 
-        className="clear-filter-btn"
-        disabled={!fromDate && !toDate}
-      >
-        Clear Filter
-      </button>
-    </div>
-  </div>
-</div>
+        <div className="a12345678901234567-date-filter-section">
+          <h3>Filter Incidents by Date</h3>
+          <div className="a12345678901234567-date-filter-container">
+            <div className="a12345678901234567-date-input-wrapper">
+              <div className="a12345678901234567-date-input-group">
+                <label>From:</label>
+                <input 
+                  type="date" 
+                  value={fromDate} 
+                  onChange={(e) => setFromDate(e.target.value)} 
+                  className="a12345678901234567-date-input"
+                />
+              </div>
+              <div className="a12345678901234567-date-input-group">
+                <label>To:</label>
+                <input 
+                  type="date" 
+                  value={toDate} 
+                  onChange={(e) => setToDate(e.target.value)} 
+                  className="a12345678901234567-date-input"
+                />
+              </div>
+            </div>
+            <div className="a12345678901234567-date-filter-buttons">
+              <button 
+                onClick={handleDateFilter} 
+                className="a12345678901234567-apply-filter-btn"
+                disabled={!fromDate && !toDate}
+              >
+                Apply Filter
+              </button>
+              <button 
+                onClick={clearDateFilter} 
+                className="a12345678901234567-clear-filter-btn"
+                disabled={!fromDate && !toDate}
+              >
+                Clear Filter
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Weather Indicator - New Feature */}
+        <div className="a12345678901234567-weather-indicator">
+          <div className="a12345678901234567-weather-icon">☀️</div>
+          <div className="a12345678901234567-weather-info">
+            <div className="a12345678901234567-weather-temp">32°C</div>
+            <div className="a12345678901234567-weather-desc">Clear sky, light winds</div>
+          </div>
+        </div>
+        
         {filteredIncidents.length > 0 ? (
-          <div className="incident-cards">
+          <div className="a12345678901234567-incident-cards">
             {filteredIncidents.map((incident) => (
               <div 
-                className="incident-card" 
+                className="a12345678901234567-incident-card" 
                 key={incident._id} 
                 style={{ borderLeft: `5px solid ${getSeverityColor(incident.severity)}` }}
               >
                 <h3>{incident.type}</h3>
                 <p><strong>Location:</strong> {incident.location}</p>
-                <p><strong>Severity:</strong> {incident.severity}/5</p>
-                <p><strong>Status:</strong> {getStatusText(incident.status)}</p>
+                <p>
+                  <strong>Severity:</strong> {incident.severity}/5
+                  <span className={getSeverityBadgeClass(incident.severity)}></span>
+                </p>
+                <p>
+                  <strong>Status:</strong> {getStatusText(incident.status)}
+                  <span className={getStatusBadgeClass(incident.status)}></span>
+                </p>
                 <p><strong>Description:</strong> {incident.description}</p>
                 <p><strong>Date:</strong> {new Date(incident.createdAt).toLocaleDateString()}</p>
-                <button onClick={() => {
-                  setMapCenter({ lat: incident.latitude, lng: incident.longitude });
-                  setSelectedIncident(incident);
-                }}>View on Map</button>
+                <button 
+                  onClick={() => {
+                    setMapCenter({ lat: incident.latitude, lng: incident.longitude });
+                    setSelectedIncident(incident);
+                  }}
+                  className="a12345678901234567-view-map-btn"
+                >
+                  View on Map
+                </button>
               </div>
             ))}
           </div>
         ) : (
-          <p>No incidents found matching the selected date range.</p>
+          <div className="a12345678901234567-alert a12345678901234567-alert-info">
+            No incidents found matching the selected date range.
+          </div>
         )}
       </div>
 
-      <footer className="footer">
+      <footer className="a12345678901234567-footer">
         <p>© 2025 Disaster Relief Platform | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
       </footer>
     </div>
