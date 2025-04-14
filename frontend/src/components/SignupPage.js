@@ -274,7 +274,6 @@ const SignupPage = () => {
                   name="email" 
                   placeholder="Enter your email" 
                   defaultValue=""
-                  autoComplete="nope" 
                   value={formData.email} 
                   onChange={handleChange} 
                 />
@@ -290,7 +289,6 @@ const SignupPage = () => {
                     name="password" 
                     placeholder="Create a password" 
                     defaultValue=""
-                    autoComplete="off"
                     value={formData.password} 
                     onChange={handleChange} 
                   />
