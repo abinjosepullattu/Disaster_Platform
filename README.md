@@ -105,6 +105,64 @@ Disaster_Platform/
 └── package.json
 ```
 
+
 ---
+
+### 💳 Payment Integration
+
+* Donations from the public are processed securely via Razorpay.
+
+* Admins can track incoming donations via the dashboard.
+
+
+
+---
+
+## 📌 Key Modules
+
+* User Management
+
+* Resource Management
+
+* Task Assignment
+
+* Shelter Management
+
+* Incident Reporting
+
+* Alert System
+
+* Manage Donations
+
+
+
+---
+
+## 🛡️ Goals & Benefits
+
+* Enhance disaster recovery speed and accuracy
+
+* Centralize coordination between admin, volunteers & public
+
+* Promote transparency and public engagement
+
+
+
+---
+
+## 🛠️ Future Enhancements
+
+* AI-based disaster prediction
+
+* IoT-based disaster alerts
+
+* Geo-location-based alerts
+
+
+
+---
+
+
+
 
 
