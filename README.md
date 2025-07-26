@@ -85,7 +85,7 @@ npm start
 ### 📁 Project Structure
 
 ```
-DRAP/
+Disaster_Platform/
 │
 ├── backend/
 │   ├── middleware/
@@ -97,8 +97,8 @@ DRAP/
 ├── frontend/
 │   ├── public/
 │   ├── src/
-│   │   └── components/
-│   │   └── styles/
+│       └── components/
+│       └── styles/
 │   
 │
 ├── .env
