@@ -158,6 +158,20 @@ Disaster_Platform/
 
 * Geo-location-based alerts
 
+  ## 📸 Screenshots
+
+### 🔹 Index Page
+![Index Page](screenshots/Indexpage.png)
+
+### 🔹 Volunteer Dashboard
+![Volunteer Dashboard](screenshots/Volunteer.png)
+
+### 🔹 Admin Panel
+![Admin Panel](screenshots/Admin.png)
+
+### 🔹 User Dashboard
+![User Dashboard](screenshots/Public.png)
+
 
 
 
