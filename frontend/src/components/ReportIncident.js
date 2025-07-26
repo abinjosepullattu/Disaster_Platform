@@ -16,7 +16,7 @@ const ReportIncident = () => {
   const autocompleteRef = useRef(null);
   const { user } = useUser();
 
-  const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o";
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
   // Fetch current location on component mou
   useEffect(() => {

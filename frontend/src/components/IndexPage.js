@@ -23,7 +23,9 @@ const IndexPage = () => {
   const [toDate, setToDate] = useState('');
   const [filteredIncidents, setFilteredIncidents] = useState([]);
 
-  const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o";
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
+
   const SEARCH_RADIUS = 10000; // 10km in meters
 
   // Clear date filters

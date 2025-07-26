@@ -71,7 +71,7 @@ const MakeDonation = () => {
       const { id: order_id, amount, currency } = response.data;
 
       const options = {
-        key: "rzp_test_cITg7ERmHMWIX4",
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
         amount,
         currency,
         name: "Disaster Relief Fund",

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import AdminSidebar from "./AdminSidebar"; // Same as in AddShelter
 import "../styles/OngoingIncidents.css";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // Load from .env
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 const OngoingIncidents = () => {
   const [incidents, setIncidents] = useState([]);

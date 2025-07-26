@@ -9,8 +9,8 @@ const DonationAllocation = require("../models/DonationAllocation");
 const ResourceType = require('../models/ResourceType');
 
 const razorpay = new Razorpay({
-  key_id: "rzp_test_cITg7ERmHMWIX4", // Replace with your Razorpay key
-  key_secret: "qMPeHvrrKNUPilyJjTjboNAS", // Replace with your Razorpay secret
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
 // Add this to your donation routes file

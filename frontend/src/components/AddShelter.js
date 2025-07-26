@@ -19,7 +19,7 @@ const AddShelter = () => {
     const navigate = useNavigate();
     const mapRef = useRef(null);
 
-    const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // API Key from .env
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
     const libraries = ["places"];
 
     // Get user's current location when component mounts

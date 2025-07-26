@@ -13,7 +13,7 @@ const VerifyPublicReports = () => {
   const mapRef = useRef(null);
   const navigate = useNavigate();
 
-  const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // ✅ Use API Key from .env
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const mapContainerStyle = { width: "100%", height: "500px" };
 
   // Memoize fetchIncidents to prevent unnecessary re-renders

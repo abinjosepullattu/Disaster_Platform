@@ -15,7 +15,7 @@ const AdminReportIncident = () => {
   const mapRef = useRef(null);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
 
-  const GOOGLE_MAPS_API_KEY ="AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // API key
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const libraries = ["places"];
 
   // Get user's current location when component mounts

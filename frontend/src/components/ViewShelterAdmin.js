@@ -4,7 +4,7 @@ import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 import AdminSidebar from "./AdminSidebar";
 import "../styles/ViewShelterAdmin.css";
 
-const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o";
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 // Separate LoadScript component to prevent unnecessary re-renders
 const MapComponent = ({ shelter, onClose }) => {

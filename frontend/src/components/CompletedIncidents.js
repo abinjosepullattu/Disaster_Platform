@@ -12,7 +12,7 @@ const CompletedIncidents = () => {
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const navigate = useNavigate();
 
-  const GOOGLE_MAPS_API_KEY = "AIzaSyCvDmFuDpXO7aDEpSqQ6LScHge8wy8Jx1o"; // Load from .env
+const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
   useEffect(() => {
     fetchIncidents();
