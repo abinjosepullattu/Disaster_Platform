@@ -158,19 +158,43 @@ Disaster_Platform/
 
 * Geo-location-based alerts
 
-  ## 📸 Screenshots
+## 📸 Screenshots
 
-### 🔹 Index Page
-![Index Page](screenshots/Indexpage.png)
+<table>
+  <tr>
+    <td align="center">
+      <img src="screenshots/Indexpage.png" width="75%" /><br>
+      <sub>Index Page</sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/Volunteer.png" width="75%" /><br>
+      <sub>Volunteer Dashboard</sub>
+    </td>
+  </tr>
+    <tr>
+    <td align="center">
+      <img src="screenshots/Admin.png" width="75%" /><br>
+      <sub>Admin Panel</sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/Public.png" width="75%" /><br>
+      <sub>Public Dashboard</sub>
+    </td>
+  </tr>
+    <tr>
+    <td align="center">
+      <img src="screenshots/Donation.png" width="75%" /><br>
+      <sub>Donation Page</sub>
+    </td>
+    <td align="center">
+      <img src="screenshots/Payment.png" width="75%" /><br>
+      <sub>Payment Page</sub>
+    </td>
+  </tr>
+</table>
 
-### 🔹 Volunteer Dashboard
-![Volunteer Dashboard](screenshots/Volunteer.png)
 
-### 🔹 Admin Panel
-![Admin Panel](screenshots/Admin.png)
 
-### 🔹 User Dashboard
-![User Dashboard](screenshots/Public.png)
 
 
 
