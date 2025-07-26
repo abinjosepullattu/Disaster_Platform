@@ -45,4 +45,66 @@ Disaster Relief Assistance Platform is a MERN stack-based web application built 
 | Maps     | Google Maps                     |
 
 ---
+Thanks for the clarification and folder structure screenshot. Based on your actual structure, here's the corrected and simplified **Setup & Installation** section for your `README.md`, aligned with your project layout:
+
+---
+
+## 🔧 Setup & Installation
+
+### ▶️ Clone & Install
+
+```bash
+git clone https://github.com/abinjosepullattu/Disaster_Platform.git
+cd Disaster_Platform
+
+# Install backend dependencies
+cd backend
+npm install
+
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
+
+---
+
+### ⚙️ Run the Project
+
+```bash
+# Run backend
+cd backend
+npm start
+
+# Run frontend (in a new terminal)
+cd frontend
+npm start
+```
+
+---
+
+### 📁 Project Structure
+
+```
+DRAP/
+│
+├── backend/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── uploads/
+│   └── server.js
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   └── components/
+│   │   └── styles/
+│   
+│
+├── .env
+└── package.json
+```
+
+---
+
 
