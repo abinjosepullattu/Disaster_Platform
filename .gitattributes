@@ -12,3 +12,10 @@ yarn.lock linguist-generated=true
 node_modules/** linguist-vendored
 build/** linguist-vendored
 dist/** linguist-vendored
+
+# Mark HTML templates as generated if they're built by your build process
+public/index.html linguist-generated=true
+
+# Documentation
+*.md linguist-documentation=true
+README.md linguist-documentation=true
