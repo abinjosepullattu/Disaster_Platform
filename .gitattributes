@@ -1,2 +1,21 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# React (in .js files)
+*.js linguist-language=JavaScript
+
+# CSS and HTML
+*.css linguist-language=CSS
+*.html linguist-language=HTML
+
+# JSON files (package.json, config, etc.)
+*.json linguist-language=JSON
+
+# Environment/config files (ignored from language stats)
+*.env linguist-generated=true
+*.env.* linguist-generated=true
+*.lock linguist-generated=true
+*.log linguist-generated=true
+
+# Ignore generated/static files (from builds)
+public/** linguist-generated=true
+build/** linguist-generated=true
+dist/** linguist-generated=true
+node_modules/** linguist-generated=true
