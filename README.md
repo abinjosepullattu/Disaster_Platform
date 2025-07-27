@@ -156,7 +156,6 @@ Disaster_Platform/
 
 * IoT-based disaster alerts
 
-* Geo-location-based alerts
 
 ## 📸 Screenshots
 
