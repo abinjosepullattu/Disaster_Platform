@@ -213,7 +213,7 @@ const IncidentReportsPage = () => {
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const apiBaseUrl = "http://localhost:5000/api/incidents";
+  const apiBaseUrl = `${process.env.REACT_APP_API_URL}/api/incidents`;
 
   useEffect(() => {
     fetchIncidents();

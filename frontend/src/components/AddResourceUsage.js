@@ -34,7 +34,7 @@ const AddResourceUsage = () => {
     setFetchingUserData(true);
     try {
       const volunteerResponse = await axios.get(
-        `http://localhost:5000/api/resourceTypes/user/${user.id}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/user/${user.id}`
       );
       
       if (!volunteerResponse.data) {
@@ -46,7 +46,7 @@ const AddResourceUsage = () => {
       const volunteerId = volunteerResponse.data._id;
       
       const shelterResponse = await axios.get(
-        `http://localhost:5000/api/resourceTypes/volunteer/${volunteerId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/volunteer/${volunteerId}`
       );
       
       if (shelterResponse.data && shelterResponse.data.length > 0) {
@@ -64,7 +64,7 @@ const AddResourceUsage = () => {
 
   const fetchResourceTypes = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/list");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/list`);
       if (response.data && Array.isArray(response.data)) {
         setResourceTypes(response.data);
       } else {
@@ -106,7 +106,7 @@ const AddResourceUsage = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/resourceTypes/add-usage", 
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/add-usage`, 
         {
           shelter: assignedShelter._id,
           resources,

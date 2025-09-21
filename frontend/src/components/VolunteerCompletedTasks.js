@@ -24,7 +24,7 @@ const VolunteerCompletedTasks = ({ volunteerId }) => {
     const fetchCompletedTasks = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/taskprogress/volunteer/${user.id}/completed`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/taskprogress/volunteer/${user.id}/completed`);
         const completed = response.data.filter(task => task.completed);
         setCompletedTasks(completed);
       } catch (err) {

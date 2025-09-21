@@ -15,7 +15,7 @@ const AdminApprovalPage = () => {
 
   const fetchVolunteers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/admin/pending-volunteers");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/pending-volunteers`);
       setVolunteers(response.data);
     } catch (err) {
       console.error("Error fetching volunteers:", err);
@@ -26,7 +26,7 @@ const AdminApprovalPage = () => {
   const handleApproval = async (volunteerId, status) => {
     try {
       const applicationStatus = status === "approved" ? 1 : 2;
-      await axios.post("http://localhost:5000/api/admin/approve-volunteer", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/approve-volunteer`, {
         volunteerId,
         applicationStatus,
       });
@@ -96,7 +96,7 @@ const AdminApprovalPage = () => {
                     </td>
                     <td className="table-cell">
                       <a 
-                        href={`http://localhost:5000/${volunteer.idProof}`} 
+                        href={`${process.env.REACT_APP_API_URL}/${volunteer.idProof}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="document-link"
@@ -106,7 +106,7 @@ const AdminApprovalPage = () => {
                     </td>
                     <td className="table-cell">
                       <a 
-                        href={`http://localhost:5000/${volunteer.experienceCertificate}`} 
+                        href={`${process.env.REACT_APP_API_URL}/${volunteer.experienceCertificate}`} 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="document-link"

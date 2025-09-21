@@ -14,7 +14,7 @@ const VolunteerRejected = () => {
 
   const fetchVolunteers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/admin/rejected-volunteers");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/rejected-volunteers`);
       setVolunteers(response.data);
     } catch (error) {
       console.error("Error fetching rejected volunteers:", error);
@@ -23,7 +23,7 @@ const VolunteerRejected = () => {
 
   const handleDelete = async (volunteerId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/admin/delete-volunteer/${volunteerId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/delete-volunteer/${volunteerId}`);
       setVolunteers(volunteers.filter((vol) => vol._id !== volunteerId));
       alert("Volunteer deleted successfully!");
     } catch (error) {

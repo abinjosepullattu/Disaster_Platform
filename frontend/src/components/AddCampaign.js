@@ -18,7 +18,7 @@ const CampaignPage = () => {
 
     const fetchCampaigns = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/api/donations/campaigns");
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/donations/campaigns`);
             setCampaigns(response.data);
         } catch (error) {
             console.error("Error fetching campaigns:", error);
@@ -35,7 +35,7 @@ const CampaignPage = () => {
                 startDate,
                 endDate
             };
-            await axios.post("http://localhost:5000/api/donations/campaigns", newCampaign);
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/donations/campaigns`, newCampaign);
             fetchCampaigns();
             setTitle("");
             setDescription("");
@@ -51,7 +51,7 @@ const CampaignPage = () => {
     const handleDeleteCampaign = async (campaignId) => {
         if (window.confirm("Are you sure you want to delete this campaign?")) {
             try {
-                await axios.delete(`http://localhost:5000/api/donations/campaigns/${campaignId}`);
+                await axios.delete(`${process.env.REACT_APP_API_URL}/api/donations/campaigns/${campaignId}`);
                 alert("Campaign deleted successfully");
                 fetchCampaigns();
             } catch (error) {

@@ -25,13 +25,13 @@ const MyDonations = () => {
 
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/donations/user-donations/${user.id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/donations/user-donations/${user.id}`);
         
         const donationsWithCampaignDetails = await Promise.all(
           response.data.map(async (donation) => {
             try {
               const campaignResponse = await axios.get(
-                `http://localhost:5000/api/donations/e/campaigns/${donation.campaignId._id}` 
+                `${process.env.REACT_APP_API_URL}/api/donations/e/campaigns/${donation.campaignId._id}` 
               );
               return {
                 ...donation,

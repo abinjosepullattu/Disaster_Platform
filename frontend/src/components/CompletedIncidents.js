@@ -21,7 +21,7 @@ const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const fetchIncidents = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/incidents/completed", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/incidents/completed`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setIncidents(response.data);

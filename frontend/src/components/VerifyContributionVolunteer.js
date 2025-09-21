@@ -26,7 +26,7 @@ const VerifyContributions = () => {
   const fetchAssignedShelter = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/resourceTypes/shelter-assigned/${userId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/shelter-assigned/${userId}`
       );
       setShelter(response.data);
       
@@ -45,7 +45,7 @@ const VerifyContributions = () => {
     try {
       // Create a dedicated endpoint for fetching shelter-specific contributions
       const response = await axios.get(
-        `http://localhost:5000/api/resourceTypes/shelter-contributions/${shelterId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/shelter-contributions/${shelterId}`
       );
       
       setContributions(response.data);
@@ -61,7 +61,7 @@ const VerifyContributions = () => {
     try {
       setLoading(true); // Show loading while verification is in progress
       await axios.put(
-        `http://localhost:5000/api/resourceTypes/approve-contribution/${contributionId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/approve-contribution/${contributionId}`
       );
       
       // Show success message

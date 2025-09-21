@@ -23,12 +23,12 @@ const ViewAssignedShelters = () => {
 
             try {
                 setLoading(true);
-                const volunteerResponse = await axios.get(`http://localhost:5000/api/shelters/volunteer-id/${user.id}`);
+                const volunteerResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/shelters/volunteer-id/${user.id}`);
                 const fetchedVolunteerId = volunteerResponse.data.volunteerId;
                 setVolunteerId(fetchedVolunteerId);
 
                 if (fetchedVolunteerId) {
-                    const response = await axios.get(`http://localhost:5000/api/shelters/assigned-shelters/${fetchedVolunteerId}`);
+                    const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/shelters/assigned-shelters/${fetchedVolunteerId}`);
                     // Combine shelter data with taskStatus from the response
                     const sheltersWithStatus = response.data.shelters.map(shelter => ({
                         ...shelter,
@@ -54,7 +54,7 @@ const ViewAssignedShelters = () => {
         }
     
         try {
-            await axios.put(`http://localhost:5000/api/shelters/update-task/${shelterId}/${volunteerId}`, { taskStatus: status });
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/shelters/update-task/${shelterId}/${volunteerId}`, { taskStatus: status });
             
             if (status === 2) {
                 alert("Task accepted successfully!");

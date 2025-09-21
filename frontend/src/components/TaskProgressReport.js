@@ -48,7 +48,7 @@ const TaskProgressReport = () => {
       if (filters.taskType && filters.taskType !== 'All') queryParams.append('taskType', filters.taskType);
       if (filters.status && filters.status !== 'All') queryParams.append('status', filters.status === 'Completed' ? 'true' : 'false');
       
-      const response = await axios.get(`http://localhost:5000/api/taskprogress?${queryParams}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/taskprogress?${queryParams}`);
       setTaskProgress(response.data);
     } catch (err) {
       setError('Failed to fetch task progress reports');

@@ -111,7 +111,7 @@ const AdminComplaintManagement = () => {
   const [selectedComplaint, setSelectedComplaint] = useState(null);
   const [isSubmittingResponse, setIsSubmittingResponse] = useState(false);
   
-  const complaintsBaseUrl = "http://localhost:5000/api/complaints";
+  const complaintsBaseUrl = `${process.env.REACT_APP_API_URL}/api/complaints`;
 
   useEffect(() => {
     fetchComplaints();

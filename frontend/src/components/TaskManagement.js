@@ -29,32 +29,32 @@ const TaskManagement = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/tasks/skills')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/skills`)
       .then(res => setSkills(res.data))
       .catch(err => console.error(err));
     
     if (skill) {
-      axios.get(`http://localhost:5000/api/tasks/volunteers/${skill}`)
+      axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/volunteers/${skill}`)
         .then(res => setVolunteers(res.data))
         .catch(err => console.error(err));
     }
 
-    axios.get('http://localhost:5000/api/tasks/list')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/list`)
       .then(res => setTaskTypes(res.data))
       .catch(err => console.error("Failed to fetch task types", err));
 
-    axios.get('http://localhost:5000/api/tasks/res-types')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/res-types`)
       .then(res => setResourceTypes(Array.isArray(res.data) ? res.data : []))
       .catch(err => {
         console.error("Failed to fetch resource types", err);
         setResourceTypes([]);
       });
 
-    axios.get('http://localhost:5000/api/tasks/incidents')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/incidents`)
       .then(res => setIncidents(res.data))
       .catch(err => console.error("Failed to fetch incidents", err));
 
-    axios.get('http://localhost:5000/api/tasks/shelters')
+    axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/shelters`)
       .then(res => setShelters(res.data))
       .catch(err => console.error("Failed to fetch shelters", err));
   }, [skill]);
@@ -79,7 +79,7 @@ const TaskManagement = () => {
 
     const selectedTask = taskTypes.find(task => task.name === taskType);
 
-    axios.post('http://localhost:5000/api/tasks/add', { task, extraData })
+    axios.post(`${process.env.REACT_APP_API_URL}/api/tasks/add`, { task, extraData })
       .then(() => {
         setMessage({ text: "✅ Task assigned successfully!", type: "success" });
         setTimeout(() => navigate(-1), 2000); // Navigate back after 2 seconds

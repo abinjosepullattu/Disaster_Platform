@@ -23,7 +23,7 @@ const ViewUserContributions = () => {
   const fetchContributions = async (userId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/resourceTypes/user-contributions/${userId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/user-contributions/${userId}`
       );
       setContributions(response.data);
       setLoading(false);

@@ -21,7 +21,7 @@ const AddInmates = () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `http://localhost:5000/api/inmates/shelters/${shelterId}/inmates`
+        `${process.env.REACT_APP_API_URL}/api/inmates/shelters/${shelterId}/inmates`
       );
       setInmates(response.data);
     } catch (error) {
@@ -43,7 +43,7 @@ const AddInmates = () => {
     e.preventDefault();
     try {
       await axios.post(
-        `http://localhost:5000/api/inmates/shelters/${shelterId}/inmates`,
+        `${process.env.REACT_APP_API_URL}/api/inmates/shelters/${shelterId}/inmates`,
         formData
       );
       setFormData({ name: "", place: "", age: "", contact: "" });
@@ -70,7 +70,7 @@ const AddInmates = () => {
     if (!window.confirm("Are you sure you want to delete this inmate?")) return;
     
     try {
-      await axios.delete(`http://localhost:5000/api/inmates/shelters/${inmateId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/inmates/shelters/${inmateId}`);
       
       // Toast notification instead of alert
       const toast = document.createElement("div");

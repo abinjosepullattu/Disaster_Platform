@@ -23,7 +23,7 @@ const ViewComplaintpublic = () => {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5000/api/complaints/user/${user.id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/complaints/user/${user.id}`);
         setComplaints(response.data.complaints);
         setLoading(false);
       } catch (error) {

@@ -26,7 +26,7 @@ const ProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/profile/${user.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${user.id}`);
       setProfile(response.data);
       setFormData({
         name: response.data.name || "",
@@ -55,7 +55,7 @@ const ProfilePage = () => {
     formData.append("userId", user.id);
 
     try {
-      const response = await axios.put("http://localhost:5000/api/profile/update-photo", formData, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/profile/update-photo`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -81,7 +81,7 @@ const ProfilePage = () => {
 
   const handleProfileUpdate = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/api/profile/${user.id}`, formData);
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/profile/${user.id}`, formData);
       setProfile(response.data);
       setMessage({ type: "success", text: "Profile updated successfully!" });
       setIsEditing(false);

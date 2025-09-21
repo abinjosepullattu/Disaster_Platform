@@ -16,7 +16,7 @@ const ResourceTypeForm = () => {
 
   const fetchResourceTypes = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/list");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/list`);
       setResourceTypes(response.data);
     } catch (error) {
       console.error("Error fetching resource types:", error);
@@ -32,7 +32,7 @@ const ResourceTypeForm = () => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/resourceTypes/add", { name: form.name });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/resourceTypes/add`, { name: form.name });
       setMessage({ text: "✅ Resource Type added successfully!", type: "success" });
       setForm({ name: "" });
       fetchResourceTypes();
@@ -46,7 +46,7 @@ const ResourceTypeForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/resourceTypes/delete/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/resourceTypes/delete/${id}`);
       setMessage({ text: "🗑️ Resource Type deleted successfully!", type: "success" });
       fetchResourceTypes();
     } catch (error) {

@@ -17,7 +17,7 @@ const ChangePasswordPublic = () => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/profile/change-password",
+        `${process.env.REACT_APP_API_URL}/api/profile/change-password`,
         { userId: user.id, ...formData }
       );
       setMessage({ type: "success", text: response.data.message });

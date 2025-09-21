@@ -21,7 +21,7 @@ const ViewAllocatedResourcesVolunteer = () => {
   const fetchShelter = async (volunteerId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/resourceTypes/shelter-assigned/${volunteerId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/shelter-assigned/${volunteerId}`
       );
       if (response.data) {
         setShelter(response.data);
@@ -39,7 +39,7 @@ const ViewAllocatedResourcesVolunteer = () => {
   const fetchAllocations = async (shelterId) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/resourceTypes/allocations/${shelterId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/allocations/${shelterId}`
       );
       setAllocations(response.data);
     } catch (err) {

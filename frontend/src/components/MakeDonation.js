@@ -18,7 +18,7 @@ const MakeDonation = () => {
     const fetchCampaignDetails = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/donations/campaigns`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/donations/campaigns`);
         const campaignData = response.data.find((c) => c._id === campaignId);
 
         if (campaignData) {
@@ -61,7 +61,7 @@ const MakeDonation = () => {
     try {
       await loadRazorpayScript();
 
-      const response = await axios.post("http://localhost:5000/api/donations/create-order", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/donations/create-order`, {
         amount: parseFloat(donationAmount) * 100,
         currency: "INR",
         campaignId,
@@ -79,7 +79,7 @@ const MakeDonation = () => {
         order_id,
         handler: async function (response) {
           try {
-            const verificationResponse = await axios.post("http://localhost:5000/api/donations/verify-payment", {
+            const verificationResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/donations/verify-payment`, {
               razorpay_payment_id: response.razorpay_payment_id,
               razorpay_order_id: response.razorpay_order_id,
               razorpay_signature: response.razorpay_signature,

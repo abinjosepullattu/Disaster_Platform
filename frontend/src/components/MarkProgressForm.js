@@ -40,11 +40,11 @@ const TaskProgressForm = () => {
     const fetchTaskDetails = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/tasks/${taskId}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/${taskId}`);
         setTask(response.data);
         
         try {
-          const progressResponse = await axios.get(`http://localhost:5000/api/taskprogress/task/${taskId}`);
+          const progressResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/taskprogress/task/${taskId}`);
           if (progressResponse.data) {
             const formattedData = { ...progressResponse.data };
             ['mealsServed', 'peopleFound', 'peopleHospitalized', 'peopleMissing', 'peopleLost'].forEach(field => {
@@ -120,7 +120,7 @@ const TaskProgressForm = () => {
         ];
       }
 
-      const response = await axios.post('http://localhost:5000/api/taskprogress', submitData);
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/taskprogress`, submitData);
       setSuccess('Progress updated successfully!');
       
       setLoading(false);

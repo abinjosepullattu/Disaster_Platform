@@ -14,7 +14,7 @@ const MyIncidentReports = () => {
     const fetchUserIncidents = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`http://localhost:5000/api/incidents/my-reports/${user.id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/incidents/my-reports/${user.id}`);
         setIncidents(response.data);
         setLoading(false);
       } catch (error) {

@@ -80,7 +80,7 @@ const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:5000/api/incidents/report", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/incidents/report`, {
         location: form.location,
         type: form.type,
         severity: form.severity,

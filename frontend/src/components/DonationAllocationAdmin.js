@@ -33,9 +33,9 @@ const DonationAllocation = () => {
     
     try {
       const [donationsRes, typesRes, historyRes] = await Promise.all([
-        axios.get("http://localhost:5000/api/donations/summary"),
-        axios.get("http://localhost:5000/api/resourceTypes/list"),
-        axios.get("http://localhost:5000/api/donations/allocations")
+        axios.get(`${process.env.REACT_APP_API_URL}/api/donations/summary`),
+        axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/list`),
+        axios.get(`${process.env.REACT_APP_API_URL}/api/donations/allocations`)
       ]);
       
       setDonations(donationsRes.data);
@@ -98,7 +98,7 @@ const DonationAllocation = () => {
     setSuccess("");
     
     try {
-      await axios.post("http://localhost:5000/api/donations/allocate", {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/donations/allocate`, {
         allocations: allocations,
         totalCost: totalCost
       });

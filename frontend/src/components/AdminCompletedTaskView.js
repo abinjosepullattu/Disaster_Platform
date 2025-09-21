@@ -23,7 +23,7 @@ const AdminCompletedTasksView = () => {
   useEffect(() => {
     const fetchTaskTypes = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/tasks/list');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/list`);
         setTaskTypes(response.data);
       } catch (err) {
         console.error('Error fetching task types:', err);
@@ -53,7 +53,7 @@ const AdminCompletedTasksView = () => {
     setError('');
     try {
       // Fetch tasks with status 4 (completed)
-      const response = await axios.get(`http://localhost:5000/api/tasks/completed/${taskType}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/completed/${taskType}`);
       
       if (response.data.length > 0) {
         // Find the task with the most recent createdAt date
@@ -77,7 +77,7 @@ const AdminCompletedTasksView = () => {
   const checkExistingFeedback = async (taskId) => {
     setFeedbackLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/feedback/task/${taskId}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/feedback/task/${taskId}`);
       setExistingFeedback(response.data);
     } catch (err) {
       if (err.response && err.response.status === 404) {
@@ -100,7 +100,7 @@ const AdminCompletedTasksView = () => {
   const handleVerifyCompletion = async (taskId) => {
     setVerifyingTask(true);
     try {
-      await axios.patch(`http://localhost:5000/api/tasks/verify-completion/${taskId}`, {
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/tasks/verify-completion/${taskId}`, {
         status: 0 // Set status back to 0 (Available)
       });
       alert("✅ Completion Verified");
@@ -131,7 +131,7 @@ const AdminCompletedTasksView = () => {
   const handleSubmitFeedback = async (feedbackData) => {
     setFeedbackSubmitting(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/feedback/submit', {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/feedback/submit`, {
         taskId: latestTask._id,
         volunteerId: latestTask.volunteer?._id,
         adminId: user.id,

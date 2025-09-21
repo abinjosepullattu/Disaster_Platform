@@ -57,7 +57,7 @@ const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
     // Fetch available volunteers
     useEffect(() => {
-        axios.get("http://localhost:5000/api/users/available-volunteers")
+        axios.get(`${process.env.REACT_APP_API_URL}/api/users/available-volunteers`)
             .then(response => setVolunteers(response.data))
             .catch(error => console.error("Error fetching volunteers", error));
     }, []);
@@ -162,7 +162,7 @@ const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
         };
 
         try {
-            await axios.post("http://localhost:5000/api/shelters/add", shelterData);
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/shelters/add`, shelterData);
             alert("✅ Shelter added successfully!");
             navigate("/admin-home");
         } catch (error) {

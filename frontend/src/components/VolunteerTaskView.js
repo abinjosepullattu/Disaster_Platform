@@ -24,7 +24,7 @@ const VolunteerTaskView = () => {
 
       try {
         // Get volunteer info using user ID
-        const volunteerRes = await axios.get(`http://localhost:5000/api/tasks/user/${user.id}`);
+        const volunteerRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/user/${user.id}`);
         const volunteerData = volunteerRes.data;
 
         if (!volunteerData || !volunteerData._id) {
@@ -36,12 +36,12 @@ const VolunteerTaskView = () => {
         setVolunteer(volunteerData);
 
         // Fetch assigned tasks
-        const tasksRes = await axios.get(`http://localhost:5000/api/tasks/volunteer/${volunteerData._id}`);
+        const tasksRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/volunteer/${volunteerData._id}`);
         
         // For each task, fetch the volunteer's status for that task
         const tasksWithStatus = await Promise.all(tasksRes.data.map(async (task) => {
           try {
-            const statusRes = await axios.get(`http://localhost:5000/api/tasks/status/${volunteerData._id}/${task._id}`);
+            const statusRes = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/status/${volunteerData._id}/${task._id}`);
             return { ...task, taskStatus: statusRes.data.taskStatus };
           } catch (err) {
             console.error(`Error fetching status for task ${task._id}:`, err);
@@ -80,7 +80,7 @@ const VolunteerTaskView = () => {
   
     try {
       setLoading(true);
-      await axios.put(`http://localhost:5000/api/tasks/update-status/${volunteer._id}/${taskId}`, { status });
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/tasks/update-status/${volunteer._id}/${taskId}`, { status });
       
       // Update task status locally
       setLatestTask(prev => prev ? { ...prev, taskStatus: status } : null);

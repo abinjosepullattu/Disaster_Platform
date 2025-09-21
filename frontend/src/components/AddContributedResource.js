@@ -37,7 +37,7 @@ const AddContributedResource = () => {
 
   const fetchShelters = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/shelters");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/shelters`);
       setShelters(response.data);
     } catch (err) {
       console.error("Error fetching shelters:", err);
@@ -47,7 +47,7 @@ const AddContributedResource = () => {
 
   const fetchResourceTypes = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/list");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/list`);
       if (response.data && Array.isArray(response.data)) {
         setResourceTypes(response.data);
       } else {
@@ -92,7 +92,7 @@ const AddContributedResource = () => {
     const userId = user ? (user._id || user.id) : null;
     
     try {
-      const response = await axios.post("http://localhost:5000/api/resourceTypes/add-contribution", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/resourceTypes/add-contribution`, {
         shelter: selectedShelter,
         resources,
         contributorName,

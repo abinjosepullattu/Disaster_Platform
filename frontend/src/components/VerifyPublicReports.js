@@ -20,7 +20,7 @@ const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const fetchIncidents = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/incidents/public-reports", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/incidents/public-reports`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setIncidents(response.data);
@@ -52,7 +52,7 @@ const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
   const verifyIncident = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(`http://localhost:5000/api/incidents/verify/${id}`, {}, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/incidents/verify/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -67,7 +67,7 @@ const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 // ✅ Delete Incident (removes from collection)
 const deleteIncident = async (id) => {
   try {
-    await axios.delete(`http://localhost:5000/api/incidents/delete/${id}`);
+    await axios.delete(`${process.env.REACT_APP_API_URL}/api/incidents/delete/${id}`);
     
     alert("🗑️ Incident removed successfully.");
     fetchIncidents();

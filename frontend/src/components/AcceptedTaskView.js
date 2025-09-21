@@ -23,7 +23,7 @@ const AcceptedTasksView = () => {
       try {
         setLoading(true);
         // Fetch tasks for the logged-in volunteer
-        const response = await axios.get(`http://localhost:5000/api/tasks/volunteer/${user.id}/accepted`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/volunteer/${user.id}/accepted`);
         
         // Find the latest task based on createdAt or updatedAt field
         if (response.data.length > 0) {

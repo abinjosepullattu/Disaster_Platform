@@ -21,7 +21,7 @@ const AdminCampaignDonationsView = () => {
         try {
             setCampaignsLoading(true);
             setError("");
-            const response = await axios.get("http://localhost:5000/api/donations/campaigns");
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/donations/campaigns`);
             setCampaigns(response.data);
         } catch (err) {
             console.error("Error fetching campaigns:", err);
@@ -35,12 +35,12 @@ const AdminCampaignDonationsView = () => {
         try {
             setLoading(true);
             setError("");
-            const response = await axios.get(`http://localhost:5000/api/donations/h/campaigns/${campaignId}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/donations/h/campaigns/${campaignId}`);
 
             const donationsWithUserDetails = await Promise.all(
                 response.data.map(async (donation) => {
                     try {
-                        const userResponse = await axios.get(`http://localhost:5000/api/donations/users/${donation.donorId}`);
+                        const userResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/donations/users/${donation.donorId}`);
                         return { ...donation, user: userResponse.data };
                     } catch (err) {
                         console.error("Error fetching user details:", err);
@@ -91,7 +91,7 @@ const AdminCampaignDonationsView = () => {
 
     const handleVerifyPayment = async (donationId) => {
         try {
-            await axios.put(`http://localhost:5000/api/donations/verify/${donationId}`);
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/donations/verify/${donationId}`);
             setDonations((prevDonations) =>
                 prevDonations.map((donation) =>
                     donation._id === donationId ? { ...donation, status: "Paid" } : donation

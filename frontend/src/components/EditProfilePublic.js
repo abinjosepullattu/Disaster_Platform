@@ -20,7 +20,7 @@ const PublicEditProfile = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/profile/${user.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${user.id}`);
       setFormData(response.data);
     } catch (error) {
       setMessage({ type: "error", text: "Failed to load profile." });
@@ -41,7 +41,7 @@ const PublicEditProfile = () => {
   
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/profile/edit/${user.id}`,
+        `${process.env.REACT_APP_API_URL}/api/profile/edit/${user.id}`,
         formData
       );
   

@@ -30,7 +30,7 @@ const AdminResourceAllocation = () => {
 
   const fetchShelters = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/shelters");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/shelters`);
       setShelters(response.data);
     } catch (err) {
       console.error("Error fetching shelters:", err);
@@ -40,7 +40,7 @@ const AdminResourceAllocation = () => {
 
   const fetchResourceTypes = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/list");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/list`);
       setResourceTypes(response.data);
     } catch (err) {
       console.error("Error fetching resource types:", err);
@@ -99,7 +99,7 @@ const AdminResourceAllocation = () => {
         description: r.description || ""
       }));
 
-      const response = await axios.post("http://localhost:5000/api/resourceTypes/allocate", {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/resourceTypes/allocate`, {
         shelter: selectedShelter,
         resources: formattedResources
       });

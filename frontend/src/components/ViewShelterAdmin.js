@@ -46,7 +46,7 @@ const ViewShelterAdmin = () => {
 
   const fetchShelters = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/shelters/view");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/shelters/view`);
       setShelters(response.data);
     } catch (error) {
       console.error("Error fetching shelters:", error);
@@ -57,7 +57,7 @@ const ViewShelterAdmin = () => {
     if (!window.confirm("🛑 Are you sure you want to delete this shelter?")) return;
 
     try {
-      await axios.delete(`http://localhost:5000/api/shelters/delete/${shelterId}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/shelters/delete/${shelterId}`);
       alert("✅ Shelter deleted successfully!");
       fetchShelters();
     } catch (error) {

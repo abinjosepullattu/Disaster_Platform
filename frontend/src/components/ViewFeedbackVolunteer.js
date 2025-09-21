@@ -22,7 +22,7 @@ const VolunteerFeedbackView = () => {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5000/api/feedback/volunteer/${user.id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/feedback/volunteer/${user.id}`);
         setFeedbackList(response.data);
         setLoading(false);
       } catch (err) {
@@ -38,7 +38,7 @@ const VolunteerFeedbackView = () => {
   const markFeedbackAsViewed = async (feedbackId) => {
     setMarkingAsViewed(true);
     try {
-      await axios.patch(`http://localhost:5000/api/feedback/${feedbackId}/view`, {
+      await axios.patch(`${process.env.REACT_APP_API_URL}/api/feedback/${feedbackId}/view`, {
         status: 1
       });
       

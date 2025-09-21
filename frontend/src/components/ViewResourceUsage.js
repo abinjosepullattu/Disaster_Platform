@@ -22,8 +22,8 @@ const ViewResourceUsage = () => {
   const [activeButton, setActiveButton] = useState(4); // Assuming resource usage is button 4
   
   // Update base URLs to match your actual endpoints
-  const resourceTypesBaseUrl = "http://localhost:5000/api/resourceTypes";
-  const volunteersBaseUrl = "http://localhost:5000/api/resourceTypes";
+  const resourceTypesBaseUrl = `${process.env.REACT_APP_API_URL}/api/resourceTypes`;
+  const volunteersBaseUrl = `${process.env.REACT_APP_API_URL}/api/resourceTypes`;
 
   useEffect(() => {
     if (!user || !user.id) {

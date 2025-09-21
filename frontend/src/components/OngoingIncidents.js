@@ -22,7 +22,7 @@ const OngoingIncidents = () => {
   const fetchIncidents = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:5000/api/incidents/ongoing", {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/incidents/ongoing`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setIncidents(response.data);
@@ -34,7 +34,7 @@ const OngoingIncidents = () => {
   const completeIncident = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(`http://localhost:5000/api/incidents/complete/${id}`, {}, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/incidents/complete/${id}`, {}, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

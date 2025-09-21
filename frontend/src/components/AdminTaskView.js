@@ -17,7 +17,7 @@ const AdminTaskView = () => {
   useEffect(() => {
     const fetchTaskTypes = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/tasks/list');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/list`);
         setTaskTypes(response.data);
       } catch (err) {
         console.error('Error fetching task types:', err);
@@ -40,7 +40,7 @@ const AdminTaskView = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`http://localhost:5000/api/tasks/by-type/${taskType}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/by-type/${taskType}`);
       
       // Group tasks by volunteer ID and find the latest one for each volunteer
       const tasksByVolunteer = {};

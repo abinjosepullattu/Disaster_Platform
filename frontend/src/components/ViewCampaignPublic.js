@@ -16,7 +16,7 @@ const ViewCampaigns = () => {
   const fetchCampaigns = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/donations/campaigns");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/donations/campaigns`);
       setCampaigns(response.data);
       setLoading(false);
     } catch (error) {

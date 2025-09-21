@@ -252,7 +252,7 @@ const AdminAddSkill = () => {
 
   const fetchSkills = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/skills");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/skills`);
       setSkills(response.data);
     } catch (error) {
       console.error("Error fetching skills:", error);
@@ -267,7 +267,7 @@ const AdminAddSkill = () => {
     }
     
     try {
-      const response = await axios.post("http://localhost:5000/api/skills", { name: newSkill.trim() });
+      const response = await axios.post("${process.env.REACT_APP_API_URL}/api/skills", { name: newSkill.trim() });
       setSkills([...skills, response.data]);
       setNewSkill("");
       showAlert(`Skill "${newSkill.trim()}" added successfully!`, "success");
@@ -284,7 +284,7 @@ const AdminAddSkill = () => {
     }
     
     try {
-      const response = await axios.put(`http://localhost:5000/api/skills/${id}`, { name: updatedName.trim() });
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/skills/${id}`, { name: updatedName.trim() });
       setSkills(skills.map((skill) => (skill._id === id ? response.data : skill)));
       setEditingSkill(null);
       showAlert(`Skill updated to "${updatedName.trim()}" successfully!`, "success");
@@ -299,7 +299,7 @@ const AdminAddSkill = () => {
     if (window.confirm("Are you sure you want to delete this skill?")) {
       try {
         const skillToDelete = skills.find(skill => skill._id === id);
-        await axios.delete(`http://localhost:5000/api/skills/${id}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/skills/${id}`);
         setSkills(skills.filter((skill) => skill._id !== id));
         showAlert(`Skill "${skillToDelete.name}" deleted successfully!`, "success");
       } catch (error) {

@@ -29,7 +29,7 @@ const AdminContributions = () => {
 
   const fetchShelters = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/shelters");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/shelters`);
       setShelters(response.data);
     } catch (err) {
       console.error("Error fetching shelters:", err);
@@ -39,7 +39,7 @@ const AdminContributions = () => {
   const fetchAllContributions = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:5000/api/resourceTypes/contributions");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/resourceTypes/contributions`);
       
       const sortedContributions = response.data.sort((a, b) => 
         new Date(b.createdAt) - new Date(a.createdAt)
@@ -74,7 +74,7 @@ const AdminContributions = () => {
     try {
       setLoading(true);
       await axios.put(
-        `http://localhost:5000/api/resourceTypes/approve-contribution/${contributionId}`
+        `${process.env.REACT_APP_API_URL}/api/resourceTypes/approve-contribution/${contributionId}`
       );
       
       setContributions(prevContributions => 

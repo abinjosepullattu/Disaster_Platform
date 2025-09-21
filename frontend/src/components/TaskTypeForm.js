@@ -16,7 +16,7 @@ const TaskTypeForm = () => {
 
   const fetchTaskTypes = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/tasks/list");
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/tasks/list`);
       setTaskTypes(response.data);
     } catch (error) {
       console.error("Error fetching task types:", error);
@@ -32,7 +32,7 @@ const TaskTypeForm = () => {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/tasks/insert", { name: form.name });
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/tasks/insert`, { name: form.name });
       setMessage({ text: "✅ Task Type added successfully!", type: "success" });
       setForm({ name: "" });
       fetchTaskTypes();
@@ -46,7 +46,7 @@ const TaskTypeForm = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tasks/delete/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/tasks/delete/${id}`);
       setMessage({ text: "🗑️ Task Type deleted successfully!", type: "success" });
       fetchTaskTypes();
     } catch (error) {

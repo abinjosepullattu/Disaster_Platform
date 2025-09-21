@@ -34,7 +34,7 @@ const SignupPage = () => {
 
   useEffect(() => {
     // document.getElementById("myForm").reset();
-    axios.get("http://localhost:5000/api/skills")
+    axios.get(`${process.env.REACT_APP_API_URL}/api/skills`)
       .then(response => setSkillsList(response.data))
       .catch(error => console.error("Error fetching skills:", error));
   }, []);
@@ -174,7 +174,7 @@ const SignupPage = () => {
     });
 
     try {
-      await axios.post("http://localhost:5000/api/users/signup", data, {
+      await axios.post(`${process.env.REACT_APP_API_URL}/api/users/signup`, data, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setIsLoading(false);

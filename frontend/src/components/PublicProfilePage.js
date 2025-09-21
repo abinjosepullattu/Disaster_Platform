@@ -18,7 +18,7 @@ const PublicProfilePage = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/profile/${user.id}`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/profile/${user.id}`);
       setProfile(response.data);
     } catch (error) {
       setMessage({ type: "error", text: "Failed to load profile." });
@@ -40,7 +40,7 @@ const PublicProfilePage = () => {
     formData.append("userId", user.id);
 
     try {
-      const response = await axios.put("http://localhost:5000/api/profile/update-photo", formData, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/profile/update-photo`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

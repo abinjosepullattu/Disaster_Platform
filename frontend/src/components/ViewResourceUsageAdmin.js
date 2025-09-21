@@ -18,8 +18,8 @@ const AdminViewResourceUsage = () => {
   });
   const [resourceTypes, setResourceTypes] = useState([]);
   // Base URLs for API endpoints
-  const resourceTypesBaseUrl = "http://localhost:5000/api/resourceTypes";
-  const sheltersBaseUrl = "http://localhost:5000/api/resourceTypes";
+  const resourceTypesBaseUrl = `${process.env.REACT_APP_API_URL}/api/resourceTypes`;
+  const sheltersBaseUrl = `${process.env.REACT_APP_API_URL}/api/resourceTypes`;
 
   useEffect(() => {
     // Fetch initial data when component mounts
