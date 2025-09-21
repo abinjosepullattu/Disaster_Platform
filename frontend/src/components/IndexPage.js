@@ -83,7 +83,7 @@ console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
       }
 
       // Fetch incidents with optional date filtering
-      const response = await axios.get("http://localhost:5000/api/incidents/active", { 
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/incidents/active`, { 
         params 
       });
 
@@ -122,9 +122,9 @@ console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
   // Find shelters within 10km radius
   const findNearbyShelters = async (location) => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/shelters/nearby?lat=${location.lat}&lng=${location.lng}&radius=${SEARCH_RADIUS / 1000}`
-      );
+ const response = await axios.get(
+  `${process.env.REACT_APP_API_URL}/shelters/nearby?lat=${location.lat}&lng=${location.lng}&radius=${SEARCH_RADIUS / 1000}`
+);
       setNearbyShelters(response.data);
       setLoading(false);
     } catch (error) {
@@ -179,7 +179,7 @@ console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
     setEmailMessage('');
   
     try {
-      const response = await axios.post('http://localhost:5000/api/shelters/send-directions', {
+      const response = await axios.post( `${process.env.REACT_APP_API_URL}/shelters/send-directions`, {
         shelterName: selectedShelter.location,
         shelterAddress: selectedShelter.location,
         userEmail: email,

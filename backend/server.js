@@ -19,7 +19,15 @@ const complaintRoutes=require("./routes/complaintRoutes");
 dotenv.config();
 const app = express();
 
-app.use(cors());
+// example Express
+
+app.use(cors({
+  origin: ["https://disaster-platform-frontend.vercel.app"], // replace with your real Vercel URL
+  credentials: true
+}));
+
+// app.use(cors({ origin: "https://disaster-platform-frontend.vercel.app/" }));
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads")); // ✅ Serve uploaded files
 app.use("/api/users", userRoutes);
