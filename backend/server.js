@@ -22,7 +22,7 @@ const app = express();
 // example Express
 
 app.use(cors({
-  origin: ["https://disaster-platform-frontend.vercel.app"], // replace with your real Vercel URL
+  origin: "https://disaster-platform-frontend-abinjosepullattus-projects.vercel.app", // replace with your real Vercel URL
   credentials: true
 }));
 
