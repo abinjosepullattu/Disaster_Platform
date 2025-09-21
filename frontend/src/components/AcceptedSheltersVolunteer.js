@@ -34,7 +34,7 @@ const AcceptedShelters = () => {
           const sheltersResponse = await axios.get(
             `${process.env.react_app_api_url}/api/shelters/accepted/${fetchedVolunteerId}`
           );
-          console.log("Shelters response:", sheltersResponse.data); // Debug log
+          //console.log("Shelters response:", sheltersResponse.data); // Debug log
           setShelters(sheltersResponse.data);
         }
       } catch (error) {

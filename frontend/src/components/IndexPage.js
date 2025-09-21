@@ -24,7 +24,7 @@ const IndexPage = () => {
   const [filteredIncidents, setFilteredIncidents] = useState([]);
 
 const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
-console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
+//console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
 
   const SEARCH_RADIUS = 10000; // 10km in meters
 

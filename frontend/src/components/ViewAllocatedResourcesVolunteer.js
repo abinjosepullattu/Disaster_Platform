@@ -25,7 +25,7 @@ const ViewAllocatedResourcesVolunteer = () => {
       );
       if (response.data) {
         setShelter(response.data);
-        console.log(response.data);
+        //console.log(response.data);
         fetchAllocations(response.data._id);
       } else {
         setLoading(false);

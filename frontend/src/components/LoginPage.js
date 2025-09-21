@@ -22,7 +22,7 @@ const LoginPage = () => {
         phone: response.data.phone,
         email: response.data.email,
       });
-      console.log(user);
+      //console.log(user);
       if (response.data.role === "admin") navigate("/admin-home");
       else if (response.data.role === "volunteer") {
         localStorage.setItem("volunteerId", response.data.volunteerId);
