@@ -123,7 +123,7 @@ console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
   const findNearbyShelters = async (location) => {
     try {
  const response = await axios.get(
-  `${process.env.REACT_APP_API_URL}/shelters/nearby?lat=${location.lat}&lng=${location.lng}&radius=${SEARCH_RADIUS / 1000}`
+  `${process.env.REACT_APP_API_URL}/api/shelters/nearby?lat=${location.lat}&lng=${location.lng}&radius=${SEARCH_RADIUS / 1000}`
 );
       setNearbyShelters(response.data);
       setLoading(false);
@@ -179,7 +179,7 @@ console.log("Google Maps API Key:", GOOGLE_MAPS_API_KEY);
     setEmailMessage('');
   
     try {
-      const response = await axios.post( `${process.env.REACT_APP_API_URL}/shelters/send-directions`, {
+      const response = await axios.post( `${process.env.REACT_APP_API_URL}/api/shelters/send-directions`, {
         shelterName: selectedShelter.location,
         shelterAddress: selectedShelter.location,
         userEmail: email,
