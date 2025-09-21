@@ -267,7 +267,7 @@ const AdminAddSkill = () => {
     }
     
     try {
-      const response = await axios.post("${process.env.REACT_APP_API_URL}/api/skills", { name: newSkill.trim() });
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/skills`, { name: newSkill.trim() });
       setSkills([...skills, response.data]);
       setNewSkill("");
       showAlert(`Skill "${newSkill.trim()}" added successfully!`, "success");
